@@ -1,4 +1,11 @@
-import { Diagram, type Disc, score, scoringZone } from "@shuff/diagram";
+import {
+  Diagram,
+  type Disc,
+  occlusion,
+  type Point,
+  score,
+  scoringZone,
+} from "@shuff/diagram";
 
 const YELLOW = "#f5c518";
 const BLACK = "#1a1a1a";
@@ -249,6 +256,121 @@ const COORD_PLOT_LEGEND: Array<{ y: number; color: string; label: string }> = [
   { y: 459, color: "#3b82f6", label: "far-end kitchen middle (shooter)" },
 ];
 
+const occlusionShooter: Point = { x: 15, y: 459 };
+const occlusionDiscs: Disc[] = [
+  // Pair 1 — full occlusion (directly inline along x=15)
+  { x: 15, y: 45, color: YELLOW }, // closer; blocks the disc behind it
+  { x: 15, y: 30, color: BLACK }, // farther; 100% blocked
+  // Trio — chain at x=40 demonstrating partial + multi-blocker
+  { x: 40, y: 100, color: YELLOW }, // closest of three; visible
+  { x: 40, y: 50, color: BLACK }, // ~half-blocked by disc above
+  { x: 40, y: 25, color: BLACK }, // blocked by BOTH discs above (unioned)
+  // Isolated reference disc, off the line of sight entirely
+  { x: 60, y: 100, color: YELLOW },
+];
+
+function OcclusionPanel() {
+  return (
+    <section style={{ marginBottom: "3rem" }}>
+      <h2>Occlusion test</h2>
+      <p style={{ color: "#555", marginTop: -8 }}>
+        Shooter at (15, 459). Three scenarios:{" "}
+        <strong>direct full occlusion</strong> (yellow at (15, 45) between
+        shooter and black at (15, 30) → 100% blocked);{" "}
+        <strong>partial occlusion</strong> (yellow at (40, 100) covers ~half
+        of black at (40, 50)); and a <strong>multi-blocker chain</strong>{" "}
+        (black at (40, 25) is shadowed by both discs in the x=40 column,
+        unioned). Yellow at (60, 100) is the off-line reference and should
+        report 0%.
+      </p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "140px 1fr",
+          gap: "1.5rem",
+          alignItems: "start",
+        }}
+      >
+        <Diagram
+          discs={occlusionDiscs}
+          variant="full"
+          shooter={occlusionShooter}
+        />
+        <table
+          style={{
+            borderCollapse: "collapse",
+            fontSize: 14,
+            width: "100%",
+          }}
+        >
+          <thead>
+            <tr style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>
+              <th style={{ padding: "4px 8px" }}>#</th>
+              <th style={{ padding: "4px 8px" }}>Disc</th>
+              <th style={{ padding: "4px 8px" }}>Position</th>
+              <th style={{ padding: "4px 8px", textAlign: "right" }}>
+                Obscured
+              </th>
+              <th style={{ padding: "4px 8px", textAlign: "right" }}>
+                Inches
+              </th>
+              <th style={{ padding: "4px 8px", textAlign: "right" }}>
+                Blockers
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {occlusionDiscs.map((target, i) => {
+              const others = occlusionDiscs.filter((_, j) => j !== i);
+              const result = occlusion(occlusionShooter, target, others);
+              return (
+                <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+                  <td style={{ padding: "4px 8px" }}>{i + 1}</td>
+                  <td style={{ padding: "4px 8px" }}>
+                    <ColorChip color={target.color} />
+                  </td>
+                  <td
+                    style={{ padding: "4px 8px", fontFamily: "monospace" }}
+                  >
+                    ({target.x}, {target.y})
+                  </td>
+                  <td
+                    style={{
+                      padding: "4px 8px",
+                      textAlign: "right",
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    {(result.fraction * 100).toFixed(1)}%
+                  </td>
+                  <td
+                    style={{
+                      padding: "4px 8px",
+                      textAlign: "right",
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    {result.inches.toFixed(2)}"
+                  </td>
+                  <td
+                    style={{
+                      padding: "4px 8px",
+                      textAlign: "right",
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    {result.blockers.length}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
 function CoordinatePlot() {
   return (
     <section style={{ marginBottom: "3rem" }}>
@@ -348,6 +470,7 @@ export function App() {
         showLabels={false}
         showTable={false}
       />
+      <OcclusionPanel />
     </main>
   );
 }

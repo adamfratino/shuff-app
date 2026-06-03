@@ -22,3 +22,5 @@ export {
   zoneAt,
 } from "./zones";
 export type { Zone, ScoringZone } from "./zones";
+export { findBlockers, isOccluded, occlusion } from "./geometry";
+export type { OcclusionResult } from "./geometry";
