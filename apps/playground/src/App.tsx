@@ -21,6 +21,18 @@ const thresholdDiscs: Disc[] = [
   { x: 36, y: 140, color: BLACK }, // buffer — no score
 ];
 
+// Landmark positions tracing the full court along the centerline (x=36).
+// Lets us eyeball whether the y-axis maps to court geometry as expected.
+const coordPlotDiscs: Disc[] = [
+  { x: 36, y: 9, color: "#3b82f6" }, //  near-end kitchen middle
+  { x: 36, y: 126, color: "#10b981" }, //  near-end apex
+  { x: 36, y: 162, color: "#f59e0b" }, //  near-end lag line
+  { x: 36, y: 234, color: "#ef4444" }, //  centerline of full court
+  { x: 36, y: 306, color: "#f59e0b" }, //  far-end lag line
+  { x: 36, y: 342, color: "#10b981" }, //  far-end apex
+  { x: 36, y: 459, color: "#3b82f6" }, //  far-end kitchen middle (shooter)
+];
+
 // 23 discs — one at each corner of each scoring area, just inside the 3.5"
 // clearance from both intersecting lines. Yellow chosen for visibility against
 // the saturated green/red tints that result from 3-4 discs per zone.
@@ -220,6 +232,70 @@ function Panel({
   );
 }
 
+const COORD_PLOT_LEGEND: Array<{ y: number; color: string; label: string }> = [
+  { y: 9, color: "#3b82f6", label: "near-end kitchen middle" },
+  { y: 126, color: "#10b981", label: "near-end apex (10 zone tip)" },
+  { y: 162, color: "#f59e0b", label: "near-end lag line" },
+  { y: 234, color: "#ef4444", label: "centerline of full court" },
+  { y: 306, color: "#f59e0b", label: "far-end lag line" },
+  { y: 342, color: "#10b981", label: "far-end apex" },
+  { y: 459, color: "#3b82f6", label: "far-end kitchen middle (shooter)" },
+];
+
+function CoordinatePlot() {
+  return (
+    <section style={{ marginBottom: "3rem" }}>
+      <h2>Coordinate plot</h2>
+      <p style={{ color: "#555", marginTop: -8 }}>
+        Seven discs tracing the centerline (x=36) from the near back baseline
+        (y=0) to the far back baseline (y=468). Confirms the full-court
+        y-axis lines up with court landmarks before we layer shooter position
+        + line-of-sight math on top.
+      </p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "140px 1fr",
+          gap: "1.5rem",
+          alignItems: "start",
+        }}
+      >
+        <Diagram discs={coordPlotDiscs} variant="full" />
+        <table
+          style={{
+            borderCollapse: "collapse",
+            fontSize: 14,
+            width: "100%",
+          }}
+        >
+          <thead>
+            <tr style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>
+              <th style={{ padding: "4px 8px" }}>Disc</th>
+              <th style={{ padding: "4px 8px" }}>y</th>
+              <th style={{ padding: "4px 8px" }}>Landmark</th>
+            </tr>
+          </thead>
+          <tbody>
+            {COORD_PLOT_LEGEND.map(({ y, color, label }) => (
+              <tr key={y} style={{ borderBottom: "1px solid #eee" }}>
+                <td style={{ padding: "4px 8px" }}>
+                  <ColorChip color={color} />
+                </td>
+                <td
+                  style={{ padding: "4px 8px", fontFamily: "monospace" }}
+                >
+                  {y}
+                </td>
+                <td style={{ padding: "4px 8px" }}>{label}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
 export function App() {
   return (
     <main
@@ -255,6 +331,7 @@ export function App() {
         variant="full"
         showLabels={false}
       />
+      <CoordinatePlot />
     </main>
   );
 }
