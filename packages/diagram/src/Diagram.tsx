@@ -136,6 +136,15 @@ export function Diagram({
     className: `shuff-zone-${zone}`,
   });
 
+  // Compute shadow polygons once; both showShadows and showSpotlight reuse them.
+  const shadowPointStrings: string[] =
+    shooter && discs.length > 0
+      ? discs.flatMap((d) => {
+          const poly = shadowPolygon(shooter, d, DISC_RADIUS);
+          return poly ? [poly.map((p) => `${p.x},${p.y}`).join(" ")] : [];
+        })
+      : [];
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -178,31 +187,10 @@ export function Diagram({
         </g>
       )}
 
-      {shooter && showShadows && discs.length > 0 && (
+      {showShadows && shadowPointStrings.length > 0 && (
         <g className="shuff-shadows">
-          {discs.map((disc, index) => {
-            const poly = shadowPolygon(shooter, disc, DISC_RADIUS);
-            if (!poly) return null;
-            return (
-              <polygon
-                key={index}
-                points={poly.map((p) => `${p.x},${p.y}`).join(" ")}
-              />
-            );
-          })}
-        </g>
-      )}
-
-      {discs.length > 0 && (
-        <g className="shuff-discs">
-          {discs.map((disc, index) => (
-            <circle
-              key={index}
-              cx={disc.x}
-              cy={disc.y}
-              r={DISC_RADIUS}
-              fill={disc.color}
-            />
+          {shadowPointStrings.map((points, index) => (
+            <polygon key={index} points={points} />
           ))}
         </g>
       )}
@@ -221,23 +209,12 @@ export function Diagram({
               />
               {/* Cone of visibility from shooter to far back baseline corners:
                   inside the cone the overlay is hidden (lit) */}
-              <polygon
-                fill="black"
-                points={spotlightConePoints(shooter)}
-              />
+              <polygon fill="black" points={spotlightConePoints(shooter)} />
               {/* Shadow polygons override the cone where blockers cast
                   shadows: overlay visible again inside shadow regions */}
-              {discs.map((disc, index) => {
-                const poly = shadowPolygon(shooter, disc, DISC_RADIUS);
-                if (!poly) return null;
-                return (
-                  <polygon
-                    key={index}
-                    fill="white"
-                    points={poly.map((p) => `${p.x},${p.y}`).join(" ")}
-                  />
-                );
-              })}
+              {shadowPointStrings.map((points, index) => (
+                <polygon key={index} fill="white" points={points} />
+              ))}
             </mask>
           </defs>
           <rect
@@ -249,6 +226,20 @@ export function Diagram({
             height={courtLength}
           />
         </>
+      )}
+
+      {discs.length > 0 && (
+        <g className="shuff-discs">
+          {discs.map((disc, index) => (
+            <circle
+              key={index}
+              cx={disc.x}
+              cy={disc.y}
+              r={DISC_RADIUS}
+              fill={disc.color}
+            />
+          ))}
+        </g>
       )}
 
       {shooter && (
