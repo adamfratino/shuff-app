@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { DISC_DIAMETER } from "./constants";
-import { findBlockers, isOccluded, occlusion } from "./geometry";
+import {
+  findBlockers,
+  isOccluded,
+  occlusion,
+  shadowPolygon,
+  tangentPoints,
+} from "./geometry";
 import type { Disc, Point } from "./types";
 
 const shooter = { x: 0, y: 0 };
@@ -175,5 +181,61 @@ describe("occlusion regression — playground scenario", () => {
         o.fraction > 0,
       );
     }
+  });
+});
+
+describe("tangentPoints", () => {
+  it("returns null when viewpoint is at the circle center", () => {
+    expect(tangentPoints({ x: 0, y: 0 }, { x: 0, y: 0 }, 5)).toBeNull();
+  });
+
+  it("returns null when viewpoint is on or inside the circle", () => {
+    expect(tangentPoints({ x: 3, y: 0 }, { x: 0, y: 0 }, 5)).toBeNull();
+  });
+
+  it("returns two distinct points on the circle's edge", () => {
+    const center = { x: 100, y: 0 };
+    const radius = 10;
+    const result = tangentPoints({ x: 0, y: 0 }, center, radius);
+    expect(result).not.toBeNull();
+    const [t1, t2] = result!;
+    expect(Math.hypot(t1.x - center.x, t1.y - center.y)).toBeCloseTo(radius, 5);
+    expect(Math.hypot(t2.x - center.x, t2.y - center.y)).toBeCloseTo(radius, 5);
+    expect(t1.x !== t2.x || t1.y !== t2.y).toBe(true);
+  });
+
+  it("tangent points are symmetric about the viewpoint→center line", () => {
+    // Horizontal line of sight: symmetry across y = 0
+    const [t1, t2] = tangentPoints({ x: 0, y: 0 }, { x: 100, y: 0 }, 10)!;
+    expect(t1.x).toBeCloseTo(t2.x, 5);
+    expect(t1.y).toBeCloseTo(-t2.y, 5);
+  });
+});
+
+describe("shadowPolygon", () => {
+  it("returns null when viewpoint is inside the blocker", () => {
+    expect(shadowPolygon({ x: 0, y: 0 }, { x: 0, y: 0 }, 5)).toBeNull();
+  });
+
+  it("returns a 4-vertex polygon whose first/last match tangent points", () => {
+    const viewpoint = { x: 0, y: 0 };
+    const center = { x: 100, y: 0 };
+    const tangents = tangentPoints(viewpoint, center, 10)!;
+    const poly = shadowPolygon(viewpoint, center, 10)!;
+    expect(poly).toHaveLength(4);
+    expect(poly[0]).toEqual(tangents[0]);
+    expect(poly[3]).toEqual(tangents[1]);
+  });
+
+  it("far vertices lie further from the viewpoint than the tangent points", () => {
+    const viewpoint = { x: 0, y: 0 };
+    const center = { x: 100, y: 0 };
+    const [t1, far1, far2, t2] = shadowPolygon(viewpoint, center, 10)!;
+    expect(Math.hypot(far1.x, far1.y)).toBeGreaterThan(
+      Math.hypot(t1.x, t1.y),
+    );
+    expect(Math.hypot(far2.x, far2.y)).toBeGreaterThan(
+      Math.hypot(t2.x, t2.y),
+    );
   });
 });

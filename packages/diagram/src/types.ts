@@ -116,4 +116,18 @@ export type DiagramProps = {
    * enter through the centerline edge.
    */
   shooter?: Point;
+
+  /**
+   * When true (and `shooter` is set), the Diagram renders a translucent
+   * "shadow" polygon behind every disc, computed from each disc's
+   * tangent lines to the shooter. The shadow polygons are drawn ABOVE
+   * the discs, so discs sitting in another disc's shadow appear
+   * darkened — producing a spotlight / lit-from-the-shooter effect.
+   *
+   * Each blocker's polygon overlaps its own back arc, giving every disc
+   * a subtle 3D shading.
+   *
+   * Defaults to `false`.
+   */
+  showShadows?: boolean;
 };

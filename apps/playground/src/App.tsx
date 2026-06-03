@@ -111,6 +111,7 @@ type PanelProps = {
   showTable?: boolean;
   variant?: "half" | "full";
   shooter?: { x: number; y: number };
+  showShadows?: boolean;
 };
 
 function Panel({
@@ -121,6 +122,7 @@ function Panel({
   showTable = true,
   variant = "half",
   shooter,
+  showShadows = false,
 }: PanelProps) {
   const totals = totalsByColor(discs);
   const scoringCount = discs.filter((d) => scoringZone(d) !== null).length;
@@ -143,6 +145,7 @@ function Panel({
           showLabels={showLabels}
           variant={variant}
           shooter={shooter}
+          showShadows={showShadows}
         />
         <div>
           {showTable ? (
@@ -295,6 +298,7 @@ function OcclusionPanel() {
           discs={occlusionDiscs}
           variant="full"
           shooter={occlusionShooter}
+          showShadows
         />
         <table
           style={{
@@ -462,13 +466,14 @@ export function App() {
       />
       <CoordinatePlot />
       <Panel
-        title="Shooter projections"
-        description="Shooter positioned on the right side of the far-end kitchen (x=50, y=459). Faint dashed lines project from the shooter through each disc — visualizes incoming trajectories and previews where line-of-sight calculations will detect occlusion."
+        title="Shooter projections + spotlight"
+        description="Shooter on the right side of the far-end kitchen (x=50, y=459). Dashed lines project to each disc; the showShadows prop adds a translucent shadow wedge behind every disc, giving the scene a lit-from-the-shooter spotlight feel. Each disc's back arc picks up a subtle self-shadow."
         discs={frameDiscs}
         variant="full"
         shooter={{ x: 50, y: 459 }}
         showLabels={false}
         showTable={false}
+        showShadows
       />
       <OcclusionPanel />
     </main>

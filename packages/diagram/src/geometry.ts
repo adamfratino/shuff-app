@@ -1,6 +1,12 @@
 import { DISC_DIAMETER, DISC_RADIUS } from "./constants";
 import type { Disc, Point } from "./types";
 
+/**
+ * Default extension length for shadow rays past the tangent points.
+ * Larger than any half-court dimension so SVG viewBoxes naturally clip.
+ */
+const SHADOW_FAR_DISTANCE = 1000;
+
 function distance(a: Point, b: Point): number {
   const dx = a.x - b.x;
   const dy = a.y - b.y;
@@ -179,5 +185,79 @@ export function occlusion(
     fraction,
     inches: fraction * DISC_DIAMETER,
     blockers: blockingDiscs,
+  };
+}
+
+/**
+ * Computes the two tangent points where lines from `viewpoint` graze a
+ * circle at `center` with `radius`. Returns `null` if the viewpoint is on
+ * or inside the circle.
+ *
+ * The two tangent points are symmetric about the line from viewpoint to
+ * center; element `[0]` is the clockwise tangent (from viewpoint's
+ * perspective), `[1]` is counter-clockwise.
+ */
+export function tangentPoints(
+  viewpoint: Point,
+  center: Point,
+  radius: number,
+): [Point, Point] | null {
+  const dx = center.x - viewpoint.x;
+  const dy = center.y - viewpoint.y;
+  const d2 = dx * dx + dy * dy;
+  if (d2 <= radius * radius) return null;
+  const d = Math.sqrt(d2);
+  const tangentDist = Math.sqrt(d2 - radius * radius);
+  const baseAngle = Math.atan2(dy, dx);
+  const halfAngle = Math.asin(radius / d);
+  const a1 = baseAngle - halfAngle;
+  const a2 = baseAngle + halfAngle;
+  return [
+    {
+      x: viewpoint.x + tangentDist * Math.cos(a1),
+      y: viewpoint.y + tangentDist * Math.sin(a1),
+    },
+    {
+      x: viewpoint.x + tangentDist * Math.cos(a2),
+      y: viewpoint.y + tangentDist * Math.sin(a2),
+    },
+  ];
+}
+
+/**
+ * Four-vertex polygon enclosing the shadow a circular blocker casts when
+ * lit from `viewpoint`. Vertices are ordered:
+ *
+ *   [t1, far1, far2, t2]
+ *
+ * where `t1` / `t2` are the tangent points (on the blocker's edge) and
+ * `far1` / `far2` are those tangent rays extended by `farDistance`
+ * (default 1000 inches — beyond any court dimension). Returns `null` if
+ * the viewpoint is on or inside the blocker.
+ *
+ * The polygon's "open" edge `t2 → t1` cuts across the blocker; rendering
+ * the polygon over a disc darkens the disc's back arc, producing a
+ * natural lit-from-the-front shading.
+ */
+export function shadowPolygon(
+  viewpoint: Point,
+  center: Point,
+  radius: number,
+  farDistance: number = SHADOW_FAR_DISTANCE,
+): [Point, Point, Point, Point] | null {
+  const tangents = tangentPoints(viewpoint, center, radius);
+  if (!tangents) return null;
+  const [t1, t2] = tangents;
+  return [t1, extend(viewpoint, t1, farDistance), extend(viewpoint, t2, farDistance), t2];
+}
+
+function extend(from: Point, through: Point, distance: number): Point {
+  const dx = through.x - from.x;
+  const dy = through.y - from.y;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len === 0) return through;
+  return {
+    x: through.x + (dx / len) * distance,
+    y: through.y + (dy / len) * distance,
   };
 }

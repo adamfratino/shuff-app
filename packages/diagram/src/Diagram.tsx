@@ -4,6 +4,7 @@ import {
   FULL_COURT_LENGTH,
   HALF_COURT_LENGTH,
 } from "./constants";
+import { shadowPolygon } from "./geometry";
 import type { Disc, DiagramProps } from "./types";
 import { activeScoringZones, scoringZone, type ScoringZone } from "./zones";
 
@@ -18,6 +19,10 @@ const DEFAULT_STYLES = `
     stroke: rgba(0, 0, 0, 0.28);
     stroke-width: 0.4;
     stroke-dasharray: 1.5 1.5;
+    pointer-events: none;
+  }
+  .shuff-shadows polygon {
+    fill: rgba(0, 0, 0, 0.32);
     pointer-events: none;
   }
   .shuff-shooter-ring { fill: none; stroke: #1a1a1a; stroke-width: 0.8; }
@@ -91,6 +96,7 @@ export function Diagram({
   showLabels = false,
   variant = "half",
   shooter,
+  showShadows = false,
 }: DiagramProps) {
   const courtLength =
     variant === "full" ? FULL_COURT_LENGTH : HALF_COURT_LENGTH;
@@ -167,6 +173,21 @@ export function Diagram({
               fill={disc.color}
             />
           ))}
+        </g>
+      )}
+
+      {shooter && showShadows && discs.length > 0 && (
+        <g className="shuff-shadows">
+          {discs.map((disc, index) => {
+            const poly = shadowPolygon(shooter, disc, DISC_RADIUS);
+            if (!poly) return null;
+            return (
+              <polygon
+                key={index}
+                points={poly.map((p) => `${p.x},${p.y}`).join(" ")}
+              />
+            );
+          })}
         </g>
       )}
 
