@@ -1,5 +1,5 @@
 export { Diagram } from "./Diagram";
-export type { Disc, DiagramProps } from "./types";
+export type { Disc, DiagramProps, Point } from "./types";
 export {
   DISC_DIAMETER,
   DISC_RADIUS,

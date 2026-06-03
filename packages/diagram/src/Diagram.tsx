@@ -14,6 +14,14 @@ const DEFAULT_STYLES = `
   .shuff-zone-kitchen.shuff-zone--scoring { fill: rgba(207, 34, 46, calc(0.15 * var(--shuff-zone-count, 1))); }
   .shuff-markings *         { fill: none; stroke: #2a2a2a; stroke-width: 1; stroke-linecap: square; }
   .shuff-kitchen-separator  { fill: #2a2a2a; stroke: none; }
+  .shuff-projections line {
+    stroke: rgba(0, 0, 0, 0.28);
+    stroke-width: 0.4;
+    stroke-dasharray: 1.5 1.5;
+    pointer-events: none;
+  }
+  .shuff-shooter-ring { fill: none; stroke: #1a1a1a; stroke-width: 0.8; }
+  .shuff-shooter-dot  { fill: #1a1a1a; }
   .shuff-disc-labels text {
     font: 600 3.5px ui-monospace, SFMono-Regular, Menlo, monospace;
     fill: #1a1a1a;
@@ -82,6 +90,7 @@ export function Diagram({
   highlightScoring = true,
   showLabels = false,
   variant = "half",
+  shooter,
 }: DiagramProps) {
   const courtLength =
     variant === "full" ? FULL_COURT_LENGTH : HALF_COURT_LENGTH;
@@ -133,6 +142,20 @@ export function Diagram({
         </g>
       )}
 
+      {shooter && discs.length > 0 && (
+        <g className="shuff-projections">
+          {discs.map((disc, index) => (
+            <line
+              key={index}
+              x1={shooter.x}
+              y1={shooter.y}
+              x2={disc.x}
+              y2={disc.y}
+            />
+          ))}
+        </g>
+      )}
+
       {discs.length > 0 && (
         <g className="shuff-discs">
           {discs.map((disc, index) => (
@@ -144,6 +167,23 @@ export function Diagram({
               fill={disc.color}
             />
           ))}
+        </g>
+      )}
+
+      {shooter && (
+        <g className="shuff-shooter">
+          <circle
+            className="shuff-shooter-ring"
+            cx={shooter.x}
+            cy={shooter.y}
+            r={DISC_RADIUS}
+          />
+          <circle
+            className="shuff-shooter-dot"
+            cx={shooter.x}
+            cy={shooter.y}
+            r={0.8}
+          />
         </g>
       )}
 

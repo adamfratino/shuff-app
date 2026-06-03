@@ -103,6 +103,7 @@ type PanelProps = {
   showLabels?: boolean;
   showTable?: boolean;
   variant?: "half" | "full";
+  shooter?: { x: number; y: number };
 };
 
 function Panel({
@@ -112,6 +113,7 @@ function Panel({
   showLabels = true,
   showTable = true,
   variant = "half",
+  shooter,
 }: PanelProps) {
   const totals = totalsByColor(discs);
   const scoringCount = discs.filter((d) => scoringZone(d) !== null).length;
@@ -129,7 +131,12 @@ function Panel({
           alignItems: "start",
         }}
       >
-        <Diagram discs={discs} showLabels={showLabels} variant={variant} />
+        <Diagram
+          discs={discs}
+          showLabels={showLabels}
+          variant={variant}
+          shooter={shooter}
+        />
         <div>
           {showTable ? (
             <>
@@ -332,6 +339,15 @@ export function App() {
         showLabels={false}
       />
       <CoordinatePlot />
+      <Panel
+        title="Shooter projections"
+        description="Shooter positioned on the right side of the far-end kitchen (x=50, y=459). Faint dashed lines project from the shooter through each disc — visualizes incoming trajectories and previews where line-of-sight calculations will detect occlusion."
+        discs={frameDiscs}
+        variant="full"
+        shooter={{ x: 50, y: 459 }}
+        showLabels={false}
+        showTable={false}
+      />
     </main>
   );
 }

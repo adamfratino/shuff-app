@@ -1,4 +1,13 @@
 /**
+ * A point in full-court coordinates (inches). Used for shooter position
+ * and other reference geometry that may live on either end.
+ */
+export type Point = {
+  x: number;
+  y: number;
+};
+
+/**
  * A disc placed on a Diagram.
  *
  * Coordinates are in inches, in the half-court coordinate system documented in
@@ -94,4 +103,17 @@ export type DiagramProps = {
    * scoring are planned follow-ups.
    */
   variant?: "half" | "full";
+
+  /**
+   * Position of the shooter, in full-court coordinates. Typically lives
+   * in the far end's kitchen (`y ∈ [450, 468]`). When set, the Diagram
+   * renders the shooter as a target-style marker and draws faint
+   * projection lines from the shooter to each disc — useful for
+   * line-of-sight visualization.
+   *
+   * Works in both `"half"` and `"full"` variants; in half-court mode the
+   * shooter typically sits outside the viewBox and projection lines
+   * enter through the centerline edge.
+   */
+  shooter?: Point;
 };
