@@ -179,6 +179,46 @@ describe("activeScoringZones — counts by zone", () => {
   });
 });
 
+describe("corner discs — every scoring zone corner just barely scores", () => {
+  // Same 23 positions rendered in the playground's corner-discs panel. Each
+  // is positioned just inside the 3.5" clearance from BOTH intersecting
+  // boundary lines that form a corner of its zone. If any corner regresses
+  // (i.e., the disc no longer scores), the zone-clearance math has drifted.
+  it.each<[string, number, number, "kitchen" | "7-left" | "7-right" | "8-left" | "8-right" | "10"]>([
+    // Kitchen (trapezoidal, 4 corners)
+    ["kitchen back-left", 5, 3.6, "kitchen"],
+    ["kitchen back-right", 67, 3.6, "kitchen"],
+    ["kitchen front-left", 8.6, 14.4, "kitchen"],
+    ["kitchen front-right", 63.4, 14.4, "kitchen"],
+    // 7-left
+    ["7-left back-left", 5, 21.6, "7-left"],
+    ["7-left back-right", 32.4, 21.6, "7-left"],
+    ["7-left front-right", 32.4, 50.4, "7-left"],
+    ["7-left front-left", 14.7, 50.4, "7-left"],
+    // 7-right
+    ["7-right back-left", 39.6, 21.6, "7-right"],
+    ["7-right back-right", 67, 21.6, "7-right"],
+    ["7-right front-right", 57.3, 50.4, "7-right"],
+    ["7-right front-left", 39.6, 50.4, "7-right"],
+    // 8-left
+    ["8-left back-left", 17, 57.6, "8-left"],
+    ["8-left back-right", 32.4, 57.6, "8-left"],
+    ["8-left front-right", 32.4, 86.4, "8-left"],
+    ["8-left front-left", 26.6, 86.4, "8-left"],
+    // 8-right
+    ["8-right back-left", 39.6, 57.6, "8-right"],
+    ["8-right back-right", 55, 57.6, "8-right"],
+    ["8-right front-right", 45.4, 86.4, "8-right"],
+    ["8-right front-left", 39.6, 86.4, "8-right"],
+    // 10 zone (triangle, 3 corners)
+    ["10 back-left", 29, 93.6, "10"],
+    ["10 back-right", 43, 93.6, "10"],
+    ["10 near-apex", 36, 114.8, "10"],
+  ])("%s scores %s", (_label, x, y, expected) => {
+    expect(scoringZone({ x, y, color: "y" })).toBe(expected);
+  });
+});
+
 describe("isAlive — basic liveness", () => {
   it("is alive for a disc on the scoring side", () => {
     expect(isAlive({ x: 36, y: 100, color: "y" })).toBe(true);
