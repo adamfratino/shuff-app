@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { DISC_RADIUS } from "./constants";
-import type { DiagramProps } from "./types";
-import { activeScoringZones, type ScoringZone } from "./zones";
+import type { Disc, DiagramProps } from "./types";
+import { activeScoringZones, scoringZone, type ScoringZone } from "./zones";
 
 const DEFAULT_STYLES = `
   .shuff-court              { fill: #e8e4d8; stroke: none; }
@@ -10,16 +10,40 @@ const DEFAULT_STYLES = `
   .shuff-zone-kitchen.shuff-zone--scoring { fill: rgba(207, 34, 46, calc(0.15 * var(--shuff-zone-count, 1))); }
   .shuff-markings *         { fill: none; stroke: #2a2a2a; stroke-width: 1; stroke-linecap: square; }
   .shuff-kitchen-separator  { fill: #2a2a2a; stroke: none; }
+  .shuff-disc-labels text {
+    font: 600 3.5px ui-monospace, SFMono-Regular, Menlo, monospace;
+    fill: #1a1a1a;
+    paint-order: stroke;
+    stroke: #fdfaf2;
+    stroke-width: 0.7;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
 `;
 
 type ZoneCustomProperty = CSSProperties & {
   "--shuff-zone-count"?: number;
 };
 
+const ZONE_ABBREV: Record<ScoringZone, string> = {
+  kitchen: "K",
+  "7-left": "7L",
+  "7-right": "7R",
+  "8-left": "8L",
+  "8-right": "8R",
+  "10": "10",
+};
+
+function labelFor(disc: Disc): string {
+  const z = scoringZone(disc);
+  return z === null ? "—" : ZONE_ABBREV[z];
+}
+
 export function Diagram({
   discs = [],
   className,
   highlightScoring = true,
+  showLabels = false,
 }: DiagramProps) {
   const zoneCounts = highlightScoring
     ? activeScoringZones(discs)
@@ -80,6 +104,21 @@ export function Diagram({
               r={DISC_RADIUS}
               fill={disc.color}
             />
+          ))}
+        </g>
+      )}
+
+      {showLabels && discs.length > 0 && (
+        <g className="shuff-disc-labels">
+          {discs.map((disc, index) => (
+            <text
+              key={index}
+              x={disc.x}
+              y={disc.y + DISC_RADIUS + 3.5}
+              textAnchor="middle"
+            >
+              {labelFor(disc)}
+            </text>
           ))}
         </g>
       )}

@@ -69,4 +69,15 @@ export type DiagramProps = {
    * that want a neutral court without highlight semantics.
    */
   highlightScoring?: boolean;
+
+  /**
+   * When true, each disc gets a small `<text>` overlay inside the SVG
+   * showing its scoring zone abbreviation (`10`, `8L`, `8R`, `7L`, `7R`,
+   * `K`) or `—` for non-scoring positions. Labels live in a
+   * `shuff-disc-labels` group; default styles draw white-stroked text
+   * below each disc for legibility on any fill.
+   *
+   * Defaults to `false`.
+   */
+  showLabels?: boolean;
 };
