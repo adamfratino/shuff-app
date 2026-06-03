@@ -178,20 +178,6 @@ export function Diagram({
         </g>
       )}
 
-      {discs.length > 0 && (
-        <g className="shuff-discs">
-          {discs.map((disc, index) => (
-            <circle
-              key={index}
-              cx={disc.x}
-              cy={disc.y}
-              r={DISC_RADIUS}
-              fill={disc.color}
-            />
-          ))}
-        </g>
-      )}
-
       {shooter && showShadows && discs.length > 0 && (
         <g className="shuff-shadows">
           {discs.map((disc, index) => {
@@ -204,6 +190,20 @@ export function Diagram({
               />
             );
           })}
+        </g>
+      )}
+
+      {discs.length > 0 && (
+        <g className="shuff-discs">
+          {discs.map((disc, index) => (
+            <circle
+              key={index}
+              cx={disc.x}
+              cy={disc.y}
+              r={DISC_RADIUS}
+              fill={disc.color}
+            />
+          ))}
         </g>
       )}
 
