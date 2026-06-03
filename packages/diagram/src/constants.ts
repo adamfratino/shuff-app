@@ -17,6 +17,11 @@ export const HALF_COURT_WIDTH = 72;
 export const HALF_COURT_LENGTH = 234;
 
 /**
+ * Full-court length (head-to-head), in inches. Two half-courts back-to-back.
+ */
+export const FULL_COURT_LENGTH = HALF_COURT_LENGTH * 2;
+
+/**
  * Reference landmarks in the half-court coordinate system. See `docs/RULES.md`.
  */
 export const APEX = { x: 36, y: 126 } as const;

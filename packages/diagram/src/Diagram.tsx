@@ -1,5 +1,9 @@
-import type { CSSProperties } from "react";
-import { DISC_RADIUS } from "./constants";
+import type { CSSProperties, ReactNode } from "react";
+import {
+  DISC_RADIUS,
+  FULL_COURT_LENGTH,
+  HALF_COURT_LENGTH,
+} from "./constants";
 import type { Disc, DiagramProps } from "./types";
 import { activeScoringZones, scoringZone, type ScoringZone } from "./zones";
 
@@ -25,6 +29,8 @@ type ZoneCustomProperty = CSSProperties & {
   "--shuff-zone-count"?: number;
 };
 
+type ZonePropsResult = { className: string; style?: ZoneCustomProperty };
+
 const ZONE_ABBREV: Record<ScoringZone, string> = {
   kitchen: "K",
   "7-left": "7L",
@@ -39,38 +45,11 @@ function labelFor(disc: Disc): string {
   return z === null ? "—" : ZONE_ABBREV[z];
 }
 
-export function Diagram({
-  discs = [],
-  className,
-  highlightScoring = true,
-  showLabels = false,
-}: DiagramProps) {
-  const zoneCounts = highlightScoring
-    ? activeScoringZones(discs)
-    : new Map<ScoringZone, number>();
-
-  const zoneProps = (
-    zone: ScoringZone,
-  ): { className: string; style?: ZoneCustomProperty } => {
-    const count = zoneCounts.get(zone);
-    if (!count) return { className: `shuff-zone-${zone}` };
-    return {
-      className: `shuff-zone-${zone} shuff-zone--scoring`,
-      style: { "--shuff-zone-count": count },
-    };
-  };
-
+function renderCourtGeometry(
+  zoneProps: (zone: ScoringZone) => ZonePropsResult,
+): ReactNode {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 72 234"
-      preserveAspectRatio="xMidYMin meet"
-      className={className}
-    >
-      <style>{DEFAULT_STYLES}</style>
-
-      <rect className="shuff-court" x="0" y="0" width="72" height="234" />
-
+    <>
       <g className="shuff-scoring-zones">
         <polygon points="0,0 72,0 66,18 6,18" {...zoneProps("kitchen")} />
         <polygon points="0,18 36,18 36,54 12,54" {...zoneProps("7-left")} />
@@ -93,6 +72,66 @@ export function Diagram({
         <line className="shuff-lag-line" x1="0" y1="162" x2="72" y2="162" />
         <polygon className="shuff-kitchen-separator" points="34,0 38,0 36,17" />
       </g>
+    </>
+  );
+}
+
+export function Diagram({
+  discs = [],
+  className,
+  highlightScoring = true,
+  showLabels = false,
+  variant = "half",
+}: DiagramProps) {
+  const courtLength =
+    variant === "full" ? FULL_COURT_LENGTH : HALF_COURT_LENGTH;
+  const viewBox = `0 0 72 ${courtLength}`;
+
+  const zoneCounts = highlightScoring
+    ? activeScoringZones(discs)
+    : new Map<ScoringZone, number>();
+
+  const nearEndZoneProps = (zone: ScoringZone): ZonePropsResult => {
+    const count = zoneCounts.get(zone);
+    if (!count) return { className: `shuff-zone-${zone}` };
+    return {
+      className: `shuff-zone-${zone} shuff-zone--scoring`,
+      style: { "--shuff-zone-count": count },
+    };
+  };
+
+  // Far end is visual context only in v1 — no disc-driven highlighting.
+  const farEndZoneProps = (zone: ScoringZone): ZonePropsResult => ({
+    className: `shuff-zone-${zone}`,
+  });
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={viewBox}
+      preserveAspectRatio="xMidYMin meet"
+      className={className}
+    >
+      <style>{DEFAULT_STYLES}</style>
+
+      <rect
+        className="shuff-court"
+        x="0"
+        y="0"
+        width="72"
+        height={courtLength}
+      />
+
+      {renderCourtGeometry(nearEndZoneProps)}
+
+      {variant === "full" && (
+        <g
+          className="shuff-far-end"
+          transform={`translate(0, ${FULL_COURT_LENGTH}) scale(1, -1)`}
+        >
+          {renderCourtGeometry(farEndZoneProps)}
+        </g>
+      )}
 
       {discs.length > 0 && (
         <g className="shuff-discs">

@@ -80,4 +80,18 @@ export type DiagramProps = {
    * Defaults to `false`.
    */
   showLabels?: boolean;
+
+  /**
+   * Court extent to render.
+   *
+   * - `"half"` (default): the target end only. viewBox `0 0 72 234`.
+   * - `"full"`: both ends. viewBox `0 0 72 468`. The far end (y ∈
+   *   [234, 468]) mirrors the near end across y = 234 and is wrapped in
+   *   a `shuff-far-end` group for selective styling.
+   *
+   * For v1, discs and scoring still operate in target-end coordinates
+   * (y ∈ [0, 234]). Shooter position, opposite-end discs, and full-court
+   * scoring are planned follow-ups.
+   */
+  variant?: "half" | "full";
 };

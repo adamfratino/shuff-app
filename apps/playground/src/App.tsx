@@ -90,6 +90,7 @@ type PanelProps = {
   discs: Disc[];
   showLabels?: boolean;
   showTable?: boolean;
+  variant?: "half" | "full";
 };
 
 function Panel({
@@ -98,6 +99,7 @@ function Panel({
   discs,
   showLabels = true,
   showTable = true,
+  variant = "half",
 }: PanelProps) {
   const totals = totalsByColor(discs);
   const scoringCount = discs.filter((d) => scoringZone(d) !== null).length;
@@ -110,12 +112,12 @@ function Panel({
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "280px 1fr",
+          gridTemplateColumns: variant === "full" ? "200px 1fr" : "280px 1fr",
           gap: "1.5rem",
           alignItems: "start",
         }}
       >
-        <Diagram discs={discs} showLabels={showLabels} />
+        <Diagram discs={discs} showLabels={showLabels} variant={variant} />
         <div>
           {showTable ? (
             <>
@@ -245,6 +247,13 @@ export function App() {
         discs={cornerDiscs}
         showLabels={false}
         showTable={false}
+      />
+      <Panel
+        title="Full court variant"
+        description="Same sample-frame discs on the near (top) end. The far end mirrors the geometry as context — shooter position and far-end scoring are future work."
+        discs={frameDiscs}
+        variant="full"
+        showLabels={false}
       />
     </main>
   );
