@@ -130,4 +130,16 @@ export type DiagramProps = {
    * Defaults to `false`.
    */
   showShadows?: boolean;
+
+  /**
+   * When true (and `shooter` is set), the Diagram renders an inverted
+   * spotlight: the entire court is dimmed and a triangular "cone of
+   * visibility" from the shooter to the back baseline corners is cut
+   * out so the lit area remains bright. Shadow polygons from blockers
+   * re-dim the cone where line of sight is broken.
+   *
+   * Defaults to `false`. Independent of `showShadows` — both can be
+   * enabled simultaneously and will compound.
+   */
+  showSpotlight?: boolean;
 };

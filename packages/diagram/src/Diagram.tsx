@@ -1,11 +1,12 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useId, type CSSProperties, type ReactNode } from "react";
 import {
   DISC_RADIUS,
   FULL_COURT_LENGTH,
   HALF_COURT_LENGTH,
+  HALF_COURT_WIDTH,
 } from "./constants";
 import { shadowPolygon } from "./geometry";
-import type { Disc, DiagramProps } from "./types";
+import type { Disc, DiagramProps, Point } from "./types";
 import { activeScoringZones, scoringZone, type ScoringZone } from "./zones";
 
 const DEFAULT_STYLES = `
@@ -22,7 +23,11 @@ const DEFAULT_STYLES = `
     pointer-events: none;
   }
   .shuff-shadows polygon {
-    fill: rgba(0, 0, 0, 0.32);
+    fill: rgba(0, 0, 0, 0.72);
+    pointer-events: none;
+  }
+  .shuff-spotlight-dim {
+    fill: rgba(0, 0, 0, 0.55);
     pointer-events: none;
   }
   .shuff-shooter-ring { fill: none; stroke: #1a1a1a; stroke-width: 0.8; }
@@ -56,6 +61,15 @@ const ZONE_ABBREV: Record<ScoringZone, string> = {
 function labelFor(disc: Disc): string {
   const z = scoringZone(disc);
   return z === null ? "—" : ZONE_ABBREV[z];
+}
+
+/**
+ * Three-vertex spotlight cone polygon: from the shooter to the two back
+ * baseline corners of the target end (y = 0). Wide enough to span the
+ * full court width at the back baseline; narrows toward the shooter.
+ */
+function spotlightConePoints(shooter: Point): string {
+  return `${shooter.x},${shooter.y} 0,0 ${HALF_COURT_WIDTH},0`;
 }
 
 function renderCourtGeometry(
@@ -97,10 +111,12 @@ export function Diagram({
   variant = "half",
   shooter,
   showShadows = false,
+  showSpotlight = false,
 }: DiagramProps) {
   const courtLength =
     variant === "full" ? FULL_COURT_LENGTH : HALF_COURT_LENGTH;
   const viewBox = `0 0 72 ${courtLength}`;
+  const maskId = useId();
 
   const zoneCounts = highlightScoring
     ? activeScoringZones(discs)
@@ -189,6 +205,50 @@ export function Diagram({
             );
           })}
         </g>
+      )}
+
+      {shooter && showSpotlight && (
+        <>
+          <defs>
+            <mask id={maskId}>
+              {/* Default: dim everywhere (overlay visible) */}
+              <rect
+                fill="white"
+                x="0"
+                y="0"
+                width={HALF_COURT_WIDTH}
+                height={courtLength}
+              />
+              {/* Cone of visibility from shooter to far back baseline corners:
+                  inside the cone the overlay is hidden (lit) */}
+              <polygon
+                fill="black"
+                points={spotlightConePoints(shooter)}
+              />
+              {/* Shadow polygons override the cone where blockers cast
+                  shadows: overlay visible again inside shadow regions */}
+              {discs.map((disc, index) => {
+                const poly = shadowPolygon(shooter, disc, DISC_RADIUS);
+                if (!poly) return null;
+                return (
+                  <polygon
+                    key={index}
+                    fill="white"
+                    points={poly.map((p) => `${p.x},${p.y}`).join(" ")}
+                  />
+                );
+              })}
+            </mask>
+          </defs>
+          <rect
+            className="shuff-spotlight-dim"
+            mask={`url(#${maskId})`}
+            x="0"
+            y="0"
+            width={HALF_COURT_WIDTH}
+            height={courtLength}
+          />
+        </>
       )}
 
       {shooter && (

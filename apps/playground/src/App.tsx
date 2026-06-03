@@ -112,6 +112,7 @@ type PanelProps = {
   variant?: "half" | "full";
   shooter?: { x: number; y: number };
   showShadows?: boolean;
+  showSpotlight?: boolean;
 };
 
 function Panel({
@@ -123,6 +124,7 @@ function Panel({
   variant = "half",
   shooter,
   showShadows = false,
+  showSpotlight = false,
 }: PanelProps) {
   const totals = totalsByColor(discs);
   const scoringCount = discs.filter((d) => scoringZone(d) !== null).length;
@@ -146,6 +148,7 @@ function Panel({
           variant={variant}
           shooter={shooter}
           showShadows={showShadows}
+          showSpotlight={showSpotlight}
         />
         <div>
           {showTable ? (
@@ -466,14 +469,24 @@ export function App() {
       />
       <CoordinatePlot />
       <Panel
-        title="Shooter projections + spotlight"
-        description="Shooter on the right side of the far-end kitchen (x=50, y=459). Dashed lines project to each disc; the showShadows prop adds a translucent shadow wedge behind every disc, giving the scene a lit-from-the-shooter spotlight feel. Each disc's back arc picks up a subtle self-shadow."
+        title="Shooter projections + heavy shadows"
+        description="Shooter on the right side of the far-end kitchen (x=50, y=459). Each disc casts a strong shadow wedge (opacity bumped to 0.72). Discs behind blockers are heavily darkened; each disc's back arc picks up a self-shadow."
         discs={frameDiscs}
         variant="full"
         shooter={{ x: 50, y: 459 }}
         showLabels={false}
         showTable={false}
         showShadows
+      />
+      <Panel
+        title="Inverted spotlight"
+        description="Whole court is dimmed; a triangular cone of visibility from the shooter to the far back baseline cuts the dim away, leaving lit court inside the cone. Blocker shadows re-dim parts of the cone — discs in shadow disappear into the void."
+        discs={frameDiscs}
+        variant="full"
+        shooter={{ x: 50, y: 459 }}
+        showLabels={false}
+        showTable={false}
+        showSpotlight
       />
       <OcclusionPanel />
     </main>
