@@ -9,3 +9,15 @@ export {
   LAG_LINE_Y,
   KITCHEN_DEPTH,
 } from "./constants";
+export {
+  activeScoringZones,
+  isAlive,
+  isScoringZone,
+  LINE_WIDTH,
+  SCORING_CLEARANCE,
+  score,
+  scoreValue,
+  scoringZone,
+  zoneAt,
+} from "./zones";
+export type { Zone, ScoringZone } from "./zones";

@@ -49,12 +49,24 @@ export type DiagramProps = {
 
   /**
    * Optional className applied to the root <svg> element. Use this to
-   * override default fills and strokes via CSS — the SVG exposes IDs for
-   * the court surface, each scoring zone, and individual line markings.
+   * override default fills and strokes via CSS — the SVG exposes classes
+   * for the court surface, each scoring zone, and individual line markings.
    *
    * @example
-   *   .my-diagram #zone-10  { fill: var(--ten-color); }
-   *   .my-diagram #line-lag { stroke: var(--lag-color); }
+   *   .my-diagram .shuff-zone-10  { fill: var(--ten-color); }
+   *   .my-diagram .shuff-lag-line { stroke: var(--lag-color); }
    */
   className?: string;
+
+  /**
+   * When true (default), each scoring zone polygon containing at least one
+   * fully-scoring disc receives a `shuff-zone--scoring` modifier class and
+   * a `--shuff-zone-count` CSS custom property set to the disc count. The
+   * default styles use the count to scale fill opacity (more discs in a
+   * zone → more intense tint).
+   *
+   * Set `false` to skip the classification entirely — useful for embeds
+   * that want a neutral court without highlight semantics.
+   */
+  highlightScoring?: boolean;
 };
