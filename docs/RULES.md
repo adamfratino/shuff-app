@@ -21,7 +21,7 @@ The court is **symmetric** along both axes. Each end mirrors the other.
 
 | Zone | Depth | Notes |
 |---|---|---|
-| **10-off / Kitchen** | 18 in (1' 6") | Aliases: "starting area", "kitchen". Doubles as the shooting-end origin (where discs are staged) and the target-end -10 zone. Contains a decorative **separator triangle** dividing it into yellow-side / black-side for shooting; the separator has no scoring meaning at the target end. |
+| **10-off / Kitchen** | 18 in (1' 6") | Aliases: "starting area", "kitchen". Doubles as the shooting-end origin (where discs are staged) and the target-end -10 zone. **Trapezoidal**: full 72-inch width at the back baseline, narrowing to 60 inches at the kitchen / 7 boundary. Side edges share the scoring triangle's slope (1 in/3 in). Contains a decorative **separator triangle** dividing it into yellow-side / black-side for shooting; the separator has no scoring meaning at the target end. |
 | **7 zone** (×2) | 36 in (3 ft) | Wide base of the scoring triangle, 6 ft wide. Left and right halves separated by the **centerline**. |
 | **8 zone** (×2) | 36 in (3 ft) | Left and right halves. |
 | **10 zone** | 36 in (3 ft) | Apex of the scoring triangle. Single zone (no left/right split). |
@@ -43,7 +43,7 @@ End-to-end: 162 + 144 + 162 = **468 in (39 ft)** ✓
 | **Apex** | The point at the front of the 10 zone (closest to the dead zone). The most-named landmark in the game. |
 | **Separator lines** | Internal lines dividing scoring zones (10/8, 8/7, 7/kitchen). |
 | **Centerline** | Longitudinal middle, divides the court into yellow side / black side. Per the old SVG, only painted through the 7 and 8 zones (not the 10 or the kitchen). |
-| **Lag line** | A transverse line discs must touch or pass to remain live. 3 ft past the apex of the 10 (`x = 162` in half-court coords; apex at `x = 126`). |
+| **Lag line** | A transverse line discs must touch or pass to remain live. 3 ft past the apex of the 10 (`y = 162` in half-court coords; apex at `y = 126`). |
 | **Side lines** | The two long edges of the playing surface. |
 
 **Line width**: 1 inch (typical painted court marking). The "touching a line"
@@ -133,13 +133,13 @@ A disc becomes **dead** (and is removed from play) if any of:
 ### Lag line position
 
 The lag line is **3 ft (36 in) past the apex of the 10**, per the ILSA court
-diagram. In half-court coords (apex at `x = 126`): **`x = 162`**. The 12 ft
+diagram. In half-court coords (apex at `y = 126`): **`y = 162`**. The 12 ft
 middle dead zone runs between the two lag lines (one at each end of the court).
 
 A disc that comes to rest short of the lag line (between the lag line and the
 shooter) without touching it is dead (rule 2.6.1). A disc touching or past the
 lag line is live and may score if also inside a scoring zone (kitchen / 7 / 8 /
-10). Discs in the apex-to-lag-line buffer (`x ∈ [126, 162]`) are alive but
+10). Discs in the apex-to-lag-line buffer (`y ∈ [126, 162]`) are alive but
 in no scoring zone.
 
 ### Schema note (deferred until replay UI)
@@ -199,7 +199,7 @@ iconography we'll layer on later (frame markers, match-progress UI,
 
 ## Open Questions
 
-None blocking v1. (Lag line at `x = 162` (3 ft past the apex), lines 1" wide,
+None blocking v1. (Lag line at `y = 162` (3 ft past the apex), lines 1" wide,
 dead-disc model deferred to replay UI.)
 
 ---
@@ -241,51 +241,61 @@ unaffected.
 ## Coordinate System
 
 A **half-court Diagram is exactly half the playing surface**, so two of them
-mirrored across their high-x edge tile into a full court.
+mirrored across their high-y edge tile into a full court.
 
-- **Origin**: back baseline of the depicted end, on the centerline.
-- **x**: 0 at the back baseline, increasing forward toward the centerline of
+The coordinate system matches the canonical SVG (`court.svg`): vertical
+orientation with the back baseline at the top.
+
+- **Origin**: top-left corner of the depicted end (back baseline meets the
+  left side line).
+- **x**: 0 at the left side line, 72 at the right side line. Centerline at
+  `x = 36`.
+- **y**: 0 at the back baseline, increasing forward toward the centerline of
   the full court (which sits at the boundary between the two half-courts).
-- **y**: 0 on the centerline, +y to one side, −y to the other.
 - **Units**: inches. Decimals allowed.
 
 ### Half-court extent
 
-- `x ∈ [0, 234]` — half the 468-inch playing surface.
-- `y ∈ [−36, +36]` — full 72-inch width.
+- `x ∈ [0, 72]` — full 72-inch width.
+- `y ∈ [0, 234]` — half the 468-inch playing surface.
 
 ### Zones in these coordinates
 
-Reading from the back baseline forward (low x to high x):
+Reading from the back baseline forward (low y to high y):
 
-| Zone | x range | y boundary |
+| Zone | y range | x boundary |
 |---|---|---|
-| 10-off / Kitchen | [0, 18] | full width: \|y\| ≤ 36 |
-| 7 zone | [18, 54] | \|y\| ≤ (126 − x) / 3 (triangle edge) |
-| 8 zone | [54, 90] | \|y\| ≤ (126 − x) / 3 |
-| 10 zone | [90, 126] | \|y\| ≤ (126 − x) / 3 |
-| Apex of the 10 | (126, 0) | single point |
-| Apex-to-lag-line buffer | [126, 162] | \|y\| ≤ 36 — alive but unscoreable |
-| Lag line | x = 162 | the threshold for liveness (rule 2.6.1) |
-| Dead zone (this side, short of lag line) | (162, 234] | \|y\| ≤ 36 — dead per rule 2.6.1 |
+| 10-off / Kitchen | [0, 18] | trapezoidal: full width at `y = 0` (x ∈ [0, 72]), narrowing to x ∈ [6, 66] at `y = 18`. Side edges share the triangle slope (`dx/dy = 1/3`). |
+| 7 zone, left | [18, 54] | x ∈ [(y − 18) / 3, 36] |
+| 7 zone, right | [18, 54] | x ∈ [36, 72 − (y − 18) / 3] |
+| 8 zone, left | [54, 90] | x ∈ [(y − 18) / 3, 36] |
+| 8 zone, right | [54, 90] | x ∈ [36, 72 − (y − 18) / 3] |
+| 10 zone | [90, 126] | x ∈ [(y − 18) / 3, 72 − (y − 18) / 3] (single zone) |
+| Apex of the 10 | (36, 126) | single point |
+| Apex-to-lag-line buffer | [126, 162] | full width: x ∈ [0, 72] — alive but unscoreable |
+| Lag line | y = 162 | the threshold for liveness (rule 2.6.1) |
+| Dead zone (this side, short of lag line) | (162, 234] | full width — dead per rule 2.6.1 |
 
-The scoring triangle's outer edge is `\|y\| = (126 − x) / 3` for `x ∈ [18, 126]`
-— a straight line from `(18, ±36)` (back corners of the 7 zone) to `(126, 0)`
-(the apex).
+The scoring triangle's outer edges are straight lines from the back corners of
+the 7 zone to the apex:
 
-Discs come from the opposite end (off-canvas, beyond x = 234) and travel
-toward decreasing x. A disc fully past the back baseline (x < 0) has left the
-court.
+- Left: `x = (y − 18) / 3` for `y ∈ [18, 126]` — from `(0, 18)` to `(36, 126)`.
+- Right: `x = 72 − (y − 18) / 3` for `y ∈ [18, 126]` — from `(72, 18)` to
+  `(36, 126)`.
+
+Discs come from the opposite end (off-canvas, beyond `y = 234`) and travel
+toward decreasing y. A disc fully past the back baseline (`y < 0`) has left
+the court.
 
 ### Full-court composition
 
-A full court is two half-courts placed back-to-back along the high-x edge.
-Mirror the second half across `x = 234`:
+A full court is two half-courts placed back-to-back along the high-y edge.
+Mirror the second half across `y = 234`:
 
-- Half A: `x ∈ [0, 234]` as defined above.
-- Half B: `x ∈ [234, 468]`, with internal zone math mirrored
-  (B-end kitchen is `x ∈ [450, 468]`, B-end apex at `(342, 0)`, B-end lag line
-  at `x = 306`).
+- Half A: `y ∈ [0, 234]` as defined above.
+- Half B: `y ∈ [234, 468]`, with internal zone math mirrored
+  (B-end kitchen is `y ∈ [450, 468]`, B-end apex at `(36, 342)`, B-end lag
+  line at `y = 306`).
 
 A full-court rendering is a composition of two Diagrams, not a separate type.
 
@@ -293,8 +303,8 @@ A full-court rendering is a composition of two Diagrams, not a separate type.
 
 - A **Diagram** is canonically the **target end** — the shooting end is never
   rendered.
-- Origin is the **back baseline on the centerline** (see Coordinate System
-  above).
+- Origin is the **top-left corner of the depicted end** — back baseline meets
+  the left side line, matching the SVG (see Coordinate System above).
 - **Yellow/black "sides" do not apply to a Diagram** — they're a shooting-end
   concept. Discs carry a `color`; the Diagram does not carry a "side."
 - A **Sequence** of Shots within a frame is 8 entries. Cross-frame Sequences

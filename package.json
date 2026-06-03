@@ -1,0 +1,18 @@
+{
+  "name": "shuff-app",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Modern rebuild of shuff.app, the shuffleboard board visualizer.",
+  "packageManager": "pnpm@9.12.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "typescript": "^5.7.2"
+  }
+}
