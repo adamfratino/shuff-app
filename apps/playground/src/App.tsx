@@ -1,6 +1,10 @@
+import { useState } from "react";
 import { Diagram } from "@shuff/diagram";
 import {
   type Disc,
+  frameScore,
+  mirrorEnd,
+  mirrorSide,
   occlusion,
   type Point,
   score,
@@ -75,14 +79,6 @@ const cornerDiscs: Disc[] = [
   { x: 36, y: 114.8, color: YELLOW },
 ];
 
-function totalsByColor(discs: Disc[]): Record<string, number> {
-  const totals: Record<string, number> = {};
-  for (const disc of discs) {
-    totals[disc.color] = (totals[disc.color] ?? 0) + score(disc);
-  }
-  return totals;
-}
-
 function formatScore(n: number): string {
   return n > 0 ? `+${n}` : `${n}`;
 }
@@ -126,7 +122,7 @@ function Panel({
   showShadows = false,
   showSpotlight = false,
 }: PanelProps) {
-  const totals = totalsByColor(discs);
+  const totals = frameScore(discs);
   const scoringCount = discs.filter((d) => scoringZone(d) !== null).length;
   return (
     <section style={{ marginBottom: "3rem" }}>
@@ -213,7 +209,7 @@ function Panel({
 
               <h3 style={{ marginTop: "1.5rem" }}>Totals</h3>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {Object.entries(totals).map(([color, total]) => (
+                {[...totals].map(([color, total]) => (
                   <li
                     key={color}
                     style={{
@@ -240,7 +236,7 @@ function Panel({
                 Sum:{" "}
                 <code style={{ fontSize: 14 }}>
                   {formatScore(
-                    Object.values(totals).reduce((a, b) => a + b, 0),
+                    [...totals.values()].reduce((a, b) => a + b, 0),
                   )}
                 </code>
               </p>
@@ -432,6 +428,101 @@ function CoordinatePlot() {
   );
 }
 
+function MirrorPanel() {
+  const [end, setEnd] = useState(false);
+  const [side, setSide] = useState(false);
+
+  let discs: Disc[] = frameDiscs;
+  if (end) discs = discs.map(mirrorEnd);
+  if (side) discs = discs.map(mirrorSide);
+
+  const totals = frameScore(discs);
+
+  return (
+    <section style={{ marginBottom: "3rem" }}>
+      <h2>Mirror transforms</h2>
+      <p style={{ color: "#555", marginTop: -8 }}>
+        Toggle <code>mirrorEnd</code> to flip the frame across the full-court
+        center (y = 234, sending discs to the far end) and{" "}
+        <code>mirrorSide</code> to flip across the longitudinal centerline
+        (x = 36). Both transforms preserve disc color and chain freely.
+        Frame totals reflect the discs' new positions — once mirrored to
+        the far end they fall outside the half-court scoring grid and report
+        0.
+      </p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "140px 1fr",
+          gap: "1.5rem",
+          alignItems: "start",
+        }}
+      >
+        <Diagram discs={discs} variant="full" />
+        <div>
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+              marginBottom: "1rem",
+              fontSize: 14,
+            }}
+          >
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={end}
+                onChange={(e) => setEnd(e.target.checked)}
+              />
+              <code>mirrorEnd</code> (flip y)
+            </label>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={side}
+                onChange={(e) => setSide(e.target.checked)}
+              />
+              <code>mirrorSide</code> (flip x)
+            </label>
+          </div>
+          <h3 style={{ marginTop: 0 }}>Totals</h3>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {[...totals].map(([color, total]) => (
+              <li
+                key={color}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "4px 0",
+                  fontFamily: "monospace",
+                }}
+              >
+                <ColorChip color={color} />
+                {formatScore(total)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function App() {
   return (
     <main
@@ -468,6 +559,7 @@ export function App() {
         showLabels={false}
       />
       <CoordinatePlot />
+      <MirrorPanel />
       <Panel
         title="Shooter projections + heavy shadows"
         description="Shooter on the right side of the far-end kitchen (x=50, y=459). Each disc casts a strong shadow wedge (opacity bumped to 0.72). Discs behind blockers are heavily darkened; each disc's back arc picks up a self-shadow."
