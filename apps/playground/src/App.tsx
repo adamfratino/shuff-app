@@ -1,11 +1,11 @@
+import { Diagram } from "@shuff/diagram";
 import {
-  Diagram,
   type Disc,
   occlusion,
   type Point,
   score,
   scoringZone,
-} from "@shuff/diagram";
+} from "@shuff/core";
 
 const YELLOW = "#f5c518";
 const BLACK = "#1a1a1a";

@@ -1,13 +1,17 @@
 import { useId, type CSSProperties, type ReactNode } from "react";
 import {
+  activeScoringZones,
+  type Disc,
   DISC_RADIUS,
   FULL_COURT_LENGTH,
   HALF_COURT_LENGTH,
   HALF_COURT_WIDTH,
-} from "./constants";
-import { shadowPolygon } from "./geometry";
-import type { Disc, DiagramProps, Point } from "./types";
-import { activeScoringZones, scoringZone, type ScoringZone } from "./zones";
+  type Point,
+  type ScoringZone,
+  scoringZone,
+  shadowPolygon,
+} from "@shuff/core";
+import type { DiagramProps } from "./types";
 
 const DEFAULT_STYLES = `
   .shuff-court              { fill: #e8e4d8; stroke: none; }

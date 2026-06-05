@@ -17,6 +17,9 @@ importers:
 
   apps/playground:
     dependencies:
+      '@shuff/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@shuff/diagram':
         specifier: workspace:*
         version: link:../../packages/diagram
@@ -46,8 +49,23 @@ importers:
         specifier: ^6.0.7
         version: 6.4.3(@types/node@22.19.19)
 
+  packages/core:
+    devDependencies:
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.5
+        version: 3.2.6(@types/node@22.19.19)
+
   packages/diagram:
     devDependencies:
+      '@shuff/core':
+        specifier: workspace:*
+        version: link:../core
       '@types/react':
         specifier: ^19.0.2
         version: 19.2.16
@@ -60,9 +78,6 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
-      vitest:
-        specifier: ^3.0.5
-        version: 3.2.6(@types/node@22.19.19)
 
 packages:
 

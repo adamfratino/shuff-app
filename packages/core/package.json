@@ -1,7 +1,8 @@
 {
-  "name": "@shuff/diagram",
+  "name": "@shuff/core",
   "version": "0.0.0",
-  "description": "Shuffleboard half-court diagram primitive — renders a court with discs at given coordinates.",
+  "description": "Pure geometry, scoring, and rules math for shuffleboard. Framework-agnostic, zero runtime dependencies.",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -13,21 +14,17 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "README.md", "LICENSE"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
-  "peerDependencies": {
-    "@shuff/core": "workspace:*",
-    "react": ">=18"
-  },
   "devDependencies": {
-    "@shuff/core": "workspace:*",
-    "@types/react": "^19.0.2",
-    "react": "^19.0.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
   }
 }

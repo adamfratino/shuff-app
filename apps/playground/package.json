@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@shuff/core": "workspace:*",
     "@shuff/diagram": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
