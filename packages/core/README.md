@@ -34,7 +34,8 @@ const result = occlusion(shooter, target, others);
 ## Modules
 
 - **Constants** (`DISC_DIAMETER`, `DISC_RADIUS`, `HALF_COURT_WIDTH`, `HALF_COURT_LENGTH`, `FULL_COURT_LENGTH`, `APEX`, `LAG_LINE_Y`, `KITCHEN_DEPTH`) — ILSA half-court dimensions in inches.
-- **Zones** (`zoneAt`, `scoringZone`, `score`, `scoreValue`, `isScoringZone`, `isAlive`, `activeScoringZones`, `SCORING_CLEARANCE`, `LINE_WIDTH`) — point/disc classification and scoring per ILSA 1.3.1.
+- **Zones** (`zoneAt`, `scoringZone`, `score`, `frameScore`, `scoreValue`, `isScoringZone`, `isAlive`, `activeScoringZones`, `SCORING_CLEARANCE`, `LINE_WIDTH`) — point/disc classification and scoring per ILSA 1.3.1.
+- **Spatial** (`distance`, `closestToApex`, `discsTouching`, `mirrorEnd`, `mirrorSide`) — basic primitives and coordinate transforms.
 - **Geometry** (`occlusion`, `isOccluded`, `findBlockers`, `tangentPoints`, `shadowPolygon`) — line-of-sight math from any viewpoint.
 - **Types** (`Disc`, `Point`, `Zone`, `ScoringZone`, `OcclusionResult`) — shared data shapes.
 

@@ -11,6 +11,7 @@ export {
 } from "./constants";
 export {
   activeScoringZones,
+  frameScore,
   isAlive,
   isScoringZone,
   LINE_WIDTH,
@@ -29,3 +30,10 @@ export {
   tangentPoints,
 } from "./geometry";
 export type { OcclusionResult } from "./geometry";
+export {
+  closestToApex,
+  discsTouching,
+  distance,
+  mirrorEnd,
+  mirrorSide,
+} from "./spatial";

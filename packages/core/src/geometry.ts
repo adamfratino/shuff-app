@@ -1,4 +1,5 @@
 import { DISC_DIAMETER, DISC_RADIUS } from "./constants";
+import { distance } from "./spatial";
 import type { Disc, Point } from "./types";
 
 /**
@@ -6,12 +7,6 @@ import type { Disc, Point } from "./types";
  * Larger than any half-court dimension so SVG viewBoxes naturally clip.
  */
 const SHADOW_FAR_DISTANCE = 1000;
-
-function distance(a: Point, b: Point): number {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
-  return Math.sqrt(dx * dx + dy * dy);
-}
 
 function angle(from: Point, to: Point): number {
   return Math.atan2(to.y - from.y, to.x - from.x);

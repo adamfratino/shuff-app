@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { APEX, KITCHEN_DEPTH, LAG_LINE_Y } from "./constants";
 import {
   activeScoringZones,
+  frameScore,
   isAlive,
   SCORING_CLEARANCE,
   score,
@@ -216,6 +217,53 @@ describe("corner discs — every scoring zone corner just barely scores", () => 
     ["10 near-apex", 36, 114.8, "10"],
   ])("%s scores %s", (_label, x, y, expected) => {
     expect(scoringZone({ x, y, color: "y" })).toBe(expected);
+  });
+});
+
+describe("frameScore — per-color totals", () => {
+  it("sums scoring discs by color", () => {
+    const discs = [
+      { x: 36, y: 108, color: "yellow" }, // +10 yellow
+      { x: 28, y: 72, color: "yellow" }, //  +8 yellow
+      { x: 46, y: 72, color: "black" }, //  +8 black
+      { x: 22, y: 10, color: "black" }, // -10 black (kitchen)
+    ];
+    const totals = frameScore(discs);
+    expect(totals.get("yellow")).toBe(18);
+    expect(totals.get("black")).toBe(-2);
+  });
+
+  it("returns 0 for a color whose discs are all non-scoring", () => {
+    const discs = [
+      { x: 36, y: 36, color: "yellow" }, // on centerline — no score
+      { x: 36, y: 140, color: "yellow" }, // buffer — no score
+    ];
+    expect(frameScore(discs).get("yellow")).toBe(0);
+  });
+
+  it("returns an empty map for no discs", () => {
+    expect(frameScore([]).size).toBe(0);
+  });
+
+  it("does not cancel scores between colors", () => {
+    // Two opposing discs both in 8 zones — both should score 8.
+    const discs = [
+      { x: 28, y: 72, color: "yellow" }, // 8-left
+      { x: 46, y: 72, color: "black" }, // 8-right
+    ];
+    const totals = frameScore(discs);
+    expect(totals.get("yellow")).toBe(8);
+    expect(totals.get("black")).toBe(8);
+  });
+
+  it("is color-agnostic — keys are whatever strings appear", () => {
+    const discs = [
+      { x: 36, y: 108, color: "#f5c518" }, // +10
+      { x: 28, y: 72, color: "team-1" }, // +8
+    ];
+    const totals = frameScore(discs);
+    expect(totals.get("#f5c518")).toBe(10);
+    expect(totals.get("team-1")).toBe(8);
   });
 });
 

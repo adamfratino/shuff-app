@@ -153,6 +153,26 @@ export function activeScoringZones(
   return counts;
 }
 
+/**
+ * Per-color total for a single frame. Sums `score(disc)` across all discs,
+ * grouped by their `color` string. ILSA scoring does not cancel between
+ * sides — both colors can score in the same frame.
+ *
+ * Color-agnostic: keys are whatever strings appear in `disc.color`. The
+ * returned map only includes colors with at least one disc; a color with
+ * all non-scoring discs is included with a value of `0`.
+ *
+ * Discs in the kitchen contribute `-10` to their color's total per ILSA
+ * 1.3.1; discs outside any scoring zone contribute `0`.
+ */
+export function frameScore(discs: readonly Disc[]): Map<string, number> {
+  const totals = new Map<string, number>();
+  for (const disc of discs) {
+    totals.set(disc.color, (totals.get(disc.color) ?? 0) + score(disc));
+  }
+  return totals;
+}
+
 // ----- internal clearance checks -------------------------------------------
 // Triangle edges:
 //   Left edge from (0, 18) → (36, 126): 3x − y + 18 = 0. Inside: 3x − y + 18 > 0.
