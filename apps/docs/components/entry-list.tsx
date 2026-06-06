@@ -1,4 +1,4 @@
-import { Stack, CodeInline, Text } from "@uiid/design-system";
+import { Box, Stack, CodeInline, Text } from "@uiid/design-system";
 import type { DocEntry, EntryKind } from "../lib/docs";
 import { groupByKind, KIND_ORDER } from "../lib/docs";
 import { Comment } from "./comment";
@@ -15,12 +15,11 @@ const KIND_LABEL: Record<EntryKind, string> = {
 
 function EntryBlock({ entry }: { entry: DocEntry }) {
   return (
-    <section
+    <Box
       id={entry.slug}
-      style={{
-        padding: "1rem 0",
-        borderBottom: "1px solid var(--shade-accent, #eee)",
-      }}
+      render={<section />}
+      py={3}
+      bb={1}
     >
       <Stack gap={2}>
         <Text size={2} weight="bold" family="mono">
@@ -40,19 +39,22 @@ function EntryBlock({ entry }: { entry: DocEntry }) {
           </Text>
         )}
         {entry.sourceUrl && (
-          <Text size={-1} shade="halftone">
-            <a
-              href={entry.sourceUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              style={{ color: "inherit" }}
-            >
-              source
-            </a>
+          <Text
+            size={-1}
+            shade="halftone"
+            render={
+              <a
+                href={entry.sourceUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+              />
+            }
+          >
+            source
           </Text>
         )}
       </Stack>
-    </section>
+    </Box>
   );
 }
 

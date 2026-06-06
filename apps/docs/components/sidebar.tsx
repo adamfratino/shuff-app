@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Stack, Text } from "@uiid/design-system";
+import { List, Stack, Text } from "@uiid/design-system";
 import { allDocs, groupByKind, KIND_ORDER } from "../lib/docs";
 
 const ROUTE_BY_PKG: Record<string, string> = {
@@ -18,7 +18,7 @@ export function Sidebar() {
           const route = ROUTE_BY_PKG[pkg.pkg] ?? "/";
           const groups = groupByKind(pkg.entries);
           return (
-            <Stack key={pkg.pkg} gap={8}>
+            <Stack key={pkg.pkg} gap={3}>
               <Link href={route}>
                 <Text size={0} weight="bold" family="mono">
                   {pkg.pkg}
@@ -32,17 +32,20 @@ export function Sidebar() {
                     <Text size={-1} shade="muted">
                       {kind}
                     </Text>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                      {items.map((entry) => (
-                        <li key={entry.slug} style={{ padding: "2px 0" }}>
+                    <List
+                      type="none"
+                      size="small"
+                      items={items.map((entry) => ({
+                        value: entry.slug,
+                        label: (
                           <Link href={`${route}#${entry.slug}`}>
                             <Text size={0} family="mono">
                               {entry.name}
                             </Text>
                           </Link>
-                        </li>
-                      ))}
-                    </ul>
+                        ),
+                      }))}
+                    />
                   </Stack>
                 );
               })}
