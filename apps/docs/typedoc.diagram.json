@@ -1,0 +1,11 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["../../packages/diagram/src/index.ts"],
+  "tsconfig": "../../packages/diagram/tsconfig.json",
+  "json": ".docs-cache/diagram.json",
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "skipErrorChecking": true,
+  "logLevel": "Warn"
+}

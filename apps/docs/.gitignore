@@ -1,0 +1,4 @@
+.next/
+node_modules/
+.docs-cache/
+next-env.d.ts
