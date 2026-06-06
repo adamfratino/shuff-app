@@ -2,6 +2,8 @@ import { Stack, CodeInline, Text } from "@uiid/design-system";
 import type { DocEntry, EntryKind } from "../lib/docs";
 import { groupByKind, KIND_ORDER } from "../lib/docs";
 import { Comment } from "./comment";
+import { ParamsTable } from "./params-table";
+import { Signature } from "./signature";
 
 const KIND_LABEL: Record<EntryKind, string> = {
   function: "Functions",
@@ -21,11 +23,19 @@ function EntryBlock({ entry }: { entry: DocEntry }) {
       }}
     >
       <Stack gap={2}>
-        <Text size={2} weight="bold" mono>
+        <Text size={2} weight="bold" family="mono">
           {entry.name}
         </Text>
-        {entry.signature && <CodeInline>{entry.signature}</CodeInline>}
+        {entry.signature && <Signature code={entry.signature} />}
         <Comment parts={entry.description} />
+        {entry.kind === "function" && entry.parameters.length > 0 && (
+          <ParamsTable params={entry.parameters} />
+        )}
+        {entry.kind === "function" && entry.returnType && (
+          <Text size={-1} shade="muted">
+            Returns <CodeInline>{entry.returnType}</CodeInline>
+          </Text>
+        )}
       </Stack>
     </section>
   );

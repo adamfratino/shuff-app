@@ -11,6 +11,7 @@ type TypeDocParam = {
   name: string;
   type?: unknown;
   comment?: TypeDocComment;
+  flags?: { isOptional?: boolean };
 };
 
 type TypeDocSignature = {
@@ -37,12 +38,21 @@ type TypeDocProject = {
 
 export type EntryKind = "function" | "variable" | "type" | "interface" | "other";
 
+export type DocParam = {
+  name: string;
+  type: string;
+  description: CommentPart[];
+  optional: boolean;
+};
+
 export type DocEntry = {
   slug: string;
   name: string;
   kind: EntryKind;
   description: CommentPart[];
   signature?: string;
+  parameters: DocParam[];
+  returnType?: string;
 };
 
 export type DocsManifest = {
@@ -69,7 +79,8 @@ function renderType(type: unknown): string {
       const args = Array.isArray(t.typeArguments)
         ? `<${(t.typeArguments as unknown[]).map(renderType).join(", ")}>`
         : "";
-      return `${t.name ?? ""}${args}`;
+      const name = String((t as { name?: string }).name ?? "");
+      return `${name}${args}`;
     }
     case "array":
       return `${renderType(t.elementType)}[]`;
@@ -79,20 +90,26 @@ function renderType(type: unknown): string {
       return ((t.types as unknown[]) ?? []).map(renderType).join(" & ");
     case "tuple":
       return `[${((t.elements as unknown[]) ?? []).map(renderType).join(", ")}]`;
+    case "typeOperator":
+      return `${String(t.operator ?? "")} ${renderType(t.target)}`;
     case "reflection":
       return "object";
+    case "indexedAccess":
+      return `${renderType(t.objectType)}[${renderType(t.indexType)}]`;
+    case "predicate":
+      return `${String(t.name ?? "")} is ${renderType(t.targetType)}`;
     default:
       return String(t.name ?? "");
   }
 }
 
-function buildSignature(child: TypeDocChild): string | undefined {
-  const sig = child.signatures?.[0];
+function buildSignature(sig: TypeDocSignature | undefined): string | undefined {
   if (!sig) return undefined;
   const params = (sig.parameters ?? [])
     .map((p) => {
       const ty = renderType(p.type);
-      return ty ? `${p.name}: ${ty}` : p.name;
+      const optional = p.flags?.isOptional ? "?" : "";
+      return ty ? `${p.name}${optional}: ${ty}` : `${p.name}${optional}`;
     })
     .join(", ");
   const ret = renderType(sig.type);
@@ -101,13 +118,22 @@ function buildSignature(child: TypeDocChild): string | undefined {
 
 function toEntry(child: TypeDocChild): DocEntry {
   const kind = KIND_MAP[child.kind] ?? "other";
-  const comment = child.signatures?.[0]?.comment ?? child.comment;
+  const sig = child.signatures?.[0];
+  const comment = sig?.comment ?? child.comment;
+  const parameters: DocParam[] = (sig?.parameters ?? []).map((p) => ({
+    name: p.name,
+    type: renderType(p.type),
+    description: p.comment?.summary ?? [],
+    optional: Boolean(p.flags?.isOptional),
+  }));
   return {
     slug: child.name,
     name: child.name,
     kind,
     description: comment?.summary ?? [],
-    signature: buildSignature(child),
+    signature: buildSignature(sig),
+    parameters,
+    returnType: sig ? renderType(sig.type) : undefined,
   };
 }
 

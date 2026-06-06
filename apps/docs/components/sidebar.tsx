@@ -9,16 +9,8 @@ const ROUTE_BY_PKG: Record<string, string> = {
 
 export function Sidebar() {
   return (
-    <aside
-      style={{
-        width: 240,
-        minHeight: "100vh",
-        padding: "1.5rem 1rem",
-        borderRight: "1px solid var(--shade-accent, #ccc)",
-        flexShrink: 0,
-      }}
-    >
-      <Stack gap={4}>
+    <aside data-slot="sidebar">
+      <Stack gap={4} maxw={240} p={8} br={1} fullheight>
         <Text size={1} weight="bold">
           shuff docs
         </Text>
@@ -26,9 +18,9 @@ export function Sidebar() {
           const route = ROUTE_BY_PKG[pkg.pkg] ?? "/";
           const groups = groupByKind(pkg.entries);
           return (
-            <Stack key={pkg.pkg} gap={2}>
-              <Link href={route} style={{ textDecoration: "none" }}>
-                <Text size={0} weight="bold" mono>
+            <Stack key={pkg.pkg} gap={8}>
+              <Link href={route}>
+                <Text size={0} weight="bold" family="mono">
                   {pkg.pkg}
                 </Text>
               </Link>
@@ -43,11 +35,8 @@ export function Sidebar() {
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                       {items.map((entry) => (
                         <li key={entry.slug} style={{ padding: "2px 0" }}>
-                          <Link
-                            href={`${route}#${entry.slug}`}
-                            style={{ textDecoration: "none" }}
-                          >
-                            <Text size={0} mono>
+                          <Link href={`${route}#${entry.slug}`}>
+                            <Text size={0} family="mono">
                               {entry.name}
                             </Text>
                           </Link>

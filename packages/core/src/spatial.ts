@@ -12,7 +12,7 @@ import type { Disc, Point } from "./types";
 export function distance(a: Point, b: Point): number {
   const dx = a.x - b.x;
   const dy = a.y - b.y;
-  return Math.sqrt(dx * dx + dy * dy);
+  return Math.hypot(dx, dy);
 }
 
 /**
@@ -33,7 +33,7 @@ export function closestToApex(discs: readonly Disc[]): Disc | null {
 }
 
 /**
- * True iff two discs are in contact — center-to-center distance ≤ disc
+ * True if two discs are in contact — center-to-center distance ≤ disc
  * diameter (`2 * DISC_RADIUS`). Real-world discs cannot overlap, so this
  * also serves as a proxy for "stacked" / "mounted" when paired with z-order.
  */

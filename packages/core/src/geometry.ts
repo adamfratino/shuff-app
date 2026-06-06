@@ -75,7 +75,7 @@ export function findBlockers(
 }
 
 /**
- * True iff at least one disc in `blockers` occludes the target from the
+ * True if at least one disc in `blockers` occludes the target from the
  * shooter's viewpoint. Equivalent to `findBlockers(...).length > 0` but
  * short-circuits on first hit.
  */
@@ -243,7 +243,12 @@ export function shadowPolygon(
   const tangents = tangentPoints(viewpoint, center, radius);
   if (!tangents) return null;
   const [t1, t2] = tangents;
-  return [t1, extend(viewpoint, t1, farDistance), extend(viewpoint, t2, farDistance), t2];
+  return [
+    t1,
+    extend(viewpoint, t1, farDistance),
+    extend(viewpoint, t2, farDistance),
+    t2,
+  ];
 }
 
 function extend(from: Point, through: Point, distance: number): Point {
