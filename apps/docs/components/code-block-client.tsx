@@ -11,12 +11,5 @@ export function CodeBlockClient({
   language: "typescript" | "tsx";
   html: string;
 }) {
-  return (
-    <CodeBlock
-      code={code}
-      language={language}
-      html={html}
-      copyable
-    />
-  );
+  return <CodeBlock code={code} language={language} html={html} copyable />;
 }
