@@ -154,20 +154,40 @@ function buildAliasMap(projects: readonly TypeDocProject[]): AliasMap {
   return map;
 }
 
+const SIGNATURE_WRAP_AT = 80;
+
 function buildSignature(
   sig: TypeDocSignature | undefined,
   aliases: AliasMap,
 ): string | undefined {
   if (!sig) return undefined;
-  const params = (sig.parameters ?? [])
-    .map((p) => {
-      const ty = renderType(p.type, aliases);
-      const optional = p.flags?.isOptional ? "?" : "";
-      return ty ? `${p.name}${optional}: ${ty}` : `${p.name}${optional}`;
-    })
-    .join(", ");
+  const params = (sig.parameters ?? []).map((p) => {
+    const ty = renderType(p.type, aliases);
+    const optional = p.flags?.isOptional ? "?" : "";
+    return ty ? `${p.name}${optional}: ${ty}` : `${p.name}${optional}`;
+  });
   const ret = renderType(sig.type, aliases);
-  return `${sig.name}(${params})${ret ? `: ${ret}` : ""}`;
+  const retSuffix = ret ? `: ${ret}` : "";
+  const oneLine = `${sig.name}(${params.join(", ")})${retSuffix}`;
+  if (oneLine.length <= SIGNATURE_WRAP_AT) return oneLine;
+  return `${sig.name}(\n  ${params.join(",\n  ")},\n)${retSuffix}`;
+}
+
+function formatAliasShape(name: string, shape: string): string {
+  const decl = `type ${name} = ${shape}`;
+  if (decl.length <= SIGNATURE_WRAP_AT) return decl;
+  // Object literals: break on every `;` so each property gets its own line.
+  if (shape.startsWith("{ ") && shape.endsWith(" }")) {
+    const inner = shape.slice(2, -2);
+    const props = inner.split("; ").filter(Boolean);
+    return `type ${name} = {\n  ${props.join(";\n  ")};\n}`;
+  }
+  // Unions: break on every ` | `.
+  if (shape.includes(" | ")) {
+    const parts = shape.split(" | ");
+    return `type ${name} =\n  | ${parts.join("\n  | ")}`;
+  }
+  return decl;
 }
 
 function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
@@ -188,7 +208,13 @@ function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
     signature: buildSignature(sig, aliases),
     parameters,
     returnType: sig ? renderType(sig.type, aliases) : undefined,
-    shape: kind === "type" ? aliasShape(child) : undefined,
+    shape:
+      kind === "type"
+        ? (() => {
+            const raw = aliasShape(child);
+            return raw ? formatAliasShape(child.name, raw) : undefined;
+          })()
+        : undefined,
     sourceUrl: child.sources?.[0]?.url,
   };
 }

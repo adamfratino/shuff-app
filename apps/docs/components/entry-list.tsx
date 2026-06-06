@@ -27,7 +27,7 @@ function EntryBlock({ entry }: { entry: DocEntry }) {
         </Text>
         {entry.signature && <Signature code={entry.signature} />}
         {entry.kind === "type" && entry.shape && (
-          <Signature code={`type ${entry.name} = ${entry.shape}`} />
+          <Signature code={entry.shape} />
         )}
         <Comment parts={entry.description} />
         {entry.kind === "function" && entry.parameters.length > 0 && (

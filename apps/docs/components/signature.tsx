@@ -1,5 +1,5 @@
 import { codeToHtml } from "shiki";
-import { CodeBlockContent } from "@uiid/design-system";
+import { CodeBlockClient } from "./code-block-client";
 
 export async function Signature({
   code,
@@ -12,5 +12,5 @@ export async function Signature({
     lang: language,
     theme: "github-light",
   });
-  return <CodeBlockContent html={html} />;
+  return <CodeBlockClient code={code} language={language} html={html} />;
 }

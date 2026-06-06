@@ -22,7 +22,7 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <Group data-slot="layout-body" render={<body />} m={0}>
+      <Group data-slot="layout-body" render={<body />} m={0} fullscreen>
         <Sidebar />
         <main>{children}</main>
       </Group>
