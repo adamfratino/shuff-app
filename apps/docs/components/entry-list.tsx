@@ -27,6 +27,9 @@ function EntryBlock({ entry }: { entry: DocEntry }) {
           {entry.name}
         </Text>
         {entry.signature && <Signature code={entry.signature} />}
+        {entry.kind === "type" && entry.shape && (
+          <Signature code={`type ${entry.name} = ${entry.shape}`} />
+        )}
         <Comment parts={entry.description} />
         {entry.kind === "function" && entry.parameters.length > 0 && (
           <ParamsTable params={entry.parameters} />
@@ -34,6 +37,18 @@ function EntryBlock({ entry }: { entry: DocEntry }) {
         {entry.kind === "function" && entry.returnType && (
           <Text size={-1} shade="muted">
             Returns <CodeInline>{entry.returnType}</CodeInline>
+          </Text>
+        )}
+        {entry.sourceUrl && (
+          <Text size={-1} shade="halftone">
+            <a
+              href={entry.sourceUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              style={{ color: "inherit" }}
+            >
+              source
+            </a>
           </Text>
         )}
       </Stack>

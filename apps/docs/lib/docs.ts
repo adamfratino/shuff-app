@@ -7,6 +7,12 @@ type TypeDocComment = {
   summary?: CommentPart[];
 };
 
+type TypeDocSource = {
+  fileName?: string;
+  line?: number;
+  url?: string;
+};
+
 type TypeDocParam = {
   name: string;
   type?: unknown;
@@ -29,6 +35,9 @@ type TypeDocChild = {
   comment?: TypeDocComment;
   type?: unknown;
   defaultValue?: string;
+  children?: TypeDocChild[];
+  flags?: { isOptional?: boolean };
+  sources?: TypeDocSource[];
 };
 
 type TypeDocProject = {
@@ -53,6 +62,8 @@ export type DocEntry = {
   signature?: string;
   parameters: DocParam[];
   returnType?: string;
+  shape?: string;
+  sourceUrl?: string;
 };
 
 export type DocsManifest = {
@@ -67,7 +78,9 @@ const KIND_MAP: Record<number, EntryKind> = {
   2097152: "type",
 };
 
-function renderType(type: unknown): string {
+type AliasMap = Map<string, string>;
+
+function renderType(type: unknown, aliases: AliasMap | null): string {
   if (!type || typeof type !== "object") return "";
   const t = type as Record<string, unknown>;
   switch (t.type) {
@@ -76,53 +89,94 @@ function renderType(type: unknown): string {
     case "literal":
       return JSON.stringify(t.value);
     case "reference": {
-      const args = Array.isArray(t.typeArguments)
-        ? `<${(t.typeArguments as unknown[]).map(renderType).join(", ")}>`
-        : "";
       const name = String((t as { name?: string }).name ?? "");
+      if (aliases?.has(name)) return aliases.get(name)!;
+      const args = Array.isArray(t.typeArguments)
+        ? `<${(t.typeArguments as unknown[])
+            .map((a) => renderType(a, aliases))
+            .join(", ")}>`
+        : "";
       return `${name}${args}`;
     }
     case "array":
-      return `${renderType(t.elementType)}[]`;
+      return `${renderType(t.elementType, aliases)}[]`;
     case "union":
-      return ((t.types as unknown[]) ?? []).map(renderType).join(" | ");
+      return ((t.types as unknown[]) ?? [])
+        .map((x) => renderType(x, aliases))
+        .join(" | ");
     case "intersection":
-      return ((t.types as unknown[]) ?? []).map(renderType).join(" & ");
+      return ((t.types as unknown[]) ?? [])
+        .map((x) => renderType(x, aliases))
+        .join(" & ");
     case "tuple":
-      return `[${((t.elements as unknown[]) ?? []).map(renderType).join(", ")}]`;
+      return `[${((t.elements as unknown[]) ?? [])
+        .map((x) => renderType(x, aliases))
+        .join(", ")}]`;
     case "typeOperator":
-      return `${String(t.operator ?? "")} ${renderType(t.target)}`;
+      return `${String(t.operator ?? "")} ${renderType(t.target, aliases)}`;
+    case "indexedAccess":
+      return `${renderType(t.objectType, aliases)}[${renderType(t.indexType, aliases)}]`;
+    case "predicate":
+      return `${String(t.name ?? "")} is ${renderType(t.targetType, aliases)}`;
     case "reflection":
       return "object";
-    case "indexedAccess":
-      return `${renderType(t.objectType)}[${renderType(t.indexType)}]`;
-    case "predicate":
-      return `${String(t.name ?? "")} is ${renderType(t.targetType)}`;
     default:
       return String(t.name ?? "");
   }
 }
 
-function buildSignature(sig: TypeDocSignature | undefined): string | undefined {
+function renderObjectShape(
+  children: readonly TypeDocChild[],
+  aliases: AliasMap | null,
+): string {
+  const props = children.map((c) => {
+    const optional = c.flags?.isOptional ? "?" : "";
+    return `${c.name}${optional}: ${renderType(c.type, aliases)}`;
+  });
+  return `{ ${props.join("; ")} }`;
+}
+
+function aliasShape(child: TypeDocChild): string | undefined {
+  if (child.children?.length) return renderObjectShape(child.children, null);
+  if (child.type) return renderType(child.type, null);
+  return undefined;
+}
+
+function buildAliasMap(projects: readonly TypeDocProject[]): AliasMap {
+  const map: AliasMap = new Map();
+  for (const project of projects) {
+    for (const child of project.children ?? []) {
+      if (child.kind !== 2097152) continue;
+      const shape = aliasShape(child);
+      if (shape) map.set(child.name, shape);
+    }
+  }
+  return map;
+}
+
+function buildSignature(
+  sig: TypeDocSignature | undefined,
+  aliases: AliasMap,
+): string | undefined {
   if (!sig) return undefined;
   const params = (sig.parameters ?? [])
     .map((p) => {
-      const ty = renderType(p.type);
+      const ty = renderType(p.type, aliases);
       const optional = p.flags?.isOptional ? "?" : "";
       return ty ? `${p.name}${optional}: ${ty}` : `${p.name}${optional}`;
     })
     .join(", ");
-  const ret = renderType(sig.type);
+  const ret = renderType(sig.type, aliases);
   return `${sig.name}(${params})${ret ? `: ${ret}` : ""}`;
 }
 
-function toEntry(child: TypeDocChild): DocEntry {
+function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
   const kind = KIND_MAP[child.kind] ?? "other";
   const sig = child.signatures?.[0];
   const comment = sig?.comment ?? child.comment;
   const parameters: DocParam[] = (sig?.parameters ?? []).map((p) => ({
     name: p.name,
-    type: renderType(p.type),
+    type: renderType(p.type, aliases),
     description: p.comment?.summary ?? [],
     optional: Boolean(p.flags?.isOptional),
   }));
@@ -131,21 +185,28 @@ function toEntry(child: TypeDocChild): DocEntry {
     name: child.name,
     kind,
     description: comment?.summary ?? [],
-    signature: buildSignature(sig),
+    signature: buildSignature(sig, aliases),
     parameters,
-    returnType: sig ? renderType(sig.type) : undefined,
+    returnType: sig ? renderType(sig.type, aliases) : undefined,
+    shape: kind === "type" ? aliasShape(child) : undefined,
+    sourceUrl: child.sources?.[0]?.url,
   };
 }
 
-function loadManifest(project: TypeDocProject): DocsManifest {
+function loadManifest(
+  project: TypeDocProject,
+  aliases: AliasMap,
+): DocsManifest {
   return {
     pkg: project.name,
-    entries: (project.children ?? []).map(toEntry),
+    entries: (project.children ?? []).map((c) => toEntry(c, aliases)),
   };
 }
 
-export const coreDocs: DocsManifest = loadManifest(core as TypeDocProject);
-export const diagramDocs: DocsManifest = loadManifest(diagram as TypeDocProject);
+const aliasMap = buildAliasMap([core as TypeDocProject, diagram as TypeDocProject]);
+
+export const coreDocs: DocsManifest = loadManifest(core as TypeDocProject, aliasMap);
+export const diagramDocs: DocsManifest = loadManifest(diagram as TypeDocProject, aliasMap);
 
 export const allDocs: readonly DocsManifest[] = [coreDocs, diagramDocs];
 
