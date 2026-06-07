@@ -1,16 +1,13 @@
-import { codeToHtml } from "shiki";
-import { CodeBlockClient } from "./code-block-client";
+"use client";
 
-export async function Signature({
+import { CodeBlock } from "@uiid/design-system";
+
+export function Signature({
   code,
   language = "typescript",
 }: {
   code: string;
   language?: "typescript" | "tsx";
 }) {
-  const html = await codeToHtml(code, {
-    lang: language,
-    theme: "github-light",
-  });
-  return <CodeBlockClient code={code} language={language} html={html} />;
+  return <CodeBlock code={code} language={language} copyable />;
 }

@@ -15,46 +15,46 @@ const KIND_LABEL: Record<EntryKind, string> = {
 
 function EntryBlock({ entry }: { entry: DocEntry }) {
   return (
-    <Box
-      id={entry.slug}
+    <Stack
+      data-slot="entry-block"
       render={<section />}
+      id={entry.slug}
+      ax="stretch"
       py={3}
       bb={1}
+      gap={4}
+      fullwidth
     >
-      <Stack gap={2}>
-        <Text size={2} weight="bold" family="mono">
-          {entry.name}
+      <Text size={2} weight="bold" family="mono">
+        {entry.name}
+      </Text>
+      <Comment parts={entry.description} />
+      {entry.signature && <Signature code={entry.signature} />}
+      {entry.kind === "type" && entry.shape && <Signature code={entry.shape} />}
+      {entry.kind === "function" && entry.parameters.length > 0 && (
+        <ParamsTable params={entry.parameters} />
+      )}
+      {entry.kind === "function" && entry.returnType && (
+        <Text size={-1} shade="muted">
+          Returns <CodeInline>{entry.returnType}</CodeInline>
         </Text>
-        {entry.signature && <Signature code={entry.signature} />}
-        {entry.kind === "type" && entry.shape && (
-          <Signature code={entry.shape} />
-        )}
-        <Comment parts={entry.description} />
-        {entry.kind === "function" && entry.parameters.length > 0 && (
-          <ParamsTable params={entry.parameters} />
-        )}
-        {entry.kind === "function" && entry.returnType && (
-          <Text size={-1} shade="muted">
-            Returns <CodeInline>{entry.returnType}</CodeInline>
-          </Text>
-        )}
-        {entry.sourceUrl && (
-          <Text
-            size={-1}
-            shade="halftone"
-            render={
-              <a
-                href={entry.sourceUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-              />
-            }
-          >
-            source
-          </Text>
-        )}
-      </Stack>
-    </Box>
+      )}
+      {entry.sourceUrl && (
+        <Text
+          size={-1}
+          shade="halftone"
+          render={
+            <a
+              href={entry.sourceUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+            />
+          }
+        >
+          source
+        </Text>
+      )}
+    </Stack>
   );
 }
 
