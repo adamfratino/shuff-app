@@ -47,13 +47,9 @@ type TypeDocProject = {
 
 export type EntryKind = "function" | "variable" | "type" | "interface" | "other";
 
-export type SigToken =
-  | { kind: "text"; value: string }
-  | { kind: "ref"; name: string; shape: string };
-
 export type DocParam = {
   name: string;
-  typeTokens: SigToken[];
+  type: string;
   description: CommentPart[];
   optional: boolean;
 };
@@ -63,9 +59,9 @@ export type DocEntry = {
   name: string;
   kind: EntryKind;
   description: CommentPart[];
-  signatureTokens?: SigToken[];
+  signature?: string;
   parameters: DocParam[];
-  returnTokens?: SigToken[];
+  returnType?: string;
   shape?: string;
   sourceUrl?: string;
 };
@@ -82,177 +78,70 @@ const KIND_MAP: Record<number, EntryKind> = {
   2097152: "type",
 };
 
-type AliasMap = Map<string, string>;
-
-function tokensToString(tokens: readonly SigToken[]): string {
-  return tokens
-    .map((t) => (t.kind === "text" ? t.value : t.name))
-    .join("");
-}
-
-function renderTypeString(type: unknown, aliases: AliasMap | null): string {
-  return tokensToString(renderTypeTokens(type, aliases));
-}
-
-function joinTokens(
-  groups: readonly SigToken[][],
-  separator: string,
-): SigToken[] {
-  const out: SigToken[] = [];
-  groups.forEach((g, i) => {
-    if (i > 0) out.push({ kind: "text", value: separator });
-    out.push(...g);
-  });
-  return out;
-}
-
-function renderTypeTokens(
-  type: unknown,
-  aliases: AliasMap | null,
-): SigToken[] {
-  if (!type || typeof type !== "object") return [];
+function renderType(type: unknown): string {
+  if (!type || typeof type !== "object") return "";
   const t = type as Record<string, unknown>;
   switch (t.type) {
     case "intrinsic":
-      return [{ kind: "text", value: String(t.name ?? "") }];
+      return String(t.name ?? "");
     case "literal":
-      return [{ kind: "text", value: JSON.stringify(t.value) }];
+      return JSON.stringify(t.value);
     case "reference": {
       const name = String((t as { name?: string }).name ?? "");
-      const shape = aliases?.get(name);
-      const head: SigToken =
-        shape !== undefined
-          ? { kind: "ref", name, shape }
-          : { kind: "text", value: name };
-      if (Array.isArray(t.typeArguments)) {
-        const args = (t.typeArguments as unknown[]).map((a) =>
-          renderTypeTokens(a, aliases),
-        );
-        return [
-          head,
-          { kind: "text", value: "<" },
-          ...joinTokens(args, ", "),
-          { kind: "text", value: ">" },
-        ];
-      }
-      return [head];
+      const args = Array.isArray(t.typeArguments)
+        ? `<${(t.typeArguments as unknown[]).map(renderType).join(", ")}>`
+        : "";
+      return `${name}${args}`;
     }
     case "array":
-      return [
-        ...renderTypeTokens(t.elementType, aliases),
-        { kind: "text", value: "[]" },
-      ];
+      return `${renderType(t.elementType)}[]`;
     case "union":
-      return joinTokens(
-        ((t.types as unknown[]) ?? []).map((x) => renderTypeTokens(x, aliases)),
-        " | ",
-      );
+      return ((t.types as unknown[]) ?? []).map(renderType).join(" | ");
     case "intersection":
-      return joinTokens(
-        ((t.types as unknown[]) ?? []).map((x) => renderTypeTokens(x, aliases)),
-        " & ",
-      );
+      return ((t.types as unknown[]) ?? []).map(renderType).join(" & ");
     case "tuple":
-      return [
-        { kind: "text", value: "[" },
-        ...joinTokens(
-          ((t.elements as unknown[]) ?? []).map((x) =>
-            renderTypeTokens(x, aliases),
-          ),
-          ", ",
-        ),
-        { kind: "text", value: "]" },
-      ];
+      return `[${((t.elements as unknown[]) ?? []).map(renderType).join(", ")}]`;
     case "typeOperator":
-      return [
-        { kind: "text", value: `${String(t.operator ?? "")} ` },
-        ...renderTypeTokens(t.target, aliases),
-      ];
+      return `${String(t.operator ?? "")} ${renderType(t.target)}`;
     case "indexedAccess":
-      return [
-        ...renderTypeTokens(t.objectType, aliases),
-        { kind: "text", value: "[" },
-        ...renderTypeTokens(t.indexType, aliases),
-        { kind: "text", value: "]" },
-      ];
+      return `${renderType(t.objectType)}[${renderType(t.indexType)}]`;
     case "predicate":
-      return [
-        { kind: "text", value: `${String(t.name ?? "")} is ` },
-        ...renderTypeTokens(t.targetType, aliases),
-      ];
+      return `${String(t.name ?? "")} is ${renderType(t.targetType)}`;
     case "reflection":
-      return [{ kind: "text", value: "object" }];
+      return "object";
     default:
-      return [{ kind: "text", value: String(t.name ?? "") }];
+      return String(t.name ?? "");
   }
 }
 
-function renderObjectShape(
-  children: readonly TypeDocChild[],
-  aliases: AliasMap | null,
-): string {
+function renderObjectShape(children: readonly TypeDocChild[]): string {
   const props = children.map((c) => {
     const optional = c.flags?.isOptional ? "?" : "";
-    return `${c.name}${optional}: ${renderTypeString(c.type, aliases)}`;
+    return `${c.name}${optional}: ${renderType(c.type)}`;
   });
   return `{ ${props.join("; ")} }`;
 }
 
 function aliasShape(child: TypeDocChild): string | undefined {
-  if (child.children?.length) return renderObjectShape(child.children, null);
-  if (child.type) return renderTypeString(child.type, null);
+  if (child.children?.length) return renderObjectShape(child.children);
+  if (child.type) return renderType(child.type);
   return undefined;
-}
-
-function buildAliasMap(projects: readonly TypeDocProject[]): AliasMap {
-  const map: AliasMap = new Map();
-  for (const project of projects) {
-    for (const child of project.children ?? []) {
-      if (child.kind !== 2097152) continue;
-      const shape = aliasShape(child);
-      if (shape) map.set(child.name, shape);
-    }
-  }
-  return map;
 }
 
 const SIGNATURE_WRAP_AT = 80;
 
-function buildSignatureTokens(
-  sig: TypeDocSignature | undefined,
-  aliases: AliasMap,
-): SigToken[] | undefined {
+function buildSignature(sig: TypeDocSignature | undefined): string | undefined {
   if (!sig) return undefined;
-  const paramTokenGroups: SigToken[][] = (sig.parameters ?? []).map((p) => {
-    const typeTokens = renderTypeTokens(p.type, aliases);
+  const params = (sig.parameters ?? []).map((p) => {
+    const ty = renderType(p.type);
     const optional = p.flags?.isOptional ? "?" : "";
-    const head: SigToken = { kind: "text", value: `${p.name}${optional}: ` };
-    return typeTokens.length === 0 ? [head] : [head, ...typeTokens];
+    return ty ? `${p.name}${optional}: ${ty}` : `${p.name}${optional}`;
   });
-  const returnTokens = renderTypeTokens(sig.type, aliases);
-  const retSuffix: SigToken[] =
-    returnTokens.length === 0
-      ? []
-      : [{ kind: "text", value: ": " }, ...returnTokens];
-
-  const inlineParams = joinTokens(paramTokenGroups, ", ");
-  const inline: SigToken[] = [
-    { kind: "text", value: `${sig.name}(` },
-    ...inlineParams,
-    { kind: "text", value: ")" },
-    ...retSuffix,
-  ];
-  if (tokensToString(inline).length <= SIGNATURE_WRAP_AT) return inline;
-
-  const out: SigToken[] = [{ kind: "text", value: `${sig.name}(\n` }];
-  paramTokenGroups.forEach((g) => {
-    out.push({ kind: "text", value: "  " });
-    out.push(...g);
-    out.push({ kind: "text", value: ",\n" });
-  });
-  out.push({ kind: "text", value: ")" });
-  out.push(...retSuffix);
-  return out;
+  const ret = renderType(sig.type);
+  const retSuffix = ret ? `: ${ret}` : "";
+  const oneLine = `${sig.name}(${params.join(", ")})${retSuffix}`;
+  if (oneLine.length <= SIGNATURE_WRAP_AT) return oneLine;
+  return `${sig.name}(\n  ${params.join(",\n  ")},\n)${retSuffix}`;
 }
 
 function formatAliasShape(name: string, shape: string): string {
@@ -270,13 +159,13 @@ function formatAliasShape(name: string, shape: string): string {
   return decl;
 }
 
-function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
+function toEntry(child: TypeDocChild): DocEntry {
   const kind = KIND_MAP[child.kind] ?? "other";
   const sig = child.signatures?.[0];
   const comment = sig?.comment ?? child.comment;
   const parameters: DocParam[] = (sig?.parameters ?? []).map((p) => ({
     name: p.name,
-    typeTokens: renderTypeTokens(p.type, aliases),
+    type: renderType(p.type),
     description: p.comment?.summary ?? [],
     optional: Boolean(p.flags?.isOptional),
   }));
@@ -285,9 +174,9 @@ function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
     name: child.name,
     kind,
     description: comment?.summary ?? [],
-    signatureTokens: buildSignatureTokens(sig, aliases),
+    signature: buildSignature(sig),
     parameters,
-    returnTokens: sig ? renderTypeTokens(sig.type, aliases) : undefined,
+    returnType: sig ? renderType(sig.type) : undefined,
     shape:
       kind === "type"
         ? (() => {
@@ -299,20 +188,15 @@ function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
   };
 }
 
-function loadManifest(
-  project: TypeDocProject,
-  aliases: AliasMap,
-): DocsManifest {
+function loadManifest(project: TypeDocProject): DocsManifest {
   return {
     pkg: project.name,
-    entries: (project.children ?? []).map((c) => toEntry(c, aliases)),
+    entries: (project.children ?? []).map(toEntry),
   };
 }
 
-const aliasMap = buildAliasMap([core as TypeDocProject, diagram as TypeDocProject]);
-
-export const coreDocs: DocsManifest = loadManifest(core as TypeDocProject, aliasMap);
-export const diagramDocs: DocsManifest = loadManifest(diagram as TypeDocProject, aliasMap);
+export const coreDocs: DocsManifest = loadManifest(core as TypeDocProject);
+export const diagramDocs: DocsManifest = loadManifest(diagram as TypeDocProject);
 
 export const allDocs: readonly DocsManifest[] = [coreDocs, diagramDocs];
 
