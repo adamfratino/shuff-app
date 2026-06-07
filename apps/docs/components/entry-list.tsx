@@ -1,10 +1,9 @@
-import { Stack, Text } from "@uiid/design-system";
+import { CodeInline, Stack, Text } from "@uiid/design-system";
 import type { DocEntry, EntryKind } from "../lib/docs";
 import { groupByKind, KIND_ORDER } from "../lib/docs";
 import { Comment } from "./comment";
 import { ParamsTable } from "./params-table";
 import { Signature } from "./signature";
-import { TypeTokens } from "./type-tokens";
 
 const KIND_LABEL: Record<EntryKind, string> = {
   function: "Functions",
@@ -37,12 +36,9 @@ function EntryBlock({ entry }: { entry: DocEntry }) {
       {entry.kind === "function" && entry.parameters.length > 0 && (
         <ParamsTable params={entry.parameters} />
       )}
-      {entry.kind === "function" && entry.returnTokens.length > 0 && (
+      {entry.kind === "function" && entry.returnType && (
         <Text size={-1} shade="muted">
-          Returns{" "}
-          <Text size={0} family="mono" render={<span />}>
-            <TypeTokens tokens={entry.returnTokens} />
-          </Text>
+          Returns <CodeInline>{entry.returnType}</CodeInline>
         </Text>
       )}
       {entry.sourceUrl && (
