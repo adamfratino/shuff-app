@@ -1,5 +1,4 @@
 import {
-  CodeInline,
   TableBody,
   TableCell,
   TableHead,
@@ -10,6 +9,7 @@ import {
 } from "@uiid/design-system";
 import type { DocParam } from "../lib/docs";
 import { Comment } from "./comment";
+import { TypeTokens } from "./type-tokens";
 
 export function ParamsTable({ params }: { params: readonly DocParam[] }) {
   if (params.length === 0) return null;
@@ -47,7 +47,9 @@ export function ParamsTable({ params }: { params: readonly DocParam[] }) {
               </Text>
             </TableCell>
             <TableCell>
-              {p.type ? <CodeInline>{p.type}</CodeInline> : null}
+              <Text size={0} family="mono">
+                <TypeTokens tokens={p.typeTokens} />
+              </Text>
             </TableCell>
             {anyDescription && (
               <TableCell>

@@ -47,9 +47,13 @@ type TypeDocProject = {
 
 export type EntryKind = "function" | "variable" | "type" | "interface" | "other";
 
+export type SigToken =
+  | { kind: "text"; value: string }
+  | { kind: "ref"; name: string; shape: string };
+
 export type DocParam = {
   name: string;
-  type: string;
+  typeTokens: SigToken[];
   description: CommentPart[];
   optional: boolean;
 };
@@ -59,9 +63,9 @@ export type DocEntry = {
   name: string;
   kind: EntryKind;
   description: CommentPart[];
-  signature?: string;
+  signatureTokens?: SigToken[];
   parameters: DocParam[];
-  returnType?: string;
+  returnTokens?: SigToken[];
   shape?: string;
   sourceUrl?: string;
 };
@@ -80,48 +84,106 @@ const KIND_MAP: Record<number, EntryKind> = {
 
 type AliasMap = Map<string, string>;
 
-function renderType(type: unknown, aliases: AliasMap | null): string {
-  if (!type || typeof type !== "object") return "";
+function tokensToString(tokens: readonly SigToken[]): string {
+  return tokens
+    .map((t) => (t.kind === "text" ? t.value : t.name))
+    .join("");
+}
+
+function renderTypeString(type: unknown, aliases: AliasMap | null): string {
+  return tokensToString(renderTypeTokens(type, aliases));
+}
+
+function joinTokens(
+  groups: readonly SigToken[][],
+  separator: string,
+): SigToken[] {
+  const out: SigToken[] = [];
+  groups.forEach((g, i) => {
+    if (i > 0) out.push({ kind: "text", value: separator });
+    out.push(...g);
+  });
+  return out;
+}
+
+function renderTypeTokens(
+  type: unknown,
+  aliases: AliasMap | null,
+): SigToken[] {
+  if (!type || typeof type !== "object") return [];
   const t = type as Record<string, unknown>;
   switch (t.type) {
     case "intrinsic":
-      return String(t.name ?? "");
+      return [{ kind: "text", value: String(t.name ?? "") }];
     case "literal":
-      return JSON.stringify(t.value);
+      return [{ kind: "text", value: JSON.stringify(t.value) }];
     case "reference": {
       const name = String((t as { name?: string }).name ?? "");
-      if (aliases?.has(name)) return aliases.get(name)!;
-      const args = Array.isArray(t.typeArguments)
-        ? `<${(t.typeArguments as unknown[])
-            .map((a) => renderType(a, aliases))
-            .join(", ")}>`
-        : "";
-      return `${name}${args}`;
+      const shape = aliases?.get(name);
+      const head: SigToken =
+        shape !== undefined
+          ? { kind: "ref", name, shape }
+          : { kind: "text", value: name };
+      if (Array.isArray(t.typeArguments)) {
+        const args = (t.typeArguments as unknown[]).map((a) =>
+          renderTypeTokens(a, aliases),
+        );
+        return [
+          head,
+          { kind: "text", value: "<" },
+          ...joinTokens(args, ", "),
+          { kind: "text", value: ">" },
+        ];
+      }
+      return [head];
     }
     case "array":
-      return `${renderType(t.elementType, aliases)}[]`;
+      return [
+        ...renderTypeTokens(t.elementType, aliases),
+        { kind: "text", value: "[]" },
+      ];
     case "union":
-      return ((t.types as unknown[]) ?? [])
-        .map((x) => renderType(x, aliases))
-        .join(" | ");
+      return joinTokens(
+        ((t.types as unknown[]) ?? []).map((x) => renderTypeTokens(x, aliases)),
+        " | ",
+      );
     case "intersection":
-      return ((t.types as unknown[]) ?? [])
-        .map((x) => renderType(x, aliases))
-        .join(" & ");
+      return joinTokens(
+        ((t.types as unknown[]) ?? []).map((x) => renderTypeTokens(x, aliases)),
+        " & ",
+      );
     case "tuple":
-      return `[${((t.elements as unknown[]) ?? [])
-        .map((x) => renderType(x, aliases))
-        .join(", ")}]`;
+      return [
+        { kind: "text", value: "[" },
+        ...joinTokens(
+          ((t.elements as unknown[]) ?? []).map((x) =>
+            renderTypeTokens(x, aliases),
+          ),
+          ", ",
+        ),
+        { kind: "text", value: "]" },
+      ];
     case "typeOperator":
-      return `${String(t.operator ?? "")} ${renderType(t.target, aliases)}`;
+      return [
+        { kind: "text", value: `${String(t.operator ?? "")} ` },
+        ...renderTypeTokens(t.target, aliases),
+      ];
     case "indexedAccess":
-      return `${renderType(t.objectType, aliases)}[${renderType(t.indexType, aliases)}]`;
+      return [
+        ...renderTypeTokens(t.objectType, aliases),
+        { kind: "text", value: "[" },
+        ...renderTypeTokens(t.indexType, aliases),
+        { kind: "text", value: "]" },
+      ];
     case "predicate":
-      return `${String(t.name ?? "")} is ${renderType(t.targetType, aliases)}`;
+      return [
+        { kind: "text", value: `${String(t.name ?? "")} is ` },
+        ...renderTypeTokens(t.targetType, aliases),
+      ];
     case "reflection":
-      return "object";
+      return [{ kind: "text", value: "object" }];
     default:
-      return String(t.name ?? "");
+      return [{ kind: "text", value: String(t.name ?? "") }];
   }
 }
 
@@ -131,14 +193,14 @@ function renderObjectShape(
 ): string {
   const props = children.map((c) => {
     const optional = c.flags?.isOptional ? "?" : "";
-    return `${c.name}${optional}: ${renderType(c.type, aliases)}`;
+    return `${c.name}${optional}: ${renderTypeString(c.type, aliases)}`;
   });
   return `{ ${props.join("; ")} }`;
 }
 
 function aliasShape(child: TypeDocChild): string | undefined {
   if (child.children?.length) return renderObjectShape(child.children, null);
-  if (child.type) return renderType(child.type, null);
+  if (child.type) return renderTypeString(child.type, null);
   return undefined;
 }
 
@@ -156,33 +218,51 @@ function buildAliasMap(projects: readonly TypeDocProject[]): AliasMap {
 
 const SIGNATURE_WRAP_AT = 80;
 
-function buildSignature(
+function buildSignatureTokens(
   sig: TypeDocSignature | undefined,
   aliases: AliasMap,
-): string | undefined {
+): SigToken[] | undefined {
   if (!sig) return undefined;
-  const params = (sig.parameters ?? []).map((p) => {
-    const ty = renderType(p.type, aliases);
+  const paramTokenGroups: SigToken[][] = (sig.parameters ?? []).map((p) => {
+    const typeTokens = renderTypeTokens(p.type, aliases);
     const optional = p.flags?.isOptional ? "?" : "";
-    return ty ? `${p.name}${optional}: ${ty}` : `${p.name}${optional}`;
+    const head: SigToken = { kind: "text", value: `${p.name}${optional}: ` };
+    return typeTokens.length === 0 ? [head] : [head, ...typeTokens];
   });
-  const ret = renderType(sig.type, aliases);
-  const retSuffix = ret ? `: ${ret}` : "";
-  const oneLine = `${sig.name}(${params.join(", ")})${retSuffix}`;
-  if (oneLine.length <= SIGNATURE_WRAP_AT) return oneLine;
-  return `${sig.name}(\n  ${params.join(",\n  ")},\n)${retSuffix}`;
+  const returnTokens = renderTypeTokens(sig.type, aliases);
+  const retSuffix: SigToken[] =
+    returnTokens.length === 0
+      ? []
+      : [{ kind: "text", value: ": " }, ...returnTokens];
+
+  const inlineParams = joinTokens(paramTokenGroups, ", ");
+  const inline: SigToken[] = [
+    { kind: "text", value: `${sig.name}(` },
+    ...inlineParams,
+    { kind: "text", value: ")" },
+    ...retSuffix,
+  ];
+  if (tokensToString(inline).length <= SIGNATURE_WRAP_AT) return inline;
+
+  const out: SigToken[] = [{ kind: "text", value: `${sig.name}(\n` }];
+  paramTokenGroups.forEach((g) => {
+    out.push({ kind: "text", value: "  " });
+    out.push(...g);
+    out.push({ kind: "text", value: ",\n" });
+  });
+  out.push({ kind: "text", value: ")" });
+  out.push(...retSuffix);
+  return out;
 }
 
 function formatAliasShape(name: string, shape: string): string {
   const decl = `type ${name} = ${shape}`;
   if (decl.length <= SIGNATURE_WRAP_AT) return decl;
-  // Object literals: break on every `;` so each property gets its own line.
   if (shape.startsWith("{ ") && shape.endsWith(" }")) {
     const inner = shape.slice(2, -2);
     const props = inner.split("; ").filter(Boolean);
     return `type ${name} = {\n  ${props.join(";\n  ")};\n}`;
   }
-  // Unions: break on every ` | `.
   if (shape.includes(" | ")) {
     const parts = shape.split(" | ");
     return `type ${name} =\n  | ${parts.join("\n  | ")}`;
@@ -196,7 +276,7 @@ function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
   const comment = sig?.comment ?? child.comment;
   const parameters: DocParam[] = (sig?.parameters ?? []).map((p) => ({
     name: p.name,
-    type: renderType(p.type, aliases),
+    typeTokens: renderTypeTokens(p.type, aliases),
     description: p.comment?.summary ?? [],
     optional: Boolean(p.flags?.isOptional),
   }));
@@ -205,9 +285,9 @@ function toEntry(child: TypeDocChild, aliases: AliasMap): DocEntry {
     name: child.name,
     kind,
     description: comment?.summary ?? [],
-    signature: buildSignature(sig, aliases),
+    signatureTokens: buildSignatureTokens(sig, aliases),
     parameters,
-    returnType: sig ? renderType(sig.type, aliases) : undefined,
+    returnTokens: sig ? renderTypeTokens(sig.type, aliases) : undefined,
     shape:
       kind === "type"
         ? (() => {
