@@ -47,6 +47,29 @@ type TypeDocProject = {
 
 export type EntryKind = "function" | "variable" | "type" | "interface" | "other";
 
+export type EntryRole =
+  | "function"
+  | "component"
+  | "constant"
+  | "type"
+  | "interface"
+  | "other";
+
+export function roleOf(entry: { kind: EntryKind; name: string }): EntryRole {
+  switch (entry.kind) {
+    case "function":
+      return /^[A-Z]/.test(entry.name) ? "component" : "function";
+    case "variable":
+      return "constant";
+    case "type":
+      return "type";
+    case "interface":
+      return "interface";
+    default:
+      return "other";
+  }
+}
+
 export type DocParam = {
   name: string;
   type: string;

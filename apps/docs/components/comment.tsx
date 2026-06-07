@@ -28,7 +28,7 @@ export function Comment({ parts }: { parts: readonly CommentPart[] }) {
   return (
     <>
       {paragraphs.map((blocks, i) => (
-        <Text key={i} size={0} shade="muted">
+        <Fragment key={i}>
           {blocks.map((part, j) =>
             part.kind === "code" ? (
               <CodeInline key={j}>{stripBackticks(part.text)}</CodeInline>
@@ -36,7 +36,7 @@ export function Comment({ parts }: { parts: readonly CommentPart[] }) {
               <Fragment key={j}>{part.text}</Fragment>
             ),
           )}
-        </Text>
+        </Fragment>
       ))}
     </>
   );

@@ -1,8 +1,7 @@
-import { CodeInline, Stack, Text } from "@uiid/design-system";
-import type { DocEntry, EntryKind } from "../lib/docs";
-import { groupByKind, KIND_ORDER } from "../lib/docs";
+import { Badge, Card, Stack, Text } from "@uiid/design-system";
+import type { DocEntry, EntryKind, EntryRole } from "../lib/docs";
+import { groupByKind, KIND_ORDER, roleOf } from "../lib/docs";
 import { Comment } from "./comment";
-import { ParamsTable } from "./params-table";
 import { Signature } from "./signature";
 
 const KIND_LABEL: Record<EntryKind, string> = {
@@ -13,9 +12,22 @@ const KIND_LABEL: Record<EntryKind, string> = {
   other: "Other",
 };
 
-function EntryBlock({ entry }: { entry: DocEntry }) {
+const ROLE_COLOR: Record<
+  EntryRole,
+  "red" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple" | "neutral"
+> = {
+  function: "blue",
+  component: "purple",
+  constant: "yellow",
+  type: "green",
+  interface: "indigo",
+  other: "neutral",
+};
+
+function EntryBlock({ entry }: { readonly entry: DocEntry }) {
+  const role = roleOf(entry);
   return (
-    <Stack
+    <Card
       data-slot="entry-block"
       render={<section />}
       id={entry.slug}
@@ -24,51 +36,33 @@ function EntryBlock({ entry }: { entry: DocEntry }) {
       bb={1}
       gap={4}
       fullwidth
+      title={entry.name}
+      description={<Comment parts={entry.description} />}
+      action={
+        <Badge size="small" color={ROLE_COLOR[role]}>
+          {role}
+        </Badge>
+      }
     >
-      <Text size={2} weight="bold" family="mono">
-        {entry.name}
-      </Text>
-      <Comment parts={entry.description} />
       {entry.signature && <Signature code={entry.signature} />}
-      {entry.kind === "type" && entry.shape && (
-        <Signature code={entry.shape} />
-      )}
-      {entry.kind === "function" && entry.parameters.length > 0 && (
-        <ParamsTable params={entry.parameters} />
-      )}
-      {entry.kind === "function" && entry.returnType && (
-        <Text size={-1} shade="muted">
-          Returns <CodeInline>{entry.returnType}</CodeInline>
-        </Text>
-      )}
-      {entry.sourceUrl && (
-        <Text
-          size={-1}
-          shade="halftone"
-          render={
-            <a
-              href={entry.sourceUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-            />
-          }
-        >
-          source
-        </Text>
-      )}
-    </Stack>
+      {entry.kind === "type" && entry.shape && <Signature code={entry.shape} />}
+    </Card>
   );
 }
 
-export function EntryList({ entries }: { entries: readonly DocEntry[] }) {
+export function EntryList({
+  entries,
+}: {
+  readonly entries: readonly DocEntry[];
+}) {
   const groups = groupByKind(entries);
   return (
-    <Stack gap={4}>
+    <Stack data-slot="entry-list">
       {KIND_ORDER.flatMap((kind) => {
         const items = groups.get(kind);
         if (!items || items.length === 0) return [];
         return (
-          <Stack key={kind} gap={2}>
+          <Stack key={kind} gap={16}>
             <Text size={1} weight="bold">
               {KIND_LABEL[kind]}
             </Text>
