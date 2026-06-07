@@ -128,8 +128,6 @@ function aliasShape(child: TypeDocChild): string | undefined {
   return undefined;
 }
 
-const SIGNATURE_WRAP_AT = 80;
-
 function buildSignature(sig: TypeDocSignature | undefined): string | undefined {
   if (!sig) return undefined;
   const params = (sig.parameters ?? []).map((p) => {
@@ -139,24 +137,23 @@ function buildSignature(sig: TypeDocSignature | undefined): string | undefined {
   });
   const ret = renderType(sig.type);
   const retSuffix = ret ? `: ${ret}` : "";
-  const oneLine = `${sig.name}(${params.join(", ")})${retSuffix}`;
-  if (oneLine.length <= SIGNATURE_WRAP_AT) return oneLine;
+  if (params.length === 0) return `${sig.name}()${retSuffix}`;
   return `${sig.name}(\n  ${params.join(",\n  ")},\n)${retSuffix}`;
 }
 
 function formatAliasShape(name: string, shape: string): string {
-  const decl = `type ${name} = ${shape}`;
-  if (decl.length <= SIGNATURE_WRAP_AT) return decl;
   if (shape.startsWith("{ ") && shape.endsWith(" }")) {
     const inner = shape.slice(2, -2);
     const props = inner.split("; ").filter(Boolean);
+    if (props.length <= 1) return `type ${name} = ${shape}`;
     return `type ${name} = {\n  ${props.join(";\n  ")};\n}`;
   }
   if (shape.includes(" | ")) {
     const parts = shape.split(" | ");
+    if (parts.length <= 2) return `type ${name} = ${shape}`;
     return `type ${name} =\n  | ${parts.join("\n  | ")}`;
   }
-  return decl;
+  return `type ${name} = ${shape}`;
 }
 
 function toEntry(child: TypeDocChild): DocEntry {
