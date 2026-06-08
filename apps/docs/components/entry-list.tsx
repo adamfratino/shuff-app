@@ -14,7 +14,14 @@ const KIND_LABEL: Record<EntryKind, string> = {
 
 const ROLE_COLOR: Record<
   EntryRole,
-  "red" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple" | "neutral"
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "indigo"
+  | "purple"
+  | "neutral"
 > = {
   function: "blue",
   component: "purple",
@@ -62,10 +69,7 @@ export function EntryList({
         const items = groups.get(kind);
         if (!items || items.length === 0) return [];
         return (
-          <Stack key={kind} gap={16}>
-            <Text size={1} weight="bold">
-              {KIND_LABEL[kind]}
-            </Text>
+          <Stack key={kind} gap={4}>
             {items.map((entry) => (
               <EntryBlock key={entry.slug} entry={entry} />
             ))}

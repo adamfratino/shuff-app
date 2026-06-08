@@ -7,12 +7,6 @@ type TypeDocComment = {
   summary?: CommentPart[];
 };
 
-type TypeDocSource = {
-  fileName?: string;
-  line?: number;
-  url?: string;
-};
-
 type TypeDocParam = {
   name: string;
   type?: unknown;
@@ -37,7 +31,6 @@ type TypeDocChild = {
   defaultValue?: string;
   children?: TypeDocChild[];
   flags?: { isOptional?: boolean };
-  sources?: TypeDocSource[];
 };
 
 type TypeDocProject = {
@@ -86,7 +79,6 @@ export type DocEntry = {
   parameters: DocParam[];
   returnType?: string;
   shape?: string;
-  sourceUrl?: string;
 };
 
 export type DocsManifest = {
@@ -204,7 +196,6 @@ function toEntry(child: TypeDocChild): DocEntry {
             return raw ? formatAliasShape(child.name, raw) : undefined;
           })()
         : undefined,
-    sourceUrl: child.sources?.[0]?.url,
   };
 }
 
