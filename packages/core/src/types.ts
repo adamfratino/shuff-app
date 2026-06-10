@@ -22,6 +22,11 @@ export type Point = {
  *   Apex of the 10:  (36, 126)
  *   Lag line:        y = 162
  *   Far edge of half-court (full-court centerline): y = 234
+ *
+ * Disc identity (for animation, replay scrubbing, reordering) is opt-in via
+ * the optional `id` field. When `id` is absent, consumers like @shuff/diagram
+ * fall back to array index for React keys — fine for static renders, but
+ * reorders and mid-replay add/remove will tear without it.
  */
 export type Disc = {
   x: number;
@@ -33,4 +38,11 @@ export type Disc = {
    * meaning to specific values.
    */
   color: string;
+  /**
+   * Stable identifier for this disc across renders. Required for correct
+   * React reconciliation when discs animate, get reordered, or are added
+   * and removed mid-sequence. Omit for static renders where the disc array
+   * never reorders — consumers should key by index in that case.
+   */
+  id?: string;
 };
