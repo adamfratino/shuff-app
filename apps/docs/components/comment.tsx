@@ -1,6 +1,5 @@
+import { CodeInline, Text } from "@uiid/design-system";
 import { Fragment } from "react";
-import { CodeInline } from "@uiid/design-system";
-import { Text } from "@uiid/design-system";
 
 type CommentPart = { kind: "text" | "code"; text: string };
 
@@ -28,11 +27,15 @@ export function Comment({ parts }: { parts: readonly CommentPart[] }) {
   return (
     <>
       {paragraphs.map((blocks, i) => (
+        // Parsed comment parts never reorder — index is a stable key here.
+        // biome-ignore lint/suspicious/noArrayIndexKey: static parsed output
         <Fragment key={i}>
           {blocks.map((part, j) =>
             part.kind === "code" ? (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static parsed output
               <CodeInline key={j}>{stripBackticks(part.text)}</CodeInline>
             ) : (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static parsed output
               <Fragment key={j}>{part.text}</Fragment>
             ),
           )}

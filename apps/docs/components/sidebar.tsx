@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { List, Stack, Text } from "@uiid/design-system";
+import Link from "next/link";
 import { allDocs, groupByKind, KIND_ORDER } from "../lib/docs";
 
 const ROUTE_BY_PKG: Record<string, string> = {

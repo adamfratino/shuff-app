@@ -1,14 +1,30 @@
-export type { Disc, Point } from "./types";
 export {
+  APEX,
   DISC_DIAMETER,
   DISC_RADIUS,
-  HALF_COURT_WIDTH,
-  HALF_COURT_LENGTH,
   FULL_COURT_LENGTH,
-  APEX,
-  LAG_LINE_Y,
+  HALF_COURT_LENGTH,
+  HALF_COURT_WIDTH,
   KITCHEN_DEPTH,
+  LAG_LINE_Y,
 } from "./constants";
+export type { OcclusionResult } from "./geometry";
+export {
+  findBlockers,
+  isOccluded,
+  occlusion,
+  shadowPolygon,
+  tangentPoints,
+} from "./geometry";
+export {
+  closestToApex,
+  discsTouching,
+  distance,
+  mirrorEnd,
+  mirrorSide,
+} from "./spatial";
+export type { Disc, Point } from "./types";
+export type { ScoringZone, Zone } from "./zones";
 export {
   activeScoringZones,
   frameScore,
@@ -21,19 +37,3 @@ export {
   scoringZone,
   zoneAt,
 } from "./zones";
-export type { Zone, ScoringZone } from "./zones";
-export {
-  findBlockers,
-  isOccluded,
-  occlusion,
-  shadowPolygon,
-  tangentPoints,
-} from "./geometry";
-export type { OcclusionResult } from "./geometry";
-export {
-  closestToApex,
-  discsTouching,
-  distance,
-  mirrorEnd,
-  mirrorSide,
-} from "./spatial";
