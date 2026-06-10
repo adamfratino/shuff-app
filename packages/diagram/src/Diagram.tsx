@@ -1,8 +1,7 @@
-import { useId, type CSSProperties, type ReactNode } from "react";
 import {
   activeScoringZones,
-  type Disc,
   DISC_RADIUS,
+  type Disc,
   FULL_COURT_LENGTH,
   HALF_COURT_LENGTH,
   HALF_COURT_WIDTH,
@@ -11,6 +10,7 @@ import {
   scoringZone,
   shadowPolygon,
 } from "@shuff/core";
+import { type CSSProperties, type ReactNode, useId } from "react";
 import type { DiagramProps } from "./types";
 
 const DEFAULT_STYLES = `
@@ -91,8 +91,20 @@ function renderCourtGeometry(
       </g>
 
       <g className="shuff-markings">
-        <line className="shuff-kitchen-side-left" x1="0" y1="0" x2="6" y2="18" />
-        <line className="shuff-kitchen-side-right" x1="72" y1="0" x2="66" y2="18" />
+        <line
+          className="shuff-kitchen-side-left"
+          x1="0"
+          y1="0"
+          x2="6"
+          y2="18"
+        />
+        <line
+          className="shuff-kitchen-side-right"
+          x1="72"
+          y1="0"
+          x2="66"
+          y2="18"
+        />
         <line className="shuff-baseline" x1="0" y1="0" x2="72" y2="0" />
         <line className="shuff-kitchen-7" x1="0" y1="18" x2="72" y2="18" />
         <line className="shuff-edge-left" x1="0" y1="18" x2="36" y2="126" />

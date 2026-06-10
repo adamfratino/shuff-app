@@ -1,6 +1,6 @@
+import { Group } from "@uiid/design-system";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Group } from "@uiid/design-system";
 
 import { Sidebar } from "../components/sidebar";
 

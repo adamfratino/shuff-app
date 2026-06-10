@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { Diagram } from "@shuff/diagram";
 import {
   type Disc,
   frameScore,
@@ -10,6 +8,8 @@ import {
   score,
   scoringZone,
 } from "@shuff/core";
+import { Diagram } from "@shuff/diagram";
+import { useState } from "react";
 
 const YELLOW = "#f5c518";
 const BLACK = "#1a1a1a";
@@ -176,7 +176,10 @@ function Panel({
                   {discs.map((disc, i) => {
                     const zone = scoringZone(disc);
                     return (
-                      <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+                      <tr
+                        key={`${disc.x},${disc.y},${disc.color}`}
+                        style={{ borderBottom: "1px solid #eee" }}
+                      >
                         <td style={{ padding: "4px 8px" }}>{i + 1}</td>
                         <td style={{ padding: "4px 8px" }}>
                           <ColorChip color={disc.color} />
@@ -235,9 +238,7 @@ function Panel({
               <p>
                 Sum:{" "}
                 <code style={{ fontSize: 14 }}>
-                  {formatScore(
-                    [...totals.values()].reduce((a, b) => a + b, 0),
-                  )}
+                  {formatScore([...totals.values()].reduce((a, b) => a + b, 0))}
                 </code>
               </p>
             </div>
@@ -279,11 +280,10 @@ function OcclusionPanel() {
         Shooter at (15, 459). Three scenarios:{" "}
         <strong>direct full occlusion</strong> (yellow at (15, 45) between
         shooter and black at (15, 30) → 100% blocked);{" "}
-        <strong>partial occlusion</strong> (yellow at (40, 100) covers ~half
-        of black at (40, 50)); and a <strong>multi-blocker chain</strong>{" "}
-        (black at (40, 25) is shadowed by both discs in the x=40 column,
-        unioned). Yellow at (60, 100) is the off-line reference and should
-        report 0%.
+        <strong>partial occlusion</strong> (yellow at (40, 100) covers ~half of
+        black at (40, 50)); and a <strong>multi-blocker chain</strong> (black at
+        (40, 25) is shadowed by both discs in the x=40 column, unioned). Yellow
+        at (60, 100) is the off-line reference and should report 0%.
       </p>
       <div
         style={{
@@ -314,9 +314,7 @@ function OcclusionPanel() {
               <th style={{ padding: "4px 8px", textAlign: "right" }}>
                 Obscured
               </th>
-              <th style={{ padding: "4px 8px", textAlign: "right" }}>
-                Inches
-              </th>
+              <th style={{ padding: "4px 8px", textAlign: "right" }}>Inches</th>
               <th style={{ padding: "4px 8px", textAlign: "right" }}>
                 Blockers
               </th>
@@ -327,14 +325,15 @@ function OcclusionPanel() {
               const others = occlusionDiscs.filter((_, j) => j !== i);
               const result = occlusion(occlusionShooter, target, others);
               return (
-                <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+                <tr
+                  key={`${target.x},${target.y},${target.color}`}
+                  style={{ borderBottom: "1px solid #eee" }}
+                >
                   <td style={{ padding: "4px 8px" }}>{i + 1}</td>
                   <td style={{ padding: "4px 8px" }}>
                     <ColorChip color={target.color} />
                   </td>
-                  <td
-                    style={{ padding: "4px 8px", fontFamily: "monospace" }}
-                  >
+                  <td style={{ padding: "4px 8px", fontFamily: "monospace" }}>
                     ({target.x}, {target.y})
                   </td>
                   <td
@@ -380,9 +379,9 @@ function CoordinatePlot() {
       <h2>Coordinate plot</h2>
       <p style={{ color: "#555", marginTop: -8 }}>
         Seven discs tracing the centerline (x=36) from the near back baseline
-        (y=0) to the far back baseline (y=468). Confirms the full-court
-        y-axis lines up with court landmarks before we layer shooter position
-        + line-of-sight math on top.
+        (y=0) to the far back baseline (y=468). Confirms the full-court y-axis
+        lines up with court landmarks before we layer shooter position +
+        line-of-sight math on top.
       </p>
       <div
         style={{
@@ -413,9 +412,7 @@ function CoordinatePlot() {
                 <td style={{ padding: "4px 8px" }}>
                   <ColorChip color={color} />
                 </td>
-                <td
-                  style={{ padding: "4px 8px", fontFamily: "monospace" }}
-                >
+                <td style={{ padding: "4px 8px", fontFamily: "monospace" }}>
                   {y}
                 </td>
                 <td style={{ padding: "4px 8px" }}>{label}</td>
@@ -444,11 +441,10 @@ function MirrorPanel() {
       <p style={{ color: "#555", marginTop: -8 }}>
         Toggle <code>mirrorEnd</code> to flip the frame across the full-court
         center (y = 234, sending discs to the far end) and{" "}
-        <code>mirrorSide</code> to flip across the longitudinal centerline
-        (x = 36). Both transforms preserve disc color and chain freely.
-        Frame totals reflect the discs' new positions — once mirrored to
-        the far end they fall outside the half-court scoring grid and report
-        0.
+        <code>mirrorSide</code> to flip across the longitudinal centerline (x =
+        36). Both transforms preserve disc color and chain freely. Frame totals
+        reflect the discs' new positions — once mirrored to the far end they
+        fall outside the half-court scoring grid and report 0.
       </p>
       <div
         style={{

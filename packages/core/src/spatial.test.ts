@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { APEX, DISC_RADIUS, FULL_COURT_LENGTH, HALF_COURT_WIDTH } from "./constants";
+import {
+  APEX,
+  DISC_RADIUS,
+  FULL_COURT_LENGTH,
+  HALF_COURT_WIDTH,
+} from "./constants";
 import {
   closestToApex,
   discsTouching,
@@ -94,8 +99,14 @@ describe("mirrorEnd", () => {
 
 describe("mirrorSide", () => {
   it("reflects x across the longitudinal centerline (x = 36)", () => {
-    expect(mirrorSide({ x: 0, y: 100 })).toEqual({ x: HALF_COURT_WIDTH, y: 100 });
-    expect(mirrorSide({ x: HALF_COURT_WIDTH, y: 100 })).toEqual({ x: 0, y: 100 });
+    expect(mirrorSide({ x: 0, y: 100 })).toEqual({
+      x: HALF_COURT_WIDTH,
+      y: 100,
+    });
+    expect(mirrorSide({ x: HALF_COURT_WIDTH, y: 100 })).toEqual({
+      x: 0,
+      y: 100,
+    });
     expect(mirrorSide({ x: HALF_COURT_WIDTH / 2, y: 100 })).toEqual({
       x: HALF_COURT_WIDTH / 2,
       y: 100,

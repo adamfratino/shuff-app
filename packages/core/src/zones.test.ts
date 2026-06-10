@@ -185,7 +185,14 @@ describe("corner discs — every scoring zone corner just barely scores", () => 
   // is positioned just inside the 3.5" clearance from BOTH intersecting
   // boundary lines that form a corner of its zone. If any corner regresses
   // (i.e., the disc no longer scores), the zone-clearance math has drifted.
-  it.each<[string, number, number, "kitchen" | "7-left" | "7-right" | "8-left" | "8-right" | "10"]>([
+  it.each<
+    [
+      string,
+      number,
+      number,
+      "kitchen" | "7-left" | "7-right" | "8-left" | "8-right" | "10",
+    ]
+  >([
     // Kitchen (trapezoidal, 4 corners)
     ["kitchen back-left", 5, 3.6, "kitchen"],
     ["kitchen back-right", 67, 3.6, "kitchen"],
