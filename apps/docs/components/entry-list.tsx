@@ -45,6 +45,7 @@ function EntryBlock({ entry }: { readonly entry: DocEntry }) {
       fullwidth
       title={entry.name}
       description={<Comment parts={entry.description} />}
+      InnerContainerProps={{ ax: "stretch" }}
       action={
         <Badge size="small" color={ROLE_COLOR[role]}>
           {role}
