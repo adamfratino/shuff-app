@@ -38,7 +38,12 @@ type TypeDocProject = {
   children?: TypeDocChild[];
 };
 
-export type EntryKind = "function" | "variable" | "type" | "interface" | "other";
+export type EntryKind =
+  | "function"
+  | "variable"
+  | "type"
+  | "interface"
+  | "other";
 
 export type EntryRole =
   | "function"
@@ -207,7 +212,9 @@ function loadManifest(project: TypeDocProject): DocsManifest {
 }
 
 export const coreDocs: DocsManifest = loadManifest(core as TypeDocProject);
-export const diagramDocs: DocsManifest = loadManifest(diagram as TypeDocProject);
+export const diagramDocs: DocsManifest = loadManifest(
+  diagram as TypeDocProject,
+);
 
 export const allDocs: readonly DocsManifest[] = [coreDocs, diagramDocs];
 
@@ -219,7 +226,9 @@ export const KIND_ORDER: EntryKind[] = [
   "other",
 ];
 
-export function groupByKind(entries: readonly DocEntry[]): Map<EntryKind, DocEntry[]> {
+export function groupByKind(
+  entries: readonly DocEntry[],
+): Map<EntryKind, DocEntry[]> {
   const groups = new Map<EntryKind, DocEntry[]>();
   for (const entry of entries) {
     const list = groups.get(entry.kind) ?? [];

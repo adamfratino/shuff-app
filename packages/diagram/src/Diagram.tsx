@@ -1,8 +1,7 @@
-import { useId, type CSSProperties, type ReactNode } from "react";
 import {
   activeScoringZones,
-  type Disc,
   DISC_RADIUS,
+  type Disc,
   FULL_COURT_LENGTH,
   HALF_COURT_LENGTH,
   HALF_COURT_WIDTH,
@@ -11,6 +10,7 @@ import {
   scoringZone,
   shadowPolygon,
 } from "@shuff/core";
+import { type CSSProperties, type ReactNode, useId } from "react";
 import type { DiagramProps } from "./types";
 
 const DEFAULT_STYLES = `
@@ -91,8 +91,20 @@ function renderCourtGeometry(
       </g>
 
       <g className="shuff-markings">
-        <line className="shuff-kitchen-side-left" x1="0" y1="0" x2="6" y2="18" />
-        <line className="shuff-kitchen-side-right" x1="72" y1="0" x2="66" y2="18" />
+        <line
+          className="shuff-kitchen-side-left"
+          x1="0"
+          y1="0"
+          x2="6"
+          y2="18"
+        />
+        <line
+          className="shuff-kitchen-side-right"
+          x1="72"
+          y1="0"
+          x2="66"
+          y2="18"
+        />
         <line className="shuff-baseline" x1="0" y1="0" x2="72" y2="0" />
         <line className="shuff-kitchen-7" x1="0" y1="18" x2="72" y2="18" />
         <line className="shuff-edge-left" x1="0" y1="18" x2="36" y2="126" />
@@ -140,12 +152,24 @@ export function Diagram({
     className: `shuff-zone-${zone}`,
   });
 
-  // Compute shadow polygons once; both showShadows and showSpotlight reuse them.
-  const shadowPointStrings: string[] =
+  // Stable React keys for every disc-derived list (projections, shadows,
+  // discs, labels). Callers opt into stable identity by providing `disc.id`.
+  const discKeys = discs.map((d, i) => d.id ?? `__idx-${i}`);
+
+  // Compute shadow polygons once; both showShadows and showSpotlight reuse
+  // them. Each entry carries its source disc's key so shadows reconcile in
+  // step with their disc when the array reorders.
+  const shadows: Array<{ key: string; points: string }> =
     shooter && discs.length > 0
-      ? discs.flatMap((d) => {
+      ? discs.flatMap((d, i) => {
           const poly = shadowPolygon(shooter, d, DISC_RADIUS);
-          return poly ? [poly.map((p) => `${p.x},${p.y}`).join(" ")] : [];
+          if (!poly) return [];
+          return [
+            {
+              key: discKeys[i]!,
+              points: poly.map((p) => `${p.x},${p.y}`).join(" "),
+            },
+          ];
         })
       : [];
 
@@ -181,7 +205,7 @@ export function Diagram({
         <g className="shuff-projections">
           {discs.map((disc, index) => (
             <line
-              key={index}
+              key={discKeys[index]}
               x1={shooter.x}
               y1={shooter.y}
               x2={disc.x}
@@ -191,10 +215,10 @@ export function Diagram({
         </g>
       )}
 
-      {showShadows && shadowPointStrings.length > 0 && (
+      {showShadows && shadows.length > 0 && (
         <g className="shuff-shadows">
-          {shadowPointStrings.map((points, index) => (
-            <polygon key={index} points={points} />
+          {shadows.map(({ key, points }) => (
+            <polygon key={key} points={points} />
           ))}
         </g>
       )}
@@ -216,8 +240,8 @@ export function Diagram({
               <polygon fill="black" points={spotlightConePoints(shooter)} />
               {/* Shadow polygons override the cone where blockers cast
                   shadows: overlay visible again inside shadow regions */}
-              {shadowPointStrings.map((points, index) => (
-                <polygon key={index} fill="white" points={points} />
+              {shadows.map(({ key, points }) => (
+                <polygon key={key} fill="white" points={points} />
               ))}
             </mask>
           </defs>
@@ -236,7 +260,7 @@ export function Diagram({
         <g className="shuff-discs">
           {discs.map((disc, index) => (
             <circle
-              key={index}
+              key={discKeys[index]}
               cx={disc.x}
               cy={disc.y}
               r={DISC_RADIUS}
@@ -267,7 +291,7 @@ export function Diagram({
         <g className="shuff-disc-labels">
           {discs.map((disc, index) => (
             <text
-              key={index}
+              key={discKeys[index]}
               x={disc.x}
               y={disc.y + DISC_RADIUS + 3.5}
               textAnchor="middle"

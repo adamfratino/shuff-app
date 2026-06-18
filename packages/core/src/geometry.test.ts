@@ -231,11 +231,7 @@ describe("shadowPolygon", () => {
     const viewpoint = { x: 0, y: 0 };
     const center = { x: 100, y: 0 };
     const [t1, far1, far2, t2] = shadowPolygon(viewpoint, center, 10)!;
-    expect(Math.hypot(far1.x, far1.y)).toBeGreaterThan(
-      Math.hypot(t1.x, t1.y),
-    );
-    expect(Math.hypot(far2.x, far2.y)).toBeGreaterThan(
-      Math.hypot(t2.x, t2.y),
-    );
+    expect(Math.hypot(far1.x, far1.y)).toBeGreaterThan(Math.hypot(t1.x, t1.y));
+    expect(Math.hypot(far2.x, far2.y)).toBeGreaterThan(Math.hypot(t2.x, t2.y));
   });
 });

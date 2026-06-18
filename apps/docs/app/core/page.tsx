@@ -1,6 +1,6 @@
 import { EntryList } from "../../components/entry-list";
-import { coreDocs } from "../../lib/docs";
 import { PageWrapper } from "../../components/page-wrapper";
+import { coreDocs } from "../../lib/docs";
 
 export const metadata = {
   title: "@shuff/core — shuff docs",

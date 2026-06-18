@@ -1,8 +1,8 @@
 import { Stack, Text } from "@uiid/design-system";
 
 import { EntryList } from "../../components/entry-list";
-import { diagramDocs } from "../../lib/docs";
 import { PageWrapper } from "../../components/page-wrapper";
+import { diagramDocs } from "../../lib/docs";
 
 export const metadata = {
   title: "@shuff/diagram — shuff docs",
