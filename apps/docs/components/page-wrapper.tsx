@@ -11,13 +11,15 @@ export function PageWrapper({
   children,
 }: Readonly<PageWrapperProps>) {
   return (
-    <Stack data-slot="page-wrapper" gap={4} p={8} maxw={1080}>
-      <Text size={3} weight="bold" family="mono">
-        {title}
-      </Text>
-      <Text size={2} shade="muted" mb={12}>
-        {description}
-      </Text>
+    <Stack data-slot="page-wrapper" px={4} pt={8} pb={32} gap={8} ax="stretch">
+      <Stack data-slot="page-intro" gap={3}>
+        <Text render={<h1 />} size={5} weight="semibold" family="mono">
+          {title}
+        </Text>
+        <Text size={1} shade="muted" balance>
+          {description}
+        </Text>
+      </Stack>
       {children}
     </Stack>
   );

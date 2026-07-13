@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { List, Stack, Text } from "@uiid/design-system";
-import { allDocs, groupByKind, KIND_ORDER } from "../lib/docs";
+
+import {
+  SIDEBAR_WIDTH,
+  SIDEBAR_SPACING,
+  SHELL_BORDER_WIDTH,
+  SIDEBAR_LIST_ITEM_SPACING,
+} from "@/constants";
+import { allDocs, groupByKind, KIND_ORDER } from "@/lib/docs";
 
 const ROUTE_BY_PKG: Record<string, string> = {
   "@shuff/core": "/core",
@@ -9,11 +16,9 @@ const ROUTE_BY_PKG: Record<string, string> = {
 
 export function Sidebar() {
   return (
-    <aside data-slot="sidebar">
-      <Stack gap={4} maxw={240} p={8} br={1} fullheight>
-        <Text size={1} weight="bold">
-          shuff docs
-        </Text>
+    <SidebarContainer>
+      <SidebarScrollContainer>
+        <SidebarHeader>shuff docs</SidebarHeader>
         {allDocs.map((pkg) => {
           const route = ROUTE_BY_PKG[pkg.pkg] ?? "/";
           const groups = groupByKind(pkg.entries);
@@ -34,6 +39,7 @@ export function Sidebar() {
                     </Text>
                     <List
                       marker="none"
+                      gap={SIDEBAR_LIST_ITEM_SPACING}
                       items={items.map((entry) => ({
                         value: entry.slug,
                         label: (
@@ -51,7 +57,47 @@ export function Sidebar() {
             </Stack>
           );
         })}
-      </Stack>
-    </aside>
+      </SidebarScrollContainer>
+    </SidebarContainer>
   );
 }
+
+const SidebarContainer = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Stack
+      data-slot="sidebar"
+      render={<aside />}
+      maxw={SIDEBAR_WIDTH}
+      br={SHELL_BORDER_WIDTH}
+      ax="stretch"
+      fullwidth
+    >
+      {children}
+    </Stack>
+  );
+};
+SidebarContainer.displayName = "SidebarContainer";
+
+const SidebarScrollContainer = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Stack
+      data-slot="sidebar-scroll-container"
+      className="sticky top-0 overflow-y-auto h-screen"
+      ax="stretch"
+      gap={SIDEBAR_SPACING}
+      p={SIDEBAR_SPACING}
+    >
+      {children}
+    </Stack>
+  );
+};
+SidebarScrollContainer.displayName = "SidebarScrollContainer";
+
+const SidebarHeader = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Text data-slot="sidebar-header" weight="bold" size={3}>
+      {children}
+    </Text>
+  );
+};
+SidebarHeader.displayName = "SidebarHeader";
