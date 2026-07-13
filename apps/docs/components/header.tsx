@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Breadcrumbs, Group } from "@uiid/design-system";
@@ -36,14 +37,34 @@ HeaderContainer.displayName = "HeaderContainer";
 const HeaderBreadcrumbs = () => {
   const pathname = usePathname();
   const active = SITEMAP.find((item) => pathname.startsWith(item.value));
+  const anchor = useAnchor();
 
   const items = [
     { label: SITE_TITLE, value: "/" },
     ...(active ? [{ label: active.label, value: active.value }] : []),
+    ...(active && anchor
+      ? [{ label: anchor, value: `${active.value}#${anchor}` }]
+      : []),
   ];
 
   return (
     <Breadcrumbs data-slot="header-breadcrumbs" items={items} linkAs={Link} />
   );
+};
+
+/** The current URL hash (without the leading `#`), kept in sync as it changes. */
+const useAnchor = () => {
+  const pathname = usePathname();
+  const [anchor, setAnchor] = useState("");
+
+  useEffect(() => {
+    const sync = () =>
+      setAnchor(decodeURIComponent(window.location.hash.replace(/^#/, "")));
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, [pathname]);
+
+  return anchor;
 };
 HeaderBreadcrumbs.displayName = "HeaderBreadcrumbs";

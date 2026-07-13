@@ -1,2 +1,7 @@
 @import "tailwindcss";
 @import "@uiid/design-system/globals.css";
+
+/* Offset anchor targets so they clear the sticky header. */
+:target {
+  scroll-margin-top: 3.5rem;
+}
