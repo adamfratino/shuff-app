@@ -24,11 +24,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/diagram
       '@uiid/design-system':
-        specifier: ^0.0.25
-        version: 0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+        specifier: ^0.0.34
+        version: 0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       '@uiid/icons':
-        specifier: ^0.0.22
-        version: 0.0.22(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.0.34
+        version: 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       next:
         specifier: ^16.2.7
         version: 16.2.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -1385,110 +1385,104 @@ packages:
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
 
-  '@uiid/buttons@0.0.25':
-    resolution: {integrity: sha512-/FwaxLxiPGB8qqLvYhst8H1mnEqyPRLv2aBLbCM2F413Tn8iXn6rGIpzzW6xYgIU6kccYy4TdF0T4b7peZ9qJg==}
+  '@uiid/buttons@0.0.34':
+    resolution: {integrity: sha512-Tu2ESEsCtgTRMy2U7TuxzKqDMv11zWCwXeOTXYpUfU/KAE0Oci3TIhHcmO7TZFwXGp/3EjE93/KsIZiLKAXnjw==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/calendars@0.0.25':
-    resolution: {integrity: sha512-Ulxn73wZlDN+l4Ld/nQZCS43Q3u1EOpJDCB8PV2/h+WqgZ0jvXjEEcUZzDRGeAwwqRtbqccumv9WCCbU1+VNmA==}
+  '@uiid/calendars@0.0.34':
+    resolution: {integrity: sha512-JwdLHQA+uFDI4rjGnwrjHQ6VLx7TgGSlstmfxlo1XYTzy4f7SY7O3Yye42r1KzglHlGbQD83YoP4MANLWwGizg==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/cards@0.0.25':
-    resolution: {integrity: sha512-vcHYL0+0oLWB0vr2j7sxjKG6vpd8rFfb00EQ6w4SqxHvvp7gz2Kzuhr4GMRYuqJEpH9Nvt+ZbCQLCcANiaXu1w==}
+  '@uiid/cards@0.0.34':
+    resolution: {integrity: sha512-mbcOaC13QcZua7KNpwz8Kqbzvtuns32BP69HeLfzBTsvrV8j7BgtCkqfAxKachh828ZN50odx6s2E0CSHZvIEA==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/code@0.0.25':
-    resolution: {integrity: sha512-Rkmc1we5H9HBzefcPwjKgAg13HSBiHowdKdP8rLBO7ODPVj9J5qJJ7/YihbxZT0lisSeCK22LSYDFSGA3sOrpw==}
+  '@uiid/code@0.0.34':
+    resolution: {integrity: sha512-K1+Sy/hmGMTOmA2Tygt2LbzZkuGXFk5v7wuQMfW605E5nX0/yPhVIsfRHeiffTyLknTqboL6/MP6dtGgqFDuqQ==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/design-system@0.0.25':
-    resolution: {integrity: sha512-5ZGTDwMIPvpnn+vPNZsSGSgXhqZttEnj2FVX4SIvNXF96sEMLEgo3UFrMnYj+E3hZnevc+ILwt4JcW6I/Bcbaw==}
+  '@uiid/design-system@0.0.34':
+    resolution: {integrity: sha512-TC+4Rj9KoZ7u3QwGYXK8DLxJ4Zh1SC89J/T6EibiijSCGb2BiRIDQ6e9osdbqPvUOQPpLMSwoZm6VEYc0XXbyg==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/forms@0.0.25':
-    resolution: {integrity: sha512-VuzVVN4UosXcwUmwif6rAJDpe8vymnWGzqmEmmGP5ej1DMawsmDbxXOAVCcfM3e2OJYQqBNx0PRmHIU7Hyo9iQ==}
+  '@uiid/forms@0.0.34':
+    resolution: {integrity: sha512-KbZIKXNlUra6XbBZI0QseToeqJCttWqXz2cnwrmx6ZoJXnPRw30uYBUiWUhmgmwjghhn1Nhd6OzalI9bP1tUQA==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/icons@0.0.22':
-    resolution: {integrity: sha512-W+4jrVcvr3sLhFR5njdzugru5EgBRs5ag8IHUanegN9CvmnIdclIbUPUWozEmxa53RCJHFn/sj9gbcASuYbPcQ==}
+  '@uiid/icons@0.0.34':
+    resolution: {integrity: sha512-J44bQ5PKn70+6nGDTnq9RNEZFNDl0sl0RDIVpT1DVoqllbXtvv1j3ya0CG9iOSRpZwnEdKuFCLlYZiog2R4omw==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/icons@0.0.25':
-    resolution: {integrity: sha512-UGe3F/IW6PrcYD9JK7tz6OKxh98rgksyg0KMwYJOhmK9sRm+O9sOzuYvi267mXgRSKRoZ3w3+gdMZfaceZOFlQ==}
+  '@uiid/indicators@0.0.34':
+    resolution: {integrity: sha512-Vmm7s+0tl0r3s8tyuOnpJ91dn/05FyClnalRrfQioAoEvQxBw1evBUOTygJQZjI3QOFYQK36yP1H1jXXGFW5sw==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/indicators@0.0.25':
-    resolution: {integrity: sha512-vrLE6Asx657uY9JXHB3w+MdHz5+07ixpdc9YzIlad1EXOuknThSPYSyk3cI6R9vi3YalBp29F8NxS+FdB7C0VQ==}
+  '@uiid/interactive@0.0.34':
+    resolution: {integrity: sha512-FoHgnZhz6xr7qbF1rRll7dHurSmqUEar6dTVs41w46f9Si4Ou4K70MFKAgpoXA2MtixCoiqb4PDUgHsHP3iJ/Q==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/interactive@0.0.25':
-    resolution: {integrity: sha512-rl3k5pdpP/K2Pkyr8U6dg9e/H8JdmE6eoDSpGnPpXH261jA4nVMUIio4ysaHf+e1kQXGuk0JAWjMoRwpFYkrtg==}
+  '@uiid/layout@0.0.34':
+    resolution: {integrity: sha512-JDco6oOLpl9lGHfP/krNEPvUJXS4otlved08sMWVCq9qkLZLXhS9Cku1jK8m6th4wn783aDJd31GWXmYpXARzA==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/layout@0.0.25':
-    resolution: {integrity: sha512-H7bvWwk91kYjI8QLJppdqfRx3WQRe5rkh6vI8a8dubNJ1jnmcuWoI97Ad7tLl9k3C8tav6oO6IMPucbkmr1GWQ==}
+  '@uiid/lists@0.0.34':
+    resolution: {integrity: sha512-dojnJzXRhSqIi5SDgBu9Ak0x6WHYqwkhsXzDTz+Le9rMCiBimLd9LFnUcACjnYhLdkyjCBrCnDpo8tmKbm1HWg==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/lists@0.0.25':
-    resolution: {integrity: sha512-kVIVSZCs9QchhcFv/DHnIlhH4pXodUUqLz27MLmsVi1JFqY6o0A9UbRwGToABUA8WLNBrYuh7QghJSwOjkUU+g==}
+  '@uiid/navigation@0.0.34':
+    resolution: {integrity: sha512-q2x2PtSWUVwZ9gNSc1bKQsjYnmKrs3SrJlyy429Nh5ZjAFrp2gfqoTi08BjWu468xbEqYq6/WjGYNBCCBfydKA==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/navigation@0.0.25':
-    resolution: {integrity: sha512-BTAOZuXBfPOPqldTVxRDKCdz/NlROha3jCUxfgL8d5gFaHLnzbY4EBfVnBhuKcKQjHY4qN0u8OW/N+A/dhD/hA==}
+  '@uiid/overlays@0.0.34':
+    resolution: {integrity: sha512-hz3mq8+eaBtB+1wDXwhN/HrBlDc8Sj/5zR8jQLvC5GVSK80iguSNq1i8CGm2bEMqrAntJ5gi7ubR1Ldhpoba4w==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/overlays@0.0.25':
-    resolution: {integrity: sha512-tFkC9mdmJQ84+oI8QvTWTCpujYUgd4HswNanfiTbQJ32w0k8Xkvw+Iz2z1H+reIHMwL6doMajqk2tkg8fXVOZQ==}
+  '@uiid/tables@0.0.34':
+    resolution: {integrity: sha512-QCt6IgopMhWjq482eD1f3lKmlesKYCHzDWAGfqwYYNloVIAJ4SN02HO8YqUHBkqSj3h3zKYGd+c+ozroYhaqjA==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/tables@0.0.25':
-    resolution: {integrity: sha512-UymTK9oi3UfdKBmVRJv+ht/rWYrPM+scA/pWKBWRqZdLfMq7ZpcABAg1vpCdFi33ixR/Ongzpvr/QZeJSaRWvw==}
+  '@uiid/themes@0.0.4':
+    resolution: {integrity: sha512-ofWJS3+Xf/vEObfGLq9gp63gW+9vZ93beBNIF8K7q9QevSRcWxgWkl/L/j5Q6Lv2wNKPziN2JjvT9udc/MYTrg==}
+
+  '@uiid/tokens@0.0.34':
+    resolution: {integrity: sha512-5bNR+2kStnX4r8nYfKhHecKwxLpq+X9jkivIC8Nu0GeLf7w9sMTSo/8X4q7R2vmphW4X9RUMreoccldCxwZB/g==}
+
+  '@uiid/typography@0.0.34':
+    resolution: {integrity: sha512-AaiJoH2cBdPw9kAGEoBi6TKi907v1hoPGPAl1AOqD5VEbm/vckfr4f3Y16R6ABmbPWLEtHWnDkltwV+aB/MxOg==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
 
-  '@uiid/themes@0.0.3':
-    resolution: {integrity: sha512-qZyJ76w350vZpsZ+Zcknd50LE7SvCRA0LRaXDpf9mhvV0Gx/5ZxX0mft4m8fRDrt0Fv/MvCLfQsK+XugvrZo9Q==}
-
-  '@uiid/tokens@0.0.25':
-    resolution: {integrity: sha512-TCAdywyK7umInKgtNLaeMJUpmvWRuyRuplo/GiKiKZuqCnm1sONdk3puPO86o4L+/azPzDrV2ZUaZjWuvmamSQ==}
-
-  '@uiid/typography@0.0.25':
-    resolution: {integrity: sha512-RgaQBZt+Dq8IYFn0PzQtousBnMrBSVYAJp0bL2iaZuZ7+iJjIVu2og6SZJtj4kSZPNRWoW3JLJjTonJQoKG71g==}
-    peerDependencies:
-      react: ^19.1.1
-      react-dom: ^19.1.1
-
-  '@uiid/utils@0.0.25':
-    resolution: {integrity: sha512-+WVFGxYgy5koIutHFKYfrSBYNj9p9bniO1Qkv5J3xpqBr/dOeqW7qa7QyTARs9ttRyJvWMSke+L9EOLp8luBCg==}
+  '@uiid/utils@0.0.34':
+    resolution: {integrity: sha512-UCp4Sm9kdmdMYCe833wmg/ewfhb+bf5e4XGTXErFPILkZmhK6vaMJno15+5z+5jnpYn+Ykk1UB+3jsjPPXinhA==}
     peerDependencies:
       react: ^19.1.1
       react-dom: ^19.1.1
@@ -3414,15 +3408,15 @@ snapshots:
 
   '@types/use-sync-external-store@0.0.6': {}
 
-  '@uiid/buttons@0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/buttons@0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/overlays': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/overlays': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
@@ -3430,20 +3424,20 @@ snapshots:
       - '@types/react-dom'
       - typescript
 
-  '@uiid/calendars@0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/calendars@0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@dnd-kit/utilities': 3.2.2(react@19.2.7)
-      '@uiid/buttons': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/cards': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/indicators': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/interactive': 0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/overlays': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/buttons': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/indicators': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/interactive': 0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/overlays': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       date-fns: 4.4.0
       react: 19.2.7
       react-day-picker: 9.14.0(react@19.2.7)
@@ -3457,30 +3451,30 @@ snapshots:
       - highlight.js
       - typescript
 
-  '@uiid/cards@0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/cards@0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
       - '@types/react'
       - typescript
 
-  '@uiid/code@0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/code@0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@shikijs/langs': 3.23.0
       '@shikijs/themes': 3.23.0
       '@shikijs/transformers': 3.23.0
-      '@uiid/buttons': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/cards': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/buttons': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       shiki: 3.23.0
@@ -3489,24 +3483,24 @@ snapshots:
       - '@types/react-dom'
       - typescript
 
-  '@uiid/design-system@0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/design-system@0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
-      '@uiid/buttons': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/calendars': 0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/cards': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/code': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/forms': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/indicators': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/interactive': 0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/lists': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/navigation': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/overlays': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tables': 0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/buttons': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/calendars': 0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/code': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/forms': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/indicators': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/interactive': 0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/lists': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/navigation': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/overlays': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tables': 0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
@@ -3518,19 +3512,19 @@ snapshots:
       - highlight.js
       - typescript
 
-  '@uiid/forms@0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/forms@0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@number-flow/react': 0.5.14(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/buttons': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/cards': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/lists': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/overlays': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/buttons': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/lists': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/overlays': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
@@ -3538,32 +3532,26 @@ snapshots:
       - '@types/react-dom'
       - typescript
 
-  '@uiid/icons@0.0.22(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@uiid/icons@0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       lucide-react: 0.564.0(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@uiid/icons@0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
-    dependencies:
-      lucide-react: 0.564.0(react@19.2.7)
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-
-  '@uiid/indicators@0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/indicators@0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/cards': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
       - '@types/react'
       - typescript
 
-  '@uiid/interactive@0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/interactive@0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@dnd-kit/core': 6.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3580,16 +3568,16 @@ snapshots:
       '@tiptap/pm': 3.26.0
       '@tiptap/react': 3.26.0(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0)(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tiptap/starter-kit': 3.26.0
-      '@uiid/buttons': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/cards': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/forms': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/indicators': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/overlays': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/buttons': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/forms': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/indicators': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/overlays': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       lowlight: 3.3.0
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
@@ -3604,46 +3592,44 @@ snapshots:
       - highlight.js
       - typescript
 
-  '@uiid/layout@0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/layout@0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
       - '@types/react'
       - typescript
 
-  '@uiid/lists@0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/lists@0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
       - '@types/react'
       - typescript
 
-  '@uiid/navigation@0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/navigation@0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/buttons': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/forms': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/indicators': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/lists': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/overlays': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/buttons': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/forms': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/indicators': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/lists': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/overlays': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
@@ -3651,15 +3637,15 @@ snapshots:
       - '@types/react-dom'
       - typescript
 
-  '@uiid/overlays@0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/overlays@0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/cards': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       vaul: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3668,17 +3654,19 @@ snapshots:
       - '@types/react-dom'
       - typescript
 
-  '@uiid/tables@0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/tables@0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/buttons': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/icons': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@uiid/interactive': 0.0.25(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/layout': 0.0.25(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/overlays': 0.0.25(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/tokens': 0.0.25
-      '@uiid/typography': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/buttons': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/cards': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/forms': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/icons': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@uiid/interactive': 0.0.34(@floating-ui/dom@1.7.6)(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/extension-code-block@3.26.0(@tiptap/core@3.26.0(@tiptap/pm@3.26.0))(@tiptap/pm@3.26.0))(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(highlight.js@11.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/layout': 0.0.34(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/overlays': 0.0.34(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/typography': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
@@ -3690,22 +3678,22 @@ snapshots:
       - highlight.js
       - typescript
 
-  '@uiid/themes@0.0.3': {}
+  '@uiid/themes@0.0.4': {}
 
-  '@uiid/tokens@0.0.25':
+  '@uiid/tokens@0.0.34':
     dependencies:
-      '@uiid/themes': 0.0.3
+      '@uiid/themes': 0.0.4
 
-  '@uiid/typography@0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/typography@0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
-      '@uiid/tokens': 0.0.25
-      '@uiid/utils': 0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
+      '@uiid/tokens': 0.0.34
+      '@uiid/utils': 0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
       - typescript
 
-  '@uiid/utils@0.0.25(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
+  '@uiid/utils@0.0.34(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)':
     dependencies:
       cva: 1.0.0-beta.4(typescript@5.9.3)
       react: 19.2.7

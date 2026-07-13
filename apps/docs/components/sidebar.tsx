@@ -33,8 +33,7 @@ export function Sidebar() {
                       {kind}
                     </Text>
                     <List
-                      type="none"
-                      size="small"
+                      marker="none"
                       items={items.map((entry) => ({
                         value: entry.slug,
                         label: (
