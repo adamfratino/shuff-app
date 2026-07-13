@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { List, Stack, Text } from "@uiid/design-system";
-import { allDocs, groupByKind, KIND_ORDER } from "../lib/docs";
+
+import {
+  SIDEBAR_WIDTH,
+  SIDEBAR_SPACING,
+  SHELL_BORDER_WIDTH,
+  SIDEBAR_LIST_ITEM_SPACING,
+} from "@/constants";
+import { allDocs, groupByKind, KIND_ORDER } from "@/lib/docs";
+import { SidebarCollapsible } from "@/components/sidebar-collapsible";
 
 const ROUTE_BY_PKG: Record<string, string> = {
   "@shuff/core": "/core",
@@ -9,50 +17,81 @@ const ROUTE_BY_PKG: Record<string, string> = {
 
 export function Sidebar() {
   return (
-    <aside data-slot="sidebar">
-      <Stack gap={4} maxw={240} p={8} br={1} fullheight>
-        <Text size={1} weight="bold">
-          shuff docs
-        </Text>
+    <SidebarContainer>
+      <SidebarScrollContainer>
+        <SidebarHeader>shuff docs</SidebarHeader>
         {allDocs.map((pkg) => {
           const route = ROUTE_BY_PKG[pkg.pkg] ?? "/";
           const groups = groupByKind(pkg.entries);
           return (
             <Stack key={pkg.pkg} gap={3}>
-              <Link href={route}>
-                <Text size={0} weight="bold" family="mono">
-                  {pkg.pkg}
-                </Text>
-              </Link>
+              <Text size={0} weight="bold" render={<Link href={route} />}>
+                {pkg.pkg}
+              </Text>
               {KIND_ORDER.flatMap((kind) => {
                 const items = groups.get(kind);
                 if (!items || items.length === 0) return [];
                 return (
-                  <Stack key={kind} gap={1}>
-                    <Text size={-1} shade="muted">
-                      {kind}
-                    </Text>
+                  <SidebarCollapsible key={kind} label={kind}>
                     <List
-                      type="none"
-                      size="small"
+                      marker="none"
+                      gap={SIDEBAR_LIST_ITEM_SPACING}
                       items={items.map((entry) => ({
                         value: entry.slug,
                         label: (
-                          <Link href={`${route}#${entry.slug}`}>
-                            <Text size={0} family="mono">
-                              {entry.name}
-                            </Text>
-                          </Link>
+                          <Text render={<Link href={`${route}#${entry.slug}`} />}>
+                            {entry.name}
+                          </Text>
                         ),
                       }))}
                     />
-                  </Stack>
+                  </SidebarCollapsible>
                 );
               })}
             </Stack>
           );
         })}
-      </Stack>
-    </aside>
+      </SidebarScrollContainer>
+    </SidebarContainer>
   );
 }
+
+const SidebarContainer = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Stack
+      data-slot="sidebar"
+      render={<aside />}
+      maxw={SIDEBAR_WIDTH}
+      br={SHELL_BORDER_WIDTH}
+      ax="stretch"
+      fullwidth
+    >
+      {children}
+    </Stack>
+  );
+};
+SidebarContainer.displayName = "SidebarContainer";
+
+const SidebarScrollContainer = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Stack
+      data-slot="sidebar-scroll-container"
+      className="sticky top-0 overflow-y-auto h-screen"
+      ax="stretch"
+      gap={SIDEBAR_SPACING}
+      p={SIDEBAR_SPACING}
+    >
+      {children}
+    </Stack>
+  );
+};
+SidebarScrollContainer.displayName = "SidebarScrollContainer";
+
+const SidebarHeader = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Text data-slot="sidebar-header" weight="bold" size={3}>
+      {children}
+    </Text>
+  );
+};
+SidebarHeader.displayName = "SidebarHeader";
