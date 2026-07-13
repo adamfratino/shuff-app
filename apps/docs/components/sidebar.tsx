@@ -24,11 +24,9 @@ export function Sidebar() {
           const groups = groupByKind(pkg.entries);
           return (
             <Stack key={pkg.pkg} gap={3}>
-              <Link href={route}>
-                <Text size={0} weight="bold" family="mono">
-                  {pkg.pkg}
-                </Text>
-              </Link>
+              <Text size={0} weight="bold" render={<Link href={route} />}>
+                {pkg.pkg}
+              </Text>
               {KIND_ORDER.flatMap((kind) => {
                 const items = groups.get(kind);
                 if (!items || items.length === 0) return [];
@@ -43,11 +41,9 @@ export function Sidebar() {
                       items={items.map((entry) => ({
                         value: entry.slug,
                         label: (
-                          <Link href={`${route}#${entry.slug}`}>
-                            <Text size={0} family="mono">
-                              {entry.name}
-                            </Text>
-                          </Link>
+                          <Text render={<Link href={`${route}#${entry.slug}`} />}>
+                            {entry.name}
+                          </Text>
                         ),
                       }))}
                     />
