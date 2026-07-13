@@ -8,6 +8,7 @@ import {
   SIDEBAR_LIST_ITEM_SPACING,
 } from "@/constants";
 import { allDocs, groupByKind, KIND_ORDER } from "@/lib/docs";
+import { SidebarCollapsible } from "@/components/sidebar-collapsible";
 
 const ROUTE_BY_PKG: Record<string, string> = {
   "@shuff/core": "/core",
@@ -31,10 +32,7 @@ export function Sidebar() {
                 const items = groups.get(kind);
                 if (!items || items.length === 0) return [];
                 return (
-                  <Stack key={kind} gap={1}>
-                    <Text size={-1} shade="muted">
-                      {kind}
-                    </Text>
+                  <SidebarCollapsible key={kind} label={kind}>
                     <List
                       marker="none"
                       gap={SIDEBAR_LIST_ITEM_SPACING}
@@ -47,7 +45,7 @@ export function Sidebar() {
                         ),
                       }))}
                     />
-                  </Stack>
+                  </SidebarCollapsible>
                 );
               })}
             </Stack>
