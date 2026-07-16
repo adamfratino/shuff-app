@@ -36,10 +36,13 @@ export function Sidebar() {
                     <List
                       marker="none"
                       gap={SIDEBAR_LIST_ITEM_SPACING}
+                      ml={2}
                       items={items.map((entry) => ({
                         value: entry.slug,
                         label: (
-                          <Text render={<Link href={`${route}#${entry.slug}`} />}>
+                          <Text
+                            render={<Link href={`${route}#${entry.slug}`} />}
+                          >
                             {entry.name}
                           </Text>
                         ),

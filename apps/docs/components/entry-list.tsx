@@ -44,6 +44,7 @@ function EntryBlock({ entry }: { readonly entry: DocEntry }) {
       gap={4}
       fullwidth
       title={entry.name}
+      style={{ scrollMarginBlockStart: 80 }}
       description={<Comment parts={entry.description} />}
       InnerContainerProps={{ ax: "stretch" }}
       action={
