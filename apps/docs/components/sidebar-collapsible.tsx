@@ -22,6 +22,7 @@ export function SidebarCollapsible({
         className="group cursor-pointer"
         ay="center"
         gap={1}
+        ml={2}
       >
         <Text size={-1} shade="muted" className="group-hover:underline">
           {label}
