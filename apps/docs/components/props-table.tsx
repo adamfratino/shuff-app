@@ -14,18 +14,18 @@ export function PropsTable({ entry }: { readonly entry: DocEntry }) {
 
   const rows = props.map((prop) => ({
     Prop: (
-      <Text family="mono" size={-1} color="orange">
+      <Text render={<p />} my={2} family="mono" size={-1} color="orange">
         {prop.name}
         {prop.optional ? "?" : ""}
       </Text>
     ),
     Type: (
-      <Badge size="small" color="blue">
+      <Badge my={2} size="small" color="blue" className="[&>span]:text-nowrap!">
         {prop.type}
       </Badge>
     ),
     Description: (
-      <Text size={-1} shade="muted">
+      <Text render={<p />} my={2} size={-1} shade="muted">
         {prop.description.length > 0 ? (
           <Comment parts={prop.description} />
         ) : (
@@ -37,7 +37,7 @@ export function PropsTable({ entry }: { readonly entry: DocEntry }) {
 
   return (
     <Stack
-      className="overflow-auto [&_td]:align-top [&_th]:align-top [&_td]:py-2 [&_th]:py-2"
+      className="overflow-auto [&_td]:align-top [&_th]:align-top"
       ax="stretch"
       fullwidth
     >

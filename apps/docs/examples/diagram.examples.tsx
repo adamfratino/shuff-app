@@ -12,10 +12,6 @@ export const WithLabels = () => {
   return <Diagram discs={sampleFrame} showLabels />;
 };
 
-export const FullCourt = () => {
-  return <Diagram discs={sampleFrame} variant="full" />;
-};
-
 export const NeutralCourt = () => {
   return <Diagram discs={sampleFrame} highlightScoring={false} />;
 };

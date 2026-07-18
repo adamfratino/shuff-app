@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Checkbox, Group, Stack, Text } from "@uiid/design-system";
+import { Box, Group, Stack, Switch, Text } from "@uiid/design-system";
 import { Diagram } from "@shuff/diagram";
 import { type Disc, frameScore, mirrorEnd, mirrorSide } from "@shuff/core";
 
 import { COURT_WIDTH, DiscChip, formatScore } from "./_shared";
 import { sampleFrame } from "./data";
 
-export const MirrorTransforms = () => {
+export const FullCourt = () => {
   const [end, setEnd] = useState(false);
   const [side, setSide] = useState(false);
 
@@ -29,12 +29,12 @@ export const MirrorTransforms = () => {
       </Box>
       <Stack gap={4} ax="stretch" className="min-w-0">
         <Group gap={4} className="flex-wrap">
-          <Checkbox
+          <Switch
             label="mirrorEnd (flip y)"
             checked={end}
             onCheckedChange={(checked) => setEnd(checked)}
           />
-          <Checkbox
+          <Switch
             label="mirrorSide (flip x)"
             checked={side}
             onCheckedChange={(checked) => setSide(checked)}

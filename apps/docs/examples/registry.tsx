@@ -112,15 +112,14 @@ export const EXAMPLES: ExampleMeta[] = [
   },
   {
     id: "FullCourt",
-    file: "diagram.examples.tsx",
+    file: "mirror.examples.tsx",
     title: "Full court",
     description:
-      'variant="full" renders both ends; the far end mirrors the near end across y = 234. viewBox 0 0 72 468.',
-    Visual: DiagramEx.FullCourt,
+      'variant="full" renders both ends; the far end mirrors the near end across y = 234. Toggle mirrorEnd to flip the frame across the full-court center (sending discs to the far end) and mirrorSide to flip across the longitudinal centerline (x = 36) — both preserve disc color and chain freely.',
+    Visual: Mirror.FullCourt,
     data: ["sampleFrame"],
-    Aside: () => <ScoreTable discs={sampleFrame} />,
-    asideLabel: "Scores",
     courtWidth: COURT_WIDTH,
+    custom: true,
     slugs: ["Diagram"],
     gallery: true,
   },
@@ -151,18 +150,6 @@ export const EXAMPLES: ExampleMeta[] = [
     courtWidth: COURT_WIDTH,
     slugs: ["Diagram"],
     gallery: true,
-  },
-  {
-    id: "MirrorTransforms",
-    file: "mirror.examples.tsx",
-    title: "Mirror transforms",
-    description:
-      "Toggle mirrorEnd to flip the frame across the full-court center (y = 234, sending discs to the far end) and mirrorSide to flip across the longitudinal centerline (x = 36). Both preserve disc color and chain freely; once mirrored to the far end the discs fall outside the half-court scoring grid and total 0.",
-    Visual: Mirror.MirrorTransforms,
-    data: ["sampleFrame"],
-    courtWidth: COURT_WIDTH,
-    custom: true,
-    slugs: ["mirrorEnd", "mirrorSide"],
   },
   {
     id: "ShooterShadows",
