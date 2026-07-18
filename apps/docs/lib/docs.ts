@@ -79,6 +79,8 @@ export type DocEntry = {
   parameters: DocParam[];
   returnType?: string;
   shape?: string;
+  /** Members of a type/interface (e.g. component props), when it has any. */
+  props?: DocParam[];
 };
 
 export type DocsManifest = {
@@ -195,6 +197,15 @@ function toEntry(child: TypeDocChild): DocEntry {
             const raw = aliasShape(child);
             return raw ? formatAliasShape(child.name, raw) : undefined;
           })()
+        : undefined,
+    props:
+      (kind === "type" || kind === "interface") && child.children?.length
+        ? child.children.map((c) => ({
+            name: c.name,
+            type: renderType(c.type),
+            description: c.comment?.summary ?? [],
+            optional: Boolean(c.flags?.isOptional),
+          }))
         : undefined,
   };
 }

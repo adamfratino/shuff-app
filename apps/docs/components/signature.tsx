@@ -1,4 +1,6 @@
-import { CodeBlock, highlight } from "@uiid/design-system";
+import { CodeBlock } from "@uiid/design-system";
+
+import { highlightCached } from "../lib/highlight";
 
 export async function Signature({
   code,
@@ -7,6 +9,6 @@ export async function Signature({
   code: string;
   language?: "typescript" | "tsx";
 }) {
-  const html = await highlight(code, language);
+  const html = await highlightCached(code, language);
   return <CodeBlock code={code} language={language} html={html} />;
 }
