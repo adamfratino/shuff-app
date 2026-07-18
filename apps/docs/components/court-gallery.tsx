@@ -13,6 +13,7 @@ export function CourtGallery() {
     <Stack
       data-slot="court-gallery"
       id="Diagram"
+      data-title="Court gallery"
       className="scroll-mt-16"
       gap={6}
       ax="stretch"

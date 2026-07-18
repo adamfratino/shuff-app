@@ -101,6 +101,7 @@ export async function ExampleFrame({ example }: { example: ExampleMeta }) {
       <Stack
         data-slot="example"
         id={`example-${id}`}
+        data-title={title}
         className="scroll-mt-16"
         ax="stretch"
         gap={6}
@@ -117,6 +118,7 @@ export async function ExampleFrame({ example }: { example: ExampleMeta }) {
     <div
       data-slot="example"
       id={`example-${id}`}
+      data-title={title}
       className="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] items-start gap-6 scroll-mt-16"
     >
       <Box

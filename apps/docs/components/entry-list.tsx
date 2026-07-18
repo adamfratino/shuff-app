@@ -48,6 +48,7 @@ function EntryBlock({
       data-slot="entry-block"
       render={<section />}
       id={entry.slug}
+      data-title={entry.name}
       ax="stretch"
       py={3}
       bb={1}

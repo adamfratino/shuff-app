@@ -5,10 +5,13 @@ import { Group, Stack } from "@uiid/design-system";
 
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
+import { OnThisPage } from "@/components/on-this-page";
 
 import {
+  ASIDE_WIDTH,
   CONTENT_MAX_WIDTH,
   SHELL_SPACING,
+  SIDEBAR_SPACING,
   SHELL_BORDER_WIDTH,
   SITE_TITLE,
   SITE_DESCRIPTION,
@@ -46,7 +49,12 @@ export default function RootLayout({
           <Sidebar />
           <AppShellInner>
             <Header />
-            <Main>{children}</Main>
+            <ContentRow>
+              <Main>{children}</Main>
+              <AsideContainer>
+                <OnThisPage />
+              </AsideContainer>
+            </ContentRow>
           </AppShellInner>
         </AppShellOuter>
       </Body>
@@ -86,11 +94,21 @@ const AppShellInner = ({ children }: React.PropsWithChildren) => {
 };
 AppShellInner.displayName = "AppShellInner";
 
+const ContentRow = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Group data-slot="content-row" className="flex-1" ay="start" fullwidth>
+      {children}
+    </Group>
+  );
+};
+ContentRow.displayName = "ContentRow";
+
 const Main = ({ children }: React.PropsWithChildren) => {
   return (
     <Stack
       data-slot="main"
       render={<main />}
+      className="min-w-0"
       maxw={CONTENT_MAX_WIDTH}
       br={SHELL_BORDER_WIDTH}
       p={SHELL_SPACING}
@@ -102,3 +120,22 @@ const Main = ({ children }: React.PropsWithChildren) => {
   );
 };
 Main.displayName = "Main";
+
+const AsideContainer = ({ children }: React.PropsWithChildren) => {
+  return (
+    <Stack
+      data-slot="aside"
+      render={<aside />}
+      maxw={ASIDE_WIDTH}
+      gap={SIDEBAR_SPACING}
+      px={SIDEBAR_SPACING}
+      py={SHELL_SPACING}
+      ax="stretch"
+      fullwidth
+      className="sticky top-0 overflow-y-auto max-h-screen"
+    >
+      {children}
+    </Stack>
+  );
+};
+AsideContainer.displayName = "AsideContainer";

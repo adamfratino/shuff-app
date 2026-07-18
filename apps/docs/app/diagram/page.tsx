@@ -26,15 +26,22 @@ export default function DiagramPage() {
       title={diagramDocs.pkg}
       description="React primitive that renders a shuffleboard half- or full-court with discs at given coordinates."
     >
+      <CourtGallery />
       {propsEntry && (
-        <Stack data-slot="props" id={PROPS_SLUG} gap={3} ax="stretch" className="scroll-mt-16">
-          <Text render={<h2 />} size={4} weight="semibold" family="mono">
+        <Stack
+          data-slot="props"
+          id={PROPS_SLUG}
+          data-title={propsEntry.name}
+          gap={3}
+          ax="stretch"
+          className="scroll-mt-16"
+        >
+          <Text render={<h2 />} size={4} weight="semibold">
             {propsEntry.name}
           </Text>
           <PropsTable entry={propsEntry} />
         </Stack>
       )}
-      <CourtGallery />
       <EntryList entries={entries} />
     </PageWrapper>
   );
