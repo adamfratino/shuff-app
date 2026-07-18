@@ -37,7 +37,7 @@ export function PropsTable({ entry }: { readonly entry: DocEntry }) {
 
   return (
     <Stack
-      className="overflow-auto [&_td]:align-top [&_th]:align-top"
+      className="overflow-auto [&_td]:align-top [&_th]:align-top [&_td]:py-2 [&_th]:py-2"
       ax="stretch"
       fullwidth
     >

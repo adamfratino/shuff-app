@@ -1,4 +1,4 @@
-import { Stack, Text } from "@uiid/design-system";
+import { Separator, Stack, Text } from "@uiid/design-system";
 
 import { EntryList } from "../../components/entry-list";
 import { CourtGallery } from "../../components/court-gallery";
@@ -26,7 +26,9 @@ export default function DiagramPage() {
       title={diagramDocs.pkg}
       description="React primitive that renders a shuffleboard half- or full-court with discs at given coordinates."
     >
+      <Separator />
       <CourtGallery />
+      <Separator />
       {propsEntry && (
         <Stack
           data-slot="props"
@@ -36,9 +38,6 @@ export default function DiagramPage() {
           ax="stretch"
           className="scroll-mt-16"
         >
-          <Text render={<h2 />} size={4} weight="semibold">
-            {propsEntry.name}
-          </Text>
           <PropsTable entry={propsEntry} />
         </Stack>
       )}

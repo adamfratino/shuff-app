@@ -11,7 +11,7 @@ export function PageWrapper({
   children,
 }: Readonly<PageWrapperProps>) {
   return (
-    <Stack data-slot="page-wrapper" px={4} pt={8} pb={32} gap={16} ax="stretch">
+    <Stack data-slot="page-wrapper" px={4} pt={8} pb={32} gap={8} ax="stretch">
       <Stack data-slot="page-intro" gap={4}>
         <Text render={<h1 />} size={5} weight="semibold" family="mono">
           {title}
