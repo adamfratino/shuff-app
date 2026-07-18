@@ -5,7 +5,7 @@ export const SITE_DESCRIPTION =
 export const SHELL_SPACING = 3;
 export const SHELL_BORDER_WIDTH = 1;
 
-export const SIDEBAR_WIDTH = 280;
+export const SIDEBAR_WIDTH = 200;
 export const SIDEBAR_SPACING = SHELL_SPACING * 2;
 export const SIDEBAR_LIST_ITEM_SPACING = 1;
 

@@ -5,6 +5,7 @@ import { Box, CodeBlock, Stack, Text } from "@uiid/design-system";
 
 import type { ExampleMeta } from "../examples/registry";
 import { highlightCached } from "../lib/highlight";
+import { MockData } from "./mock-data";
 
 const EXAMPLES_DIR = path.resolve(process.cwd(), "examples");
 const EXPORT_PATTERN = /^export const /m;
@@ -31,11 +32,11 @@ function Heading({
   description: string;
 }) {
   return (
-    <Stack gap={3}>
+    <Stack gap={6}>
       <Text render={<h3 />} size={4} weight="semibold">
         {title}
       </Text>
-      <Text size={0} shade="muted">
+      <Text size={1} shade="muted" balance>
         {description}
       </Text>
     </Stack>
@@ -59,8 +60,18 @@ function SectionLabel({ children }: React.PropsWithChildren) {
  * render full-width above the source.
  */
 export async function ExampleFrame({ example }: { example: ExampleMeta }) {
-  const { id, file, title, description, Visual, Aside, asideLabel, courtWidth, custom } =
-    example;
+  const {
+    id,
+    file,
+    title,
+    description,
+    Visual,
+    Aside,
+    asideLabel,
+    data,
+    courtWidth,
+    custom,
+  } = example;
   const code = await getExampleSource(file, id);
   const html = code ? await highlightCached(code, "tsx") : undefined;
 
@@ -74,6 +85,7 @@ export async function ExampleFrame({ example }: { example: ExampleMeta }) {
         filename={`${id}.tsx`}
         rows={12}
       />
+      {data?.length ? <MockData data={data} /> : null}
     </Stack>
   ) : null;
 
