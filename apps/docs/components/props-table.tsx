@@ -20,7 +20,7 @@ export function PropsTable({ entry }: { readonly entry: DocEntry }) {
       </Text>
     ),
     Type: (
-      <Badge size="small" color="blue" className="text-nowrap">
+      <Badge size="small" color="blue">
         {prop.type}
       </Badge>
     ),
@@ -36,7 +36,11 @@ export function PropsTable({ entry }: { readonly entry: DocEntry }) {
   }));
 
   return (
-    <Stack className="overflow-auto [&_td]:align-top [&_th]:align-top" ax="stretch" fullwidth>
+    <Stack
+      className="overflow-auto [&_td]:align-top [&_th]:align-top"
+      ax="stretch"
+      fullwidth
+    >
       <Table
         items={rows}
         bordered

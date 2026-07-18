@@ -12,9 +12,14 @@ export const metadata = {
 
 const PROPS_SLUG = "DiagramProps";
 
+// The Diagram component and its props are documented by the gallery + props
+// table above; drop their auto-generated reference entries from the list so it
+// only carries the supporting types (Disc, Point).
+const HIDDEN_SLUGS = new Set([PROPS_SLUG, "Diagram"]);
+
 export default function DiagramPage() {
   const propsEntry = diagramDocs.entries.find((e) => e.slug === PROPS_SLUG);
-  const entries = diagramDocs.entries.filter((e) => e.slug !== PROPS_SLUG);
+  const entries = diagramDocs.entries.filter((e) => !HIDDEN_SLUGS.has(e.slug));
 
   return (
     <PageWrapper

@@ -10,7 +10,14 @@ import { ExampleFrame } from "./example-frame";
  */
 export function CourtGallery() {
   return (
-    <Stack data-slot="court-gallery" gap={6} ax="stretch" fullwidth>
+    <Stack
+      data-slot="court-gallery"
+      id="Diagram"
+      className="scroll-mt-16"
+      gap={6}
+      ax="stretch"
+      fullwidth
+    >
       {galleryExamples.map((example, i) => (
         <Fragment key={example.id}>
           {i > 0 && <Separator my={6} />}
