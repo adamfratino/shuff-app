@@ -1,11 +1,6 @@
 import { Diagram } from "@shuff/diagram";
 
-import {
-  frameShooter,
-  occlusionDiscs,
-  occlusionShooter,
-  sampleFrame,
-} from "./data";
+import { frameShooter, sampleFrame } from "./data";
 
 export const ShooterShadows = () => {
   return (
@@ -25,17 +20,6 @@ export const Spotlight = () => {
       variant="full"
       shooter={frameShooter}
       showSpotlight
-    />
-  );
-};
-
-export const Occlusion = () => {
-  return (
-    <Diagram
-      discs={occlusionDiscs}
-      variant="full"
-      shooter={occlusionShooter}
-      showShadows
     />
   );
 };

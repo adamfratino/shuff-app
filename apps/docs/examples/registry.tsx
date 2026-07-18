@@ -1,14 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
 
 import { COURT_WIDTH, OcclusionTable, ScoreTable } from "./_shared";
-import {
-  cornerDiscs,
-  frameShooter,
-  occlusionDiscs,
-  occlusionShooter,
-  sampleFrame,
-  thresholdDiscs,
-} from "./data";
+import { cornerDiscs, frameShooter, sampleFrame } from "./data";
 import * as Scoring from "./scoring.examples";
 import * as DiagramEx from "./diagram.examples";
 import * as Spatial from "./spatial.examples";
@@ -48,32 +41,6 @@ export type ExampleMeta = {
 
 export const EXAMPLES: ExampleMeta[] = [
   {
-    id: "SampleFrame",
-    file: "scoring.examples.tsx",
-    title: "A scored frame",
-    description:
-      "Eight discs, four per color. frameScore sums each color; scoringZone and score resolve each disc's zone and points. 7-left and 8-right hold two discs each, so their zone fills tint more heavily.",
-    Visual: Scoring.SampleFrame,
-    data: ["sampleFrame"],
-    Aside: () => <ScoreTable discs={sampleFrame} />,
-    asideLabel: "Scores",
-    courtWidth: COURT_WIDTH,
-    slugs: ["frameScore", "score", "scoringZone"],
-  },
-  {
-    id: "ThresholdCases",
-    file: "scoring.examples.tsx",
-    title: "Clearance threshold",
-    description:
-      'A disc must clear a scoring line by SCORING_CLEARANCE (3.5") to count. Only the disc just past the 8/10 line scores — the one just short, the one straddling the centerline, and the one in the buffer all read as no score.',
-    Visual: Scoring.ThresholdCases,
-    data: ["thresholdDiscs"],
-    Aside: () => <ScoreTable discs={thresholdDiscs} />,
-    asideLabel: "Scores",
-    courtWidth: COURT_WIDTH,
-    slugs: ["SCORING_CLEARANCE", "scoreValue", "isScoringZone"],
-  },
-  {
     id: "CornerDiscs",
     file: "scoring.examples.tsx",
     title: "Every scoring corner",
@@ -84,7 +51,8 @@ export const EXAMPLES: ExampleMeta[] = [
     Aside: () => <ScoreTable discs={cornerDiscs} />,
     asideLabel: "Scores",
     courtWidth: COURT_WIDTH,
-    slugs: ["zoneAt", "activeScoringZones"],
+    slugs: ["Diagram"],
+    gallery: true,
   },
   {
     id: "HalfCourt",
@@ -182,21 +150,6 @@ export const EXAMPLES: ExampleMeta[] = [
     courtWidth: COURT_WIDTH,
     slugs: ["Diagram"],
     gallery: true,
-  },
-  {
-    id: "Occlusion",
-    file: "spatial.examples.tsx",
-    title: "Occlusion breakdown",
-    description:
-      "Shooter at (15, 459). occlusion reports what fraction of each disc is hidden and which discs block it: full occlusion (yellow blocks black at x=15), partial (~half), a multi-blocker chain (unioned), and an off-line reference that reports 0%.",
-    Visual: Spatial.Occlusion,
-    data: ["occlusionDiscs", "occlusionShooter"],
-    Aside: () => (
-      <OcclusionTable shooter={occlusionShooter} discs={occlusionDiscs} />
-    ),
-    asideLabel: "Occlusion",
-    courtWidth: COURT_WIDTH,
-    slugs: ["occlusion", "findBlockers", "isOccluded"],
   },
 ];
 

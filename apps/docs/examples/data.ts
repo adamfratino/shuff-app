@@ -13,14 +13,6 @@ export const sampleFrame: Disc[] = [
   { x: 22, y: 10, color: BLACK }, // kitchen
 ];
 
-/** Four discs at and around the 3.5" clearance threshold; only one scores. */
-export const thresholdDiscs: Disc[] = [
-  { x: 36, y: 93.6, color: YELLOW }, // just past 3.5" from 8/10 line
-  { x: 36, y: 93.4, color: BLACK }, // just short — no score
-  { x: 36, y: 36, color: YELLOW }, // straddles centerline — no score
-  { x: 36, y: 140, color: BLACK }, // buffer — no score
-];
-
 /**
  * One disc at each corner of each scoring area, just inside the 3.5"
  * clearance from both intersecting lines — every disc scores.
@@ -84,17 +76,3 @@ export const COORD_PLOT_LEGEND: ReadonlyArray<{
 
 /** Shooter on the right side of the far-end kitchen. */
 export const frameShooter: Point = { x: 50, y: 459 };
-
-/** Shooter + discs arranged to demonstrate full, partial, and chained occlusion. */
-export const occlusionShooter: Point = { x: 15, y: 459 };
-export const occlusionDiscs: Disc[] = [
-  // Pair 1 — full occlusion (directly inline along x=15)
-  { x: 15, y: 45, color: YELLOW }, // closer; blocks the disc behind it
-  { x: 15, y: 30, color: BLACK }, // farther; 100% blocked
-  // Trio — chain at x=40 demonstrating partial + multi-blocker
-  { x: 40, y: 100, color: YELLOW }, // closest of three; visible
-  { x: 40, y: 50, color: BLACK }, // ~half-blocked by disc above
-  { x: 40, y: 25, color: BLACK }, // blocked by BOTH discs above (unioned)
-  // Isolated reference disc, off the line of sight entirely
-  { x: 60, y: 100, color: YELLOW }, // reports 0%
-];
