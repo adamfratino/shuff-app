@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 import { COURT_WIDTH, OcclusionTable, ScoreTable } from "./_shared";
 import {
@@ -21,8 +21,12 @@ export type ExampleMeta = {
   file: string;
   title: string;
   description: string;
-  /** The court visual, rendered in the fixed-width left column. */
-  Visual: ComponentType;
+  /**
+   * The court visual, rendered in the fixed-width left column. A `custom`
+   * example receives the rendered code section as children so it can place it
+   * within its own layout (e.g. beside the diagram instead of below it).
+   */
+  Visual: ComponentType<{ children?: ReactNode }>;
   /** Optional data view (score/occlusion table), rendered in the details column. */
   Aside?: ComponentType;
   /** Section header shown above the Aside table (defaults to "Result"). */

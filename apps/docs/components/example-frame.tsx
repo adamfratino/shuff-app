@@ -108,8 +108,7 @@ export async function ExampleFrame({ example }: { example: ExampleMeta }) {
         fullwidth
       >
         <Heading title={title} description={description} />
-        <Visual />
-        {codeSection}
+        <Visual>{codeSection}</Visual>
       </Stack>
     );
   }

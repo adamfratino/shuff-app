@@ -8,7 +8,7 @@ import { type Disc, frameScore, mirrorEnd, mirrorSide } from "@shuff/core";
 import { COURT_WIDTH, DiscChip, formatScore } from "./_shared";
 import { sampleFrame } from "./data";
 
-export const FullCourt = () => {
+export const FullCourt = ({ children }: React.PropsWithChildren) => {
   const [end, setEnd] = useState(false);
   const [side, setSide] = useState(false);
 
@@ -50,6 +50,7 @@ export const FullCourt = () => {
             </Text>
           ))}
         </Stack>
+        {children}
       </Stack>
     </div>
   );
