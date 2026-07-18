@@ -163,7 +163,8 @@ export const EXAMPLES: ExampleMeta[] = [
     Aside: () => <OcclusionTable shooter={frameShooter} discs={sampleFrame} />,
     asideLabel: "Occlusion",
     courtWidth: COURT_WIDTH,
-    slugs: ["shadowPolygon", "tangentPoints"],
+    slugs: ["Diagram"],
+    gallery: true,
   },
   {
     id: "Spotlight",
