@@ -41,20 +41,6 @@ export type ExampleMeta = {
 
 export const EXAMPLES: ExampleMeta[] = [
   {
-    id: "CornerDiscs",
-    file: "scoring.examples.tsx",
-    title: "Every scoring corner",
-    description:
-      "One disc tucked into each corner of every scoring area, just inside the clearance from both intersecting lines. A stress test that every zone resolves and tints independently.",
-    Visual: Scoring.CornerDiscs,
-    data: ["cornerDiscs"],
-    Aside: () => <ScoreTable discs={cornerDiscs} />,
-    asideLabel: "Scores",
-    courtWidth: COURT_WIDTH,
-    slugs: ["Diagram"],
-    gallery: true,
-  },
-  {
     id: "HalfCourt",
     file: "diagram.examples.tsx",
     title: "Half court (default)",
@@ -92,6 +78,20 @@ export const EXAMPLES: ExampleMeta[] = [
     data: ["sampleFrame"],
     courtWidth: COURT_WIDTH,
     custom: true,
+    slugs: ["Diagram"],
+    gallery: true,
+  },
+  {
+    id: "CornerDiscs",
+    file: "scoring.examples.tsx",
+    title: "Every scoring corner",
+    description:
+      "One disc tucked into each corner of every scoring area, just inside the clearance from both intersecting lines. A stress test that every zone resolves and tints independently.",
+    Visual: Scoring.CornerDiscs,
+    data: ["cornerDiscs"],
+    Aside: () => <ScoreTable discs={cornerDiscs} />,
+    asideLabel: "Scores",
+    courtWidth: COURT_WIDTH,
     slugs: ["Diagram"],
     gallery: true,
   },
