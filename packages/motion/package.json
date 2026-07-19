@@ -1,0 +1,41 @@
+{
+  "name": "@shuff/motion",
+  "version": "0.0.0",
+  "description": "Animation layer for @shuff/diagram — Motion-driven board transitions with floor-shuffleboard friction physics.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@shuff/core": "workspace:*",
+    "@shuff/diagram": "workspace:*",
+    "motion": ">=12",
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@shuff/core": "workspace:*",
+    "@shuff/diagram": "workspace:*",
+    "@types/react": "^19.0.2",
+    "motion": "^12.42.2",
+    "react": "^19.0.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
+  }
+}

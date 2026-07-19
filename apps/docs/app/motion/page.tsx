@@ -12,7 +12,7 @@ export default function MotionPage() {
   return (
     <PageWrapper
       title="@shuff/motion"
-      description="Planned animation layer on top of @shuff/diagram — Motion drives the data, the untouched Diagram renders it each frame. Strategy lives in packages/motion/PLAN.md; this page hosts the Phase 0 spike."
+      description="Animation layer on top of @shuff/diagram — Motion drives the data, the untouched Diagram renders it each frame. Strategy lives in packages/motion/PLAN.md; this page hosts the Phase 0 physics spike and the Phase 1 board-transition primitive."
     >
       <Separator />
       {MOTION_EXAMPLES.map((example) => (
