@@ -23,7 +23,16 @@ import {
 } from "@shuff/strategy";
 
 import { BLACK, COURT_WIDTH, DiscChip, formatScore, YELLOW } from "./_shared";
-import { exposureGuard, exposureScorer, playbookBoards } from "./data";
+import {
+  exposureGuard,
+  exposureScorer,
+  guardBoard,
+  hammerBoard,
+  kitchenReplaceBoard,
+  kitchenShotBoard,
+  snuggleBoard,
+  sweepBoard,
+} from "./data";
 import { usePhysicsBoard } from "./use-physics-board";
 
 /** Seeded PRNG so each shot's engine pick is stable across renders. */
@@ -140,26 +149,26 @@ function ShotSection({ board, plan, options, children }: ShotSectionProps) {
 }
 
 export const KitchenShot = ({ children }: React.PropsWithChildren) => (
-  <ShotSection board={playbookBoards.kitchen} plan={kitchenCandidates}>
+  <ShotSection board={kitchenShotBoard} plan={kitchenCandidates}>
     {children}
   </ShotSection>
 );
 
 export const TheGuard = ({ children }: React.PropsWithChildren) => (
-  <ShotSection board={playbookBoards.guard} plan={blockCandidates}>
+  <ShotSection board={guardBoard} plan={blockCandidates}>
     {children}
   </ShotSection>
 );
 
 export const TheSnuggle = ({ children }: React.PropsWithChildren) => (
-  <ShotSection board={playbookBoards.snuggle} plan={snuggleCandidates}>
+  <ShotSection board={snuggleBoard} plan={snuggleCandidates}>
     {children}
   </ShotSection>
 );
 
 export const KitchenReplace = ({ children }: React.PropsWithChildren) => (
   <ShotSection
-    board={playbookBoards["kitchen-replace"]}
+    board={kitchenReplaceBoard}
     plan={kitchenReplaceCandidates}
   >
     {children}
@@ -167,7 +176,7 @@ export const KitchenReplace = ({ children }: React.PropsWithChildren) => (
 );
 
 export const TheSweep = ({ children }: React.PropsWithChildren) => (
-  <ShotSection board={playbookBoards.sweep} plan={sweepCandidates}>
+  <ShotSection board={sweepBoard} plan={sweepCandidates}>
     {children}
   </ShotSection>
 );
@@ -180,7 +189,7 @@ const HAMMER_OPTIONS: Partial<StrategyOptions> = { shotNumber: 8, trials: 5 };
 
 export const TheHammer = ({ children }: React.PropsWithChildren) => (
   <ShotSection
-    board={playbookBoards.hammer}
+    board={hammerBoard}
     plan={hammerPlan}
     options={HAMMER_OPTIONS}
   >
