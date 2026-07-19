@@ -10,18 +10,39 @@ import {
   distance,
   HALF_COURT_LENGTH,
   HALF_COURT_WIDTH,
+  KITCHEN_DEPTH,
   type Point,
 } from "@shuff/core";
 
 import { COURT_WIDTH } from "./_shared";
 import { glideDiscs } from "./data";
 
+/**
+ * Physics: Coulomb friction (constant deceleration) and perfectly elastic
+ * equal-mass collisions — the model real shuffleboard sims use. Constant
+ * deceleration is exactly a quadratic ease, so each motion segment maps
+ * onto one Motion animation with an exact bezier, and a disc's velocity at
+ * any instant falls out of the friction law analytically.
+ */
+const EASE_ACCEL: [number, number, number, number] = [0.33, 0, 0.67, 0.33]; // exact t²
+const EASE_DECEL: [number, number, number, number] = [0.33, 0.67, 0.67, 1]; // exact 1-(1-t)²
+
+type Segment = {
+  dir: Point; // unit direction of travel
+  v0: number; // peak speed, in/s
+  startedAt: number; // performance.now() at segment start
+  phase: "stroke" | "glide";
+};
+
 export const GlideToClick = ({ children }: React.PropsWithChildren) => {
   const [discs, setDiscs] = useState(glideDiscs);
   const discsRef = useRef(discs);
   const controlsRef = useRef(new Map<string, AnimationPlaybackControls>());
-  // Last observed position + timestamp per moving disc → velocity at contact.
-  const trackRef = useRef(new Map<string, { p: Point; at: number }>());
+  const segRef = useRef(new Map<string, Segment>());
+
+  // Friction: deceleration in in/s². This is the court-speed knob from
+  // PLAN.md — lower is a faster (beaded) court.
+  const MU = 160;
 
   useEffect(
     () => () => {
@@ -43,100 +64,95 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
     y: Math.min(Math.max(p.y, DISC_RADIUS), HALF_COURT_LENGTH - DISC_RADIUS),
   });
 
-  /** Track a moving disc's position and return its velocity in inches/sec. */
-  const velocityOf = (id: string, p: Point): Point => {
-    const prev = trackRef.current.get(id);
-    const at = performance.now();
-    trackRef.current.set(id, { p, at });
-    if (!prev || at <= prev.at) return { x: 0, y: 0 };
-    const dt = (at - prev.at) / 1000;
-    return { x: (p.x - prev.p.x) / dt, y: (p.y - prev.p.y) / dt };
+  /** Exact velocity of a disc right now, from its motion segment. */
+  const velocityAt = (id: string): Point => {
+    const seg = segRef.current.get(id);
+    if (!seg) return { x: 0, y: 0 };
+    const t = (performance.now() - seg.startedAt) / 1000;
+    const strokeAccel = (seg.v0 * seg.v0) / (2 * KITCHEN_DEPTH);
+    const speed =
+      seg.phase === "stroke"
+        ? Math.min(seg.v0, strokeAccel * t)
+        : Math.max(0, seg.v0 - MU * t);
+    return { x: seg.dir.x * speed, y: seg.dir.y * speed };
   };
 
-  /**
-   * One moving disc against every other disc (treated as resting). On
-   * contact, most of the velocity component along the line of centers
-   * transfers to the struck disc (equal masses, imperfect restitution) and
-   * the tangential component stays with the mover — so a dead-center hit
-   * near-stops the shooter (the stick shot) while a glancing hit deflects
-   * it aside. Struck discs launch through the same machinery, so knock-ons
-   * chain.
-   */
-  const resolveCollisions = (id: string, p: Point, v: Point): Point => {
-    for (const other of discsRef.current) {
-      if (other.id === id || other.id === undefined) continue;
-      const gap = distance(p, other);
-      if (gap === 0 || gap >= DISC_DIAMETER) continue;
-      const n = { x: (other.x - p.x) / gap, y: (other.y - p.y) / gap };
-      const speedAlongCenters = v.x * n.x + v.y * n.y;
-      if (speedAlongCenters <= 0) continue; // touching but separating
-      controlsRef.current.get(id)?.stop();
-      // Back the mover off to exactly touching before splitting the velocity.
-      const touch = {
-        x: other.x - n.x * DISC_DIAMETER,
-        y: other.y - n.y * DISC_DIAMETER,
-      };
-      // Heavy discs on a hard court are a lossy system — the contact eats a
-      // good chunk of the energy. The struck disc leaves with ~55% of the
-      // approach speed and the shooter keeps ~15% as follow-through; the
-      // rest is lost to the collision itself.
-      const transferred = 0.55 * speedAlongCenters;
-      const retained = 0.15 * speedAlongCenters;
-      launch(
-        other.id,
-        { x: other.x, y: other.y },
-        { x: n.x * transferred, y: n.y * transferred },
-      );
-      launch(id, touch, {
-        x: v.x - n.x * (speedAlongCenters - retained),
-        y: v.y - n.y * (speedAlongCenters - retained),
-      });
-      return touch;
-    }
-    return p;
-  };
-
-  /** A struck disc departs at contact speed and glides friction-out to rest. */
-  const launch = (id: string, from: Point, v: Point) => {
-    controlsRef.current.get(id)?.stop();
-    const speed = Math.hypot(v.x, v.y);
-    if (speed < 10) return; // slower than ~10 in/s: it just settles
-    const glideLength = speed * 0.32; // court friction: inches per in/s
-    const to = clampToCourt({
-      x: from.x + (v.x / speed) * glideLength,
-      y: from.y + (v.y / speed) * glideLength,
-    });
-    // Full speed off the contact, then a long lazy decay — knocked discs
-    // bleed speed gradually, they don't brake.
-    glide(id, from, to, {
-      duration: (2 * glideLength) / speed,
-      ease: [0, 0.55, 0.15, 1],
-    });
-  };
-
-  const glide = (
+  const run = (
     id: string,
     from: Point,
     to: Point,
-    transition: {
-      duration: number;
-      ease: [number, number, number, number];
-    },
+    duration: number,
+    ease: [number, number, number, number],
+    onComplete?: () => void,
   ) => {
-    trackRef.current.set(id, { p: from, at: performance.now() });
     controlsRef.current.set(
       id,
       animate(0, 1, {
-        ...transition,
+        duration,
+        ease,
         onUpdate: (t) => {
           const p = {
             x: from.x + (to.x - from.x) * t,
             y: from.y + (to.y - from.y) * t,
           };
-          setDisc(id, resolveCollisions(id, p, velocityOf(id, p)));
+          setDisc(id, resolveCollisions(id, p));
         },
+        onComplete: onComplete ?? (() => segRef.current.delete(id)),
       }),
     );
+  };
+
+  /** Friction glide: stopping distance v²/2μ over duration v/μ. */
+  const launch = (id: string, from: Point, v: Point) => {
+    controlsRef.current.get(id)?.stop();
+    segRef.current.delete(id);
+    setDisc(id, from);
+    const speed = Math.hypot(v.x, v.y);
+    if (speed < 1) return; // effectively stopped
+    const dir = { x: v.x / speed, y: v.y / speed };
+    const glideLength = (speed * speed) / (2 * MU);
+    // Rest positions clamp to the court for now — dead-disc removal
+    // (sliding off the edge) is deferred to the replay phase.
+    const to = clampToCourt({
+      x: from.x + dir.x * glideLength,
+      y: from.y + dir.y * glideLength,
+    });
+    segRef.current.set(id, {
+      dir,
+      v0: speed,
+      startedAt: performance.now(),
+      phase: "glide",
+    });
+    run(id, from, to, speed / MU, EASE_DECEL);
+  };
+
+  /**
+   * One moving disc against every other. On contact the full normal
+   * component of the relative velocity exchanges between the two discs
+   * (perfectly elastic, equal masses): a dead-center hit stops the shooter
+   * dead — the stick shot — and a glancing hit splits the motion between
+   * them. Struck discs launch through the same machinery, so knock-ons
+   * chain.
+   */
+  const resolveCollisions = (id: string, p: Point): Point => {
+    for (const other of discsRef.current) {
+      if (other.id === id || other.id === undefined) continue;
+      const gap = distance(p, other);
+      if (gap === 0 || gap >= DISC_DIAMETER) continue;
+      const n = { x: (other.x - p.x) / gap, y: (other.y - p.y) / gap };
+      const va = velocityAt(id);
+      const vb = velocityAt(other.id);
+      const dvn = (va.x - vb.x) * n.x + (va.y - vb.y) * n.y;
+      if (dvn <= 0) continue; // touching but separating
+      // Separate the overlap evenly, then exchange the normal component.
+      const half = (DISC_DIAMETER - gap) / 2;
+      const aPos = { x: p.x - n.x * half, y: p.y - n.y * half };
+      const bPos = { x: other.x + n.x * half, y: other.y + n.y * half };
+      launch(other.id, bPos, { x: vb.x + dvn * n.x, y: vb.y + dvn * n.y });
+      launch(id, aPos, { x: va.x - dvn * n.x, y: va.y - dvn * n.y });
+      return aPos;
+    }
+    return p;
   };
 
   const handleCourtClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -150,14 +166,33 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
     const shot = discsRef.current.find((d) => d.id === "y1");
     if (!shot) return;
     const from = { x: shot.x, y: shot.y };
-    // Friction feel: the cue accelerates the disc through the stroke — a
-    // gentle ramp-up, not an instant launch — then it decelerates in a long
-    // glide to a stop. No overshoot: a cued disc on a hard court doesn't
-    // bounce. Longer trips glide longer.
-    glide("y1", from, target, {
-      duration: 0.45 + (distance(from, target) / HALF_COURT_LENGTH) * 1.1,
-      ease: [0.23, 0.25, 0.15, 1],
+    const dist = distance(from, target);
+    if (dist < 1) return;
+    const dir = { x: (target.x - from.x) / dist, y: (target.y - from.y) / dist };
+
+    // Launch speed is chosen so friction brings the disc to rest exactly at
+    // the click: v0 = √(2μ·d). The cue stroke is a real acceleration phase —
+    // the disc ramps up over one kitchen depth (18 in) before release.
+    if (dist <= KITCHEN_DEPTH * 1.5) {
+      const v0 = Math.sqrt(2 * MU * dist);
+      launch("y1", from, { x: dir.x * v0, y: dir.y * v0 });
+      return;
+    }
+    const v0 = Math.sqrt(2 * MU * (dist - KITCHEN_DEPTH));
+    const release = {
+      x: from.x + dir.x * KITCHEN_DEPTH,
+      y: from.y + dir.y * KITCHEN_DEPTH,
+    };
+    controlsRef.current.get("y1")?.stop();
+    segRef.current.set("y1", {
+      dir,
+      v0,
+      startedAt: performance.now(),
+      phase: "stroke",
     });
+    run("y1", from, release, (2 * KITCHEN_DEPTH) / v0, EASE_ACCEL, () =>
+      launch("y1", release, { x: dir.x * v0, y: dir.y * v0 }),
+    );
   };
 
   return (
@@ -173,10 +208,12 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
       <Stack gap={4} ax="stretch" className="min-w-0">
         <Text size={1} shade="muted" balance>
           Click anywhere on the court to send the yellow disc gliding there —
-          zone tints and labels update mid-flight, and clicking again mid-glide
-          retargets it. Aim through a black disc to knock it: momentum
-          transfers along the line of centers, so a dead-center hit mostly
-          sticks the shooter and a glancing hit deflects both discs.
+          the cue accelerates it through one kitchen depth, then friction
+          brings it to rest exactly at the click. Zone tints and labels update
+          mid-flight. Aim through a black disc to knock it: collisions are
+          elastic between equal masses, so a dead-center hit stops the shooter
+          dead (the stick shot) and a glancing hit splits the motion between
+          both discs.
         </Text>
         {children}
       </Stack>

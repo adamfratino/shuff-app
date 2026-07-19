@@ -234,6 +234,15 @@ not an instant launch, and not a spring with overshoot. Motion's springs remain 
 for their *interruptibility* (velocity carry-over when retargeting
 mid-flight) — configured critically damped so they never oscillate.
 
+**Reference physics**: [shuffleboardjam.com](https://shuffleboardjam.com/)
+(a playable floor-shuffleboard sim in the same inch-based coordinates) uses
+Coulomb friction — constant deceleration `μ = 160 in/s²`, so stopping
+distance is `v²/2μ` (quadratic in speed) — launch speed `v0 = √(2μd)` chosen
+to stop at the aim point, and **perfectly elastic equal-mass collisions**
+(full exchange of the normal component of relative velocity). Constant
+deceleration is exactly a quadratic ease-out, so this maps 1:1 onto Motion
+segments with analytic velocities. The Phase 0 spike ports this model.
+
 Some courts are dressed with **beads** (silicone/glass) that make the surface
 faster; many aren't. Court speed is therefore variable in real play. Not MVP,
 but the presets should be parameterized from day one by a single
