@@ -172,6 +172,18 @@ export const MOTION_EXAMPLES: ExampleMeta[] = [
     custom: true,
     slugs: [],
   },
+  {
+    id: "BoardTransition",
+    file: "motion.examples.tsx",
+    title: "Board transitions",
+    description:
+      "The Phase 1 primitive, from the @shuff/motion package itself: hand <AnimatedDiagram> a new board state and discs glide there from wherever they currently are, with friction-derived durations. Retargeting mid-flight continues from the in-flight position; added discs appear in place and removed discs drop instantly (enter/exit choreography comes later). Honors prefers-reduced-motion by snapping instead of gliding.",
+    Visual: Motion.BoardTransition,
+    data: ["transitionBoards"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
 ];
 
 export const galleryExamples = EXAMPLES.filter((e) => e.gallery);

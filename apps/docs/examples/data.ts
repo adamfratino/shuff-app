@@ -1,4 +1,5 @@
 import type { Disc, Point } from "@shuff/core";
+import type { TrackedDisc } from "@shuff/motion";
 import { BLACK, YELLOW } from "./_shared";
 
 /** A representative 8-disc frame — 4 yellow + 4 black, with doubled-up zones. */
@@ -90,3 +91,29 @@ export const glideDiscs: Disc[] = [
   { id: "b3", x: 33, y: 95, color: BLACK },
   { id: "b4", x: 18, y: 35, color: BLACK },
 ];
+
+/**
+ * Named board states for the AnimatedDiagram transition example. Ids
+ * correlate discs across states: y1/b1/b2 move between boards, y2 exists
+ * only in "crowded" (appears/disappears), and "cleared" removes the black
+ * discs entirely.
+ */
+export const transitionBoards = {
+  setup: [
+    { id: "y1", x: 36, y: 190, color: YELLOW },
+    { id: "b1", x: 30, y: 70, color: BLACK },
+    { id: "b2", x: 44, y: 40, color: BLACK },
+  ],
+  spread: [
+    { id: "y1", x: 36, y: 108, color: YELLOW },
+    { id: "b1", x: 20, y: 50, color: BLACK },
+    { id: "b2", x: 60, y: 30, color: BLACK },
+  ],
+  crowded: [
+    { id: "y1", x: 54, y: 38, color: YELLOW },
+    { id: "b1", x: 33, y: 95, color: BLACK },
+    { id: "b2", x: 12, y: 25, color: BLACK },
+    { id: "y2", x: 36, y: 108, color: YELLOW },
+  ],
+  cleared: [{ id: "y1", x: 36, y: 190, color: YELLOW }],
+} satisfies Record<string, TrackedDisc[]>;

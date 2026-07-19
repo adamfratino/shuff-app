@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { animate, type AnimationPlaybackControls } from "motion";
-import { Box, Stack, Text } from "@uiid/design-system";
+import { Box, Button, Group, Stack, Text } from "@uiid/design-system";
 import { Diagram } from "@shuff/diagram";
 import {
   DISC_DIAMETER,
@@ -13,9 +13,10 @@ import {
   KITCHEN_DEPTH,
   type Point,
 } from "@shuff/core";
+import { AnimatedDiagram } from "@shuff/motion";
 
 import { COURT_WIDTH } from "./_shared";
-import { glideDiscs } from "./data";
+import { glideDiscs, transitionBoards } from "./data";
 
 /**
  * Physics: Coulomb friction (constant deceleration) and perfectly elastic
@@ -214,6 +215,47 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
           elastic between equal masses, so a dead-center hit stops the shooter
           dead (the stick shot) and a glancing hit splits the motion between
           both discs.
+        </Text>
+        {children}
+      </Stack>
+    </div>
+  );
+};
+
+export const BoardTransition = ({ children }: React.PropsWithChildren) => {
+  const [boardId, setBoardId] =
+    useState<keyof typeof transitionBoards>("setup");
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] items-start gap-6">
+      <Box
+        data-slot="court"
+        w={COURT_WIDTH}
+        className="[&>svg]:block [&>svg]:w-full [&>svg]:h-auto"
+      >
+        <AnimatedDiagram discs={transitionBoards[boardId]} showLabels />
+      </Box>
+      <Stack gap={4} ax="stretch" className="min-w-0">
+        <Group gap={2} className="flex-wrap">
+          {(
+            Object.keys(transitionBoards) as Array<
+              keyof typeof transitionBoards
+            >
+          ).map((id) => (
+            <Button
+              key={id}
+              disabled={id === boardId}
+              onClick={() => setBoardId(id)}
+            >
+              {id}
+            </Button>
+          ))}
+        </Group>
+        <Text size={1} shade="muted" balance>
+          Each button hands AnimatedDiagram a different board state; discs
+          glide from wherever they currently are — switch again mid-flight and
+          they retarget without a jump. Ids correlate discs across states:
+          added discs appear in place, removed discs drop instantly.
         </Text>
         {children}
       </Stack>

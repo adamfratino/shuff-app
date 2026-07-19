@@ -73,6 +73,15 @@ export function Sidebar() {
                     </Text>
                   ),
                 },
+                {
+                  label: (
+                    <Text
+                      render={<Link href="/motion#example-BoardTransition" />}
+                    >
+                      Board transitions
+                    </Text>
+                  ),
+                },
               ]}
             />
           </SidebarCollapsible>
