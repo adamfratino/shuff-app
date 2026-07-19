@@ -165,7 +165,7 @@ export const MOTION_EXAMPLES: ExampleMeta[] = [
     file: "motion.examples.tsx",
     title: "Glide to click",
     description:
-      "The animate-the-data architecture from the plan: Motion animates a progress value and the untouched <Diagram> re-renders each frame from fresh Disc[] data, so zone tints and labels stay correct mid-flight. Friction feel — a gentle ramp-up as the cue accelerates the disc, then a long decaying glide, no overshoot — because a cued disc on a hard court doesn't bounce.",
+      "The animate-the-data architecture from the plan: Motion animates a progress value and the untouched <Diagram> re-renders each frame from fresh Disc[] data, so zone tints and labels stay correct mid-flight. Friction feel — a gentle ramp-up as the cue accelerates the disc, then a long decaying glide, no overshoot. Collisions use one equal-mass impulse rule: the velocity component along the line of centers transfers to the struck disc, so stick shots, glancing deflections, and chained knock-ons all fall out of it.",
     Visual: Motion.GlideToClick,
     data: ["glideDiscs"],
     courtWidth: COURT_WIDTH,
