@@ -132,7 +132,7 @@ const AsideContainer = ({ children }: React.PropsWithChildren) => {
       py={SHELL_SPACING}
       ax="stretch"
       fullwidth
-      className="sticky top-10 overflow-y-auto max-h-screen"
+      className="sticky top-12 overflow-y-auto max-h-screen"
     >
       {children}
     </Stack>

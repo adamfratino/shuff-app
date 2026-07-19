@@ -12,7 +12,8 @@ type TocNode = {
 };
 
 // Sections (entries, gallery, props table) become top-level items; example
-// frames nest under whichever section precedes them.
+// frames nest under the section that contains them in the DOM. Examples
+// outside any section (e.g. directly on a page) stay top-level.
 const SECTION_SELECTOR =
   "[data-slot='court-gallery'][id],[data-slot='props'][id],[data-slot='entry-block'][id]";
 const CHILD_SELECTOR = "[data-slot='example'][id]";
@@ -27,15 +28,17 @@ const scanToc = (): TocNode[] => {
   );
 
   const sections: TocNode[] = [];
+  let lastSectionEl: HTMLElement | null = null;
   nodes.forEach((node) => {
     const isChild = node.matches(CHILD_SELECTOR);
     const label = node.dataset.title ?? node.textContent ?? node.id;
     const entry: TocNode = { id: node.id, label, children: [] };
     const last = sections[sections.length - 1];
-    if (isChild && last) {
+    if (isChild && last && lastSectionEl?.contains(node)) {
       last.children.push(entry);
     } else {
       sections.push(entry);
+      if (!isChild) lastSectionEl = node;
     }
   });
 
