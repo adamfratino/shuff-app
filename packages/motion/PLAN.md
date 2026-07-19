@@ -215,9 +215,10 @@ useShotReplay(sequence: Sequence, options?): {
 <ReplayDiagram sequence={sequence} controls {...diagramProps} />
 
 // presets & config
-easings: { travel, settle, knock }           // a cued 11.5 oz disc decelerating
-                                             // under friction on a hard court —
-                                             // long glide, no bounce, no overshoot
+easings: { travel, settle, knock }           // a cued 11.5 oz disc: gentle
+                                             // ramp-up through the stroke, long
+                                             // friction glide — no bounce or
+                                             // overshoot
 <ShuffMotionConfig reducedMotion="user">     // wraps MotionConfig; snap-to-final fallback
 
 // types
@@ -227,8 +228,9 @@ TrackedDisc, BoardState, Shot, ShotOutcome, DiscMove, Sequence
 **Feel note — this is floor shuffleboard, not tabletop.** Discs are pushed
 with a cue down a hard court (concrete or similar) and decelerate under
 friction to a stop. There is no springiness in the real motion: the correct
-default for a traveling disc is a friction-style ease-out (fast launch, long
-decaying glide), not a spring with overshoot. Motion's springs remain useful
+default for a traveling disc is a gentle ramp-up as the cue accelerates it
+through the stroke, then a friction-style ease-out (long decaying glide) —
+not an instant launch, and not a spring with overshoot. Motion's springs remain useful
 for their *interruptibility* (velocity carry-over when retargeting
 mid-flight) — configured critically damped so they never oscillate.
 

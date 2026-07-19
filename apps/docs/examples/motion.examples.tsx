@@ -27,11 +27,13 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
     if (!shot) return;
     const from = { x: shot.x, y: shot.y };
 
-    // Friction feel: fast launch, long decaying glide, no overshoot — a cued
-    // disc on a hard court doesn't bounce. Longer trips glide longer.
+    // Friction feel: the cue accelerates the disc through the stroke — a
+    // gentle ramp-up, not an instant launch — then it decelerates in a long
+    // glide to a stop. No overshoot: a cued disc on a hard court doesn't
+    // bounce. Longer trips glide longer.
     controlsRef.current = animate(0, 1, {
-      duration: 0.35 + (distance(from, target) / HALF_COURT_LENGTH) * 1.1,
-      ease: [0.05, 0.65, 0.1, 1],
+      duration: 0.45 + (distance(from, target) / HALF_COURT_LENGTH) * 1.1,
+      ease: [0.33, 0.25, 0.15, 1],
       onUpdate: (t) => {
         const next = discsRef.current.map((d) =>
           d.id === "y1"
