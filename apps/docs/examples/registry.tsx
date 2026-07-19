@@ -7,6 +7,7 @@ import * as DiagramEx from "./diagram.examples";
 import * as Spatial from "./spatial.examples";
 import * as Mirror from "./mirror.examples";
 import * as Motion from "./motion.examples";
+import * as Strategy from "./strategy.examples";
 
 export type ExampleMeta = {
   /** Stable id, also used as the source-code export name. */
@@ -180,6 +181,38 @@ export const MOTION_EXAMPLES: ExampleMeta[] = [
       "The Phase 1 primitive, from the @shuff/motion package itself: hand <AnimatedDiagram> a new board state and discs glide there from wherever they currently are, with friction-derived durations. Retargeting mid-flight continues from the in-flight position; added discs appear in place and removed discs drop instantly (enter/exit choreography comes later). Honors prefers-reduced-motion by snapping instead of gliding.",
     Visual: Motion.BoardTransition,
     data: ["transitionBoards"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
+];
+
+/**
+ * Examples for the /strategy page — @shuff/strategy played through the
+ * motion physics engine. Framed for a shuffleboard player: each example is
+ * a named shot or a question a player actually asks at the line.
+ */
+export const STRATEGY_EXAMPLES: ExampleMeta[] = [
+  {
+    id: "Playbook",
+    file: "strategy.examples.tsx",
+    title: "The playbook",
+    description:
+      "Six named shots from docs/STRATEGY.md, each set up on a board where it's the right play. The engine picks the shot — Monte Carlo over that tactic's candidates, exposure-weighted — and the physics engine plays it: watch the kitchen shot stick-and-follow, the kitchen replace swap discs, the sweep take out a cluster. Totals update as discs settle.",
+    Visual: Strategy.Playbook,
+    data: ["playbookBoards"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
+  {
+    id: "ExposureMeter",
+    file: "strategy.examples.tsx",
+    title: "Is this disc safe?",
+    description:
+      "The question behind every defensive shot. kitchenExposure reads the opponent's lines of sight geometrically: a scoring disc on an open kitchen line isn't points, it's a swing waiting to happen — and one guard on the line drops the risk to zero. Shadow wedges show the middle slot's view; the numbers aggregate all three.",
+    Visual: Strategy.ExposureMeter,
+    data: ["exposureScorer", "exposureGuard"],
     courtWidth: COURT_WIDTH,
     custom: true,
     slugs: [],
