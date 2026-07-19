@@ -189,18 +189,79 @@ export const MOTION_EXAMPLES: ExampleMeta[] = [
 
 /**
  * Examples for the /strategy page — @shuff/strategy played through the
- * motion physics engine. Framed for a shuffleboard player: each example is
- * a named shot or a question a player actually asks at the line.
+ * motion physics engine. Framed for a shuffleboard player: one section per
+ * named shot from docs/STRATEGY.md, each set up on a board where that shot
+ * is the right play, plus the question behind every defensive choice.
  */
 export const STRATEGY_EXAMPLES: ExampleMeta[] = [
   {
-    id: "Playbook",
+    id: "KitchenShot",
     file: "strategy.examples.tsx",
-    title: "The playbook",
+    title: "The kitchen shot",
     description:
-      "Six named shots from docs/STRATEGY.md, each set up on a board where it's the right play. The engine picks the shot — Monte Carlo over that tactic's candidates, exposure-weighted — and the physics engine plays it: watch the kitchen shot stick-and-follow, the kitchen replace swap discs, the sweep take out a cluster. Totals update as discs settle.",
-    Visual: Strategy.Playbook,
-    data: ["playbookBoards"],
+      "Their 8 sits on an open line. The engine shoots straight through it into the 10-off: their +8 becomes −10 — an 18-point swing — and a clean stick-and-follow leaves the shooter scoring near where theirs stood.",
+    Visual: Strategy.KitchenShot,
+    data: ["kitchenShotBoard"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
+  {
+    id: "TheGuard",
+    file: "strategy.examples.tsx",
+    title: "The guard",
+    description:
+      "Your own 8 is naked on an open line — not 8 points of position but an 18-point liability. The engine parks a disc on the opponent's shooting line in front of it and the kitchen threat drops to zero. Here the guard even lands in the 8 itself.",
+    Visual: Strategy.TheGuard,
+    data: ["guardBoard"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
+  {
+    id: "TheSnuggle",
+    file: "strategy.examples.tsx",
+    title: "The snuggle",
+    description:
+      "Park your disc one diameter in front of their scorer. Any attack on yours now drives it into their own disc — your disc is protected by their material, and their bump line is gone.",
+    Visual: Strategy.TheSnuggle,
+    data: ["snuggleBoard"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
+  {
+    id: "KitchenReplace",
+    file: "strategy.examples.tsx",
+    title: "Kitchen replace",
+    description:
+      "You have a disc stuck at −10 and they have a scorer above it. The engine ghost-balls their disc into yours: yours is knocked out of the kitchen, theirs stays in it. One shot, a 20+ point swing.",
+    Visual: Strategy.KitchenReplace,
+    data: ["kitchenReplaceBoard"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
+  {
+    id: "TheSweep",
+    file: "strategy.examples.tsx",
+    title: "The sweep",
+    description:
+      "Two of their scorers share the 8 zone — that's not 16 points of position, it's one shot from being nothing. The engine punches through the nearest into the cluster's center of mass and takes them both.",
+    Visual: Strategy.TheSweep,
+    data: ["sweepBoard"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
+  {
+    id: "TheHammer",
+    file: "strategy.examples.tsx",
+    title: "The hammer",
+    description:
+      "Last shot of the frame: no reply is coming, so exposure means nothing and pure placement wins. The engine, so cautious mid-frame, aims dead at the 10.",
+    Visual: Strategy.TheHammer,
+    data: ["hammerBoard"],
     courtWidth: COURT_WIDTH,
     custom: true,
     slugs: [],
