@@ -27,6 +27,7 @@ export {
   HARD_FACTOR,
   KITCHEN_WEIGHT,
   LEFT_STARTS,
+  resolveOptions,
   RIGHT_STARTS,
   SHOOTING_Y,
   SHOTS_PER_FRAME,
