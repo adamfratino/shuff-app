@@ -54,6 +54,29 @@ export function Sidebar() {
             </Stack>
           );
         })}
+        {/* @shuff/motion has no typedoc manifest yet (package is in planning —
+            see packages/motion/PLAN.md), so it's listed statically. */}
+        <Stack gap={3}>
+          <Text size={0} weight="bold" render={<Link href="/motion" />}>
+            @shuff/motion
+          </Text>
+          <SidebarCollapsible label="example">
+            <List
+              marker="none"
+              gap={SIDEBAR_LIST_ITEM_SPACING}
+              ml={2}
+              items={[
+                {
+                  label: (
+                    <Text render={<Link href="/motion#example-GlideToClick" />}>
+                      Glide to click
+                    </Text>
+                  ),
+                },
+              ]}
+            />
+          </SidebarCollapsible>
+        </Stack>
       </SidebarScrollContainer>
     </SidebarContainer>
   );
