@@ -94,15 +94,16 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
     controlsRef.current.get(id)?.stop();
     const speed = Math.hypot(v.x, v.y);
     if (speed < 10) return; // slower than ~10 in/s: it just settles
-    const glideLength = speed * 0.22; // court friction: inches per in/s
+    const glideLength = speed * 0.32; // court friction: inches per in/s
     const to = clampToCourt({
       x: from.x + (v.x / speed) * glideLength,
       y: from.y + (v.y / speed) * glideLength,
     });
-    // Constant deceleration from contact speed to rest over the glide.
+    // Full speed off the contact, then a long lazy decay — knocked discs
+    // bleed speed gradually, they don't brake.
     glide(id, from, to, {
       duration: (2 * glideLength) / speed,
-      ease: "easeOut",
+      ease: [0, 0.55, 0.15, 1],
     });
   };
 
@@ -112,7 +113,7 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
     to: Point,
     transition: {
       duration: number;
-      ease: "easeOut" | [number, number, number, number];
+      ease: [number, number, number, number];
     },
   ) => {
     trackRef.current.set(id, { p: from, at: performance.now() });
