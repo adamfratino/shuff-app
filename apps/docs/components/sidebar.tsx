@@ -86,6 +86,38 @@ export function Sidebar() {
             />
           </SidebarCollapsible>
         </Stack>
+        {/* @shuff/strategy has no typedoc manifest yet — listed statically
+            like @shuff/motion. */}
+        <Stack gap={3}>
+          <Text size={0} weight="bold" render={<Link href="/strategy" />}>
+            @shuff/strategy
+          </Text>
+          <SidebarCollapsible label="example">
+            <List
+              marker="none"
+              gap={SIDEBAR_LIST_ITEM_SPACING}
+              ml={2}
+              items={[
+                {
+                  label: (
+                    <Text render={<Link href="/strategy#example-Playbook" />}>
+                      The playbook
+                    </Text>
+                  ),
+                },
+                {
+                  label: (
+                    <Text
+                      render={<Link href="/strategy#example-ExposureMeter" />}
+                    >
+                      Is this disc safe?
+                    </Text>
+                  ),
+                },
+              ]}
+            />
+          </SidebarCollapsible>
+        </Stack>
       </SidebarScrollContainer>
     </SidebarContainer>
   );

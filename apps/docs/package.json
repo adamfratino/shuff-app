@@ -16,6 +16,7 @@
     "@shuff/core": "workspace:*",
     "@shuff/diagram": "workspace:*",
     "@shuff/motion": "workspace:*",
+    "@shuff/strategy": "workspace:*",
     "@uiid/design-system": "^0.0.34",
     "@uiid/icons": "^0.0.34",
     "motion": "^12.42.2",
