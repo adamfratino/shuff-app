@@ -140,12 +140,24 @@ export function Diagram({
     className: `shuff-zone-${zone}`,
   });
 
-  // Compute shadow polygons once; both showShadows and showSpotlight reuse them.
-  const shadowPointStrings: string[] =
+  // Stable React keys for every disc-derived list (projections, shadows,
+  // discs, labels). Callers opt into stable identity by providing `disc.id`.
+  const discKeys = discs.map((d, i) => d.id ?? `__idx-${i}`);
+
+  // Compute shadow polygons once; both showShadows and showSpotlight reuse
+  // them. Each entry carries its source disc's key so shadows reconcile in
+  // step with their disc when the array reorders.
+  const shadows: Array<{ key: string; points: string }> =
     shooter && discs.length > 0
-      ? discs.flatMap((d) => {
+      ? discs.flatMap((d, i) => {
           const poly = shadowPolygon(shooter, d, DISC_RADIUS);
-          return poly ? [poly.map((p) => `${p.x},${p.y}`).join(" ")] : [];
+          if (!poly) return [];
+          return [
+            {
+              key: discKeys[i]!,
+              points: poly.map((p) => `${p.x},${p.y}`).join(" "),
+            },
+          ];
         })
       : [];
 
@@ -181,7 +193,7 @@ export function Diagram({
         <g className="shuff-projections">
           {discs.map((disc, index) => (
             <line
-              key={index}
+              key={discKeys[index]}
               x1={shooter.x}
               y1={shooter.y}
               x2={disc.x}
@@ -191,10 +203,10 @@ export function Diagram({
         </g>
       )}
 
-      {showShadows && shadowPointStrings.length > 0 && (
+      {showShadows && shadows.length > 0 && (
         <g className="shuff-shadows">
-          {shadowPointStrings.map((points, index) => (
-            <polygon key={index} points={points} />
+          {shadows.map(({ key, points }) => (
+            <polygon key={key} points={points} />
           ))}
         </g>
       )}
@@ -216,8 +228,8 @@ export function Diagram({
               <polygon fill="black" points={spotlightConePoints(shooter)} />
               {/* Shadow polygons override the cone where blockers cast
                   shadows: overlay visible again inside shadow regions */}
-              {shadowPointStrings.map((points, index) => (
-                <polygon key={index} fill="white" points={points} />
+              {shadows.map(({ key, points }) => (
+                <polygon key={key} fill="white" points={points} />
               ))}
             </mask>
           </defs>
@@ -236,7 +248,7 @@ export function Diagram({
         <g className="shuff-discs">
           {discs.map((disc, index) => (
             <circle
-              key={index}
+              key={discKeys[index]}
               cx={disc.x}
               cy={disc.y}
               r={DISC_RADIUS}
@@ -267,7 +279,7 @@ export function Diagram({
         <g className="shuff-disc-labels">
           {discs.map((disc, index) => (
             <text
-              key={index}
+              key={discKeys[index]}
               x={disc.x}
               y={disc.y + DISC_RADIUS + 3.5}
               textAnchor="middle"
