@@ -79,44 +79,13 @@ export const COORD_PLOT_LEGEND: ReadonlyArray<{
 export const frameShooter: Point = { x: 50, y: 459 };
 
 /**
- * Four settled blockers plus the yellow glider ("y1") for the motion glide
- * example. Discs carry ids so the animation can address the glider across
- * frames — the identity model @shuff/motion is built on. b1/b3 sit roughly
- * on the glider's line to the apex, inviting chained knock-ons.
+ * The board driven through useBoardTransition in the use-with-Diagram
+ * example: a single disc. Its id is how the hook correlates it across
+ * states — the identity model @shuff/motion is built on.
  */
-export const glideDiscs: Disc[] = [
-  { id: "y1", x: 36, y: 220, color: YELLOW },
-  { id: "b1", x: 30, y: 70, color: BLACK },
-  { id: "b2", x: 44, y: 40, color: BLACK },
-  { id: "b3", x: 33, y: 95, color: BLACK },
-  { id: "b4", x: 18, y: 35, color: BLACK },
+export const diagramBoard: TrackedDisc[] = [
+  { id: "b1", x: 24, y: 60, color: BLACK },
 ];
-
-/**
- * Named board states for the AnimatedDiagram transition example. Ids
- * correlate discs across states: y1/b1/b2 move between boards, y2 exists
- * only in "crowded" (appears/disappears), and "cleared" removes the black
- * discs entirely.
- */
-export const transitionBoards = {
-  setup: [
-    { id: "y1", x: 36, y: 190, color: YELLOW },
-    { id: "b1", x: 30, y: 70, color: BLACK },
-    { id: "b2", x: 44, y: 40, color: BLACK },
-  ],
-  spread: [
-    { id: "y1", x: 36, y: 108, color: YELLOW },
-    { id: "b1", x: 20, y: 50, color: BLACK },
-    { id: "b2", x: 60, y: 30, color: BLACK },
-  ],
-  crowded: [
-    { id: "y1", x: 54, y: 38, color: YELLOW },
-    { id: "b1", x: 33, y: 95, color: BLACK },
-    { id: "b2", x: 12, y: 25, color: BLACK },
-    { id: "y2", x: 36, y: 108, color: YELLOW },
-  ],
-  cleared: [{ id: "y1", x: 36, y: 190, color: YELLOW }],
-} satisfies Record<string, TrackedDisc[]>;
 
 // Opening positions for the strategy playbook — one small board per named
 // shot, arranged so the tactic is the engine's natural choice. Yellow

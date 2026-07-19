@@ -62,8 +62,8 @@ async function BringYourOwnRenderer() {
           GSAP, or a game engine tween. The beziers are exact, not
           approximations: quadratics are perfectly representable as cubics, so{" "}
           <code>cubic-bezier(0.33, 0.67, 0.67, 1)</code> <em>is</em> the
-          friction curve, and <code>cubic-bezier(0.33, 0, 0.67, 0.33)</code>{" "}
-          (<code>EASE_STROKE</code>) is its mirror-image t² for the cue stroke.
+          friction curve, and <code>cubic-bezier(0.33, 0, 0.67, 0.33)</code> (
+          <code>EASE_STROKE</code>) is its mirror-image t² for the cue stroke.
         </Text>
         <Text>
           The full recipe for a shot: pick where the disc should die, get the
