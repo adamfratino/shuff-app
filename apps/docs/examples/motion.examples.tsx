@@ -76,19 +76,20 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
         x: other.x - n.x * DISC_DIAMETER,
         y: other.y - n.y * DISC_DIAMETER,
       };
-      // Biscuits aren't perfectly elastic — the contact absorbs some of the
-      // energy (restitution ≈ 0.6), so the struck disc takes 80% of the
-      // approach speed and the shooter keeps a touch of follow-through
-      // instead of a dead stop.
-      const transferred = 0.8 * speedAlongCenters;
+      // Heavy discs on a hard court are a lossy system — the contact eats a
+      // good chunk of the energy. The struck disc leaves with ~55% of the
+      // approach speed and the shooter keeps ~15% as follow-through; the
+      // rest is lost to the collision itself.
+      const transferred = 0.55 * speedAlongCenters;
+      const retained = 0.15 * speedAlongCenters;
       launch(
         other.id,
         { x: other.x, y: other.y },
         { x: n.x * transferred, y: n.y * transferred },
       );
       launch(id, touch, {
-        x: v.x - n.x * transferred,
-        y: v.y - n.y * transferred,
+        x: v.x - n.x * (speedAlongCenters - retained),
+        y: v.y - n.y * (speedAlongCenters - retained),
       });
       return touch;
     }
