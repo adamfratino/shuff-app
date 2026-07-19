@@ -55,11 +55,12 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
 
   /**
    * One moving disc against every other disc (treated as resting). On
-   * contact, the velocity component along the line of centers transfers to
-   * the struck disc (equal masses) and the tangential component stays with
-   * the mover — so a dead-center hit stops the shooter on the spot (the
-   * stick shot) while a glancing hit deflects it aside. Struck discs launch
-   * through the same machinery, so knock-ons chain.
+   * contact, most of the velocity component along the line of centers
+   * transfers to the struck disc (equal masses, imperfect restitution) and
+   * the tangential component stays with the mover — so a dead-center hit
+   * near-stops the shooter (the stick shot) while a glancing hit deflects
+   * it aside. Struck discs launch through the same machinery, so knock-ons
+   * chain.
    */
   const resolveCollisions = (id: string, p: Point, v: Point): Point => {
     for (const other of discsRef.current) {
@@ -75,14 +76,19 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
         x: other.x - n.x * DISC_DIAMETER,
         y: other.y - n.y * DISC_DIAMETER,
       };
+      // Biscuits aren't perfectly elastic — the contact absorbs some of the
+      // energy (restitution ≈ 0.6), so the struck disc takes 80% of the
+      // approach speed and the shooter keeps a touch of follow-through
+      // instead of a dead stop.
+      const transferred = 0.8 * speedAlongCenters;
       launch(
         other.id,
         { x: other.x, y: other.y },
-        { x: n.x * speedAlongCenters, y: n.y * speedAlongCenters },
+        { x: n.x * transferred, y: n.y * transferred },
       );
       launch(id, touch, {
-        x: v.x - n.x * speedAlongCenters,
-        y: v.y - n.y * speedAlongCenters,
+        x: v.x - n.x * transferred,
+        y: v.y - n.y * transferred,
       });
       return touch;
     }
@@ -168,8 +174,8 @@ export const GlideToClick = ({ children }: React.PropsWithChildren) => {
           Click anywhere on the court to send the yellow disc gliding there —
           zone tints and labels update mid-flight, and clicking again mid-glide
           retargets it. Aim through a black disc to knock it: momentum
-          transfers along the line of centers, so a dead-center hit sticks the
-          shooter in place and a glancing hit deflects both discs.
+          transfers along the line of centers, so a dead-center hit mostly
+          sticks the shooter and a glancing hit deflects both discs.
         </Text>
         {children}
       </Stack>
