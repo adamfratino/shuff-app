@@ -117,3 +117,33 @@ export const transitionBoards = {
   ],
   cleared: [{ id: "y1", x: 36, y: 190, color: YELLOW }],
 } satisfies Record<string, TrackedDisc[]>;
+
+/**
+ * Opening positions for the strategy playbook — one small board per named
+ * shot, arranged so the tactic is the engine's natural choice. Yellow
+ * shoots; black is the opponent. See docs/STRATEGY.md for the taxonomy.
+ */
+export const playbookBoards = {
+  /** Their naked 8 on an open kitchen line. */
+  kitchen: [{ id: "b1", x: 30, y: 72, color: BLACK }],
+  /** My naked 8 — an 18-point swing waiting to happen. */
+  guard: [{ id: "y2", x: 30, y: 72, color: YELLOW }],
+  /** Their scorer in the 8-right, inviting a disc parked in front. */
+  snuggle: [{ id: "b1", x: 45, y: 80, color: BLACK }],
+  /** My disc stuck at −10, their 8 lined up above it. */
+  "kitchen-replace": [
+    { id: "y2", x: 30, y: 9, color: YELLOW },
+    { id: "b1", x: 30, y: 60, color: BLACK },
+  ],
+  /** Two of their scorers clustered in the 8-left. */
+  sweep: [
+    { id: "b1", x: 25, y: 62, color: BLACK },
+    { id: "b2", x: 31, y: 80, color: BLACK },
+  ],
+  /** Empty board, last shot of the frame: nothing to fear, take the 10. */
+  hammer: [],
+} satisfies Record<string, Disc[]>;
+
+/** The exposure example's scorer and the guard that shields it. */
+export const exposureScorer: Disc = { id: "y1", x: 30, y: 72, color: YELLOW };
+export const exposureGuard: Disc = { id: "y2", x: 29.4, y: 82, color: YELLOW };
