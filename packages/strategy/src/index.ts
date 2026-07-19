@@ -37,6 +37,7 @@ export { clearExposure, kitchenExposure } from "./exposure";
 export { simulateShot } from "./simulate";
 export type {
   EvaluatedShot,
+  ResolvedStrategyOptions,
   Shot,
   ShotCandidate,
   ShotIntent,
