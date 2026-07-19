@@ -17,6 +17,7 @@
     "@shuff/diagram": "workspace:*",
     "@uiid/design-system": "^0.0.34",
     "@uiid/icons": "^0.0.34",
+    "motion": "^12.42.2",
     "next": "^16.2.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

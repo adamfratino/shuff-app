@@ -76,3 +76,17 @@ export const COORD_PLOT_LEGEND: ReadonlyArray<{
 
 /** Shooter on the right side of the far-end kitchen. */
 export const frameShooter: Point = { x: 50, y: 459 };
+
+/**
+ * Four settled blockers plus the yellow glider ("y1") for the motion glide
+ * example. Discs carry ids so the animation can address the glider across
+ * frames — the identity model @shuff/motion is built on. b1/b3 sit roughly
+ * on the glider's line to the apex, inviting chained knock-ons.
+ */
+export const glideDiscs: Disc[] = [
+  { id: "y1", x: 36, y: 220, color: YELLOW },
+  { id: "b1", x: 30, y: 70, color: BLACK },
+  { id: "b2", x: 44, y: 40, color: BLACK },
+  { id: "b3", x: 33, y: 95, color: BLACK },
+  { id: "b4", x: 18, y: 35, color: BLACK },
+];

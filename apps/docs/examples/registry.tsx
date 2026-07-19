@@ -6,6 +6,7 @@ import * as Scoring from "./scoring.examples";
 import * as DiagramEx from "./diagram.examples";
 import * as Spatial from "./spatial.examples";
 import * as Mirror from "./mirror.examples";
+import * as Motion from "./motion.examples";
 
 export type ExampleMeta = {
   /** Stable id, also used as the source-code export name. */
@@ -150,6 +151,26 @@ export const EXAMPLES: ExampleMeta[] = [
     courtWidth: COURT_WIDTH,
     slugs: ["Diagram"],
     gallery: true,
+  },
+];
+
+/**
+ * Examples for the /motion page — the planned @shuff/motion animation layer
+ * (see packages/motion/PLAN.md). Kept out of EXAMPLES so they don't surface
+ * in the /diagram gallery or under API entries.
+ */
+export const MOTION_EXAMPLES: ExampleMeta[] = [
+  {
+    id: "GlideToClick",
+    file: "motion.examples.tsx",
+    title: "Glide to click",
+    description:
+      "The animate-the-data architecture from the plan: Motion animates a progress value and the untouched <Diagram> re-renders each frame from fresh Disc[] data, so zone tints and labels stay correct mid-flight. The physics is the real thing: Coulomb friction (stopping distance ∝ v², each segment an exact quadratic-ease Motion animation), a cue stroke that accelerates the disc over one kitchen depth, and perfectly elastic equal-mass collisions — stick shots, glancing deflections, and chained knock-ons all fall out of exchanging the normal component of relative velocity.",
+    Visual: Motion.GlideToClick,
+    data: ["glideDiscs"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
   },
 ];
 

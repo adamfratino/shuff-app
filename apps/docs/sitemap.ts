@@ -6,4 +6,5 @@ export type SitemapItem = {
 export const SITEMAP: SitemapItem[] = [
   { label: "@shuff/core", value: "/core" },
   { label: "@shuff/diagram", value: "/diagram" },
+  { label: "@shuff/motion", value: "/motion" },
 ];
