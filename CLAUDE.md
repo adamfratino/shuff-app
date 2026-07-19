@@ -6,3 +6,7 @@ architecture are not yet locked.
 
 **Game rules and vocabulary: see [`docs/RULES.md`](docs/RULES.md).** Read this
 before making any schema, naming, or rendering decisions.
+
+**Shot names and strategy: see [`docs/STRATEGY.md`](docs/STRATEGY.md).** Read
+this before naming shots, building gameplay examples, or touching
+`@shuff/strategy`.
