@@ -19,7 +19,7 @@ export function Sidebar() {
   return (
     <SidebarContainer>
       <SidebarScrollContainer>
-        <SidebarHeader>shuff docs</SidebarHeader>
+        <SidebarHeader>shuff.app</SidebarHeader>
         {allDocs.map((pkg) => {
           const route = ROUTE_BY_PKG[pkg.pkg] ?? "/";
           const groups = groupByKind(pkg.entries);
@@ -87,7 +87,7 @@ export function Sidebar() {
           </SidebarCollapsible>
         </Stack>
         {/* @shuff/strategy has no typedoc manifest yet — listed statically
-            like @shuff/motion. */}
+            like @shuff/motion. One link per named-shot section. */}
         <Stack gap={3}>
           <Text size={0} weight="bold" render={<Link href="/strategy" />}>
             @shuff/strategy
@@ -98,23 +98,20 @@ export function Sidebar() {
               gap={SIDEBAR_LIST_ITEM_SPACING}
               ml={2}
               items={[
-                {
-                  label: (
-                    <Text render={<Link href="/strategy#example-Playbook" />}>
-                      The playbook
-                    </Text>
-                  ),
-                },
-                {
-                  label: (
-                    <Text
-                      render={<Link href="/strategy#example-ExposureMeter" />}
-                    >
-                      Is this disc safe?
-                    </Text>
-                  ),
-                },
-              ]}
+                { id: "KitchenShot", label: "The kitchen shot" },
+                { id: "TheGuard", label: "The guard" },
+                { id: "TheSnuggle", label: "The snuggle" },
+                { id: "KitchenReplace", label: "Kitchen replace" },
+                { id: "TheSweep", label: "The sweep" },
+                { id: "TheHammer", label: "The hammer" },
+                { id: "ExposureMeter", label: "Is this disc safe?" },
+              ].map(({ id, label }) => ({
+                label: (
+                  <Text render={<Link href={`/strategy#example-${id}`} />}>
+                    {label}
+                  </Text>
+                ),
+              }))}
             />
           </SidebarCollapsible>
         </Stack>
