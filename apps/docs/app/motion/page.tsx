@@ -1,12 +1,77 @@
-import { Separator } from "@uiid/design-system";
+import { CodeBlock, Separator, Stack, Text } from "@uiid/design-system";
 
 import { ExampleFrame } from "../../components/example-frame";
 import { PageWrapper } from "../../components/page-wrapper";
 import { MOTION_EXAMPLES } from "../../examples/registry";
+import { highlightCached } from "../../lib/highlight";
 
 export const metadata = {
   title: "@shuff/motion — shuff docs",
 };
+
+const JAM_MODEL_USAGE = `import { launchSpeed, glideLength, glideDuration } from "@shuff/motion";
+
+launchSpeed(120); // ≈ 196 in/s release speed
+glideDuration(120); // ≈ 1.22 s to come to rest
+glideLength(140); // ≈ 61 in of follow-through for the struck disc`;
+
+async function JamModel() {
+  return (
+    <Stack
+      data-slot="entry-block"
+      render={<section />}
+      id="jam-model"
+      data-title="The Jam model"
+      ax="stretch"
+      gap={8}
+      style={{ scrollMarginBlockStart: 80 }}
+    >
+      <Text render={<h2 />} size={4} weight="semibold">
+        The "Jam" model
+      </Text>
+      <CodeBlock
+        code={JAM_MODEL_USAGE}
+        html={await highlightCached(JAM_MODEL_USAGE)}
+        language="typescript"
+        filename="jam-model.ts"
+        rows={14}
+      />
+      <Stack gap={4} maxw={640}>
+        <Text>
+          Our physics are adopted from{" "}
+          <a href="https://shuffleboardjam.com/" className="underline">
+            shuffleboardjam.com
+          </a>
+          , a playable floor-shuffleboard simulator built in the same inch-based
+          court coordinates. Full credit for the model goes to that project — we
+          treat its feel as the accuracy benchmark and summarize its rules here
+          for anyone building shuffleboard tools.
+        </Text>
+        <Stack my={2} bl={1}>
+          <Text render={<blockquote />} shade="muted" pl={4} className="italic">
+            A gliding disc decelerates under Coulomb friction: a constant μ =
+            160 in/s² (<code>DEFAULT_MU</code> — the court-speed knob; lower μ
+            is a faster, beaded court). Everything follows analytically: a disc
+            released at speed v stops after v²/2μ inches in v/μ seconds, so the
+            launch speed that dies exactly at distance d is √(2μd). Collisions
+            are perfectly elastic between equal masses — the striking disc hands
+            its velocity component along the line of centers to the struck disc,
+            so a head-on hit stops the shooter dead and sends the target off at
+            full speed.
+          </Text>
+        </Stack>
+        <Text>
+          Constant deceleration traces an exact quadratic ease-out, which is why
+          each glide is a single Motion animation (<code>EASE_GLIDE</code>, with{" "}
+          <code>EASE_STROKE</code> for the cue stroke) rather than a per-frame
+          simulation. The entire model is three one-line formulas and two easing
+          constants — <code>physics.ts</code> is under fifty lines, so you can
+          adopt it in any renderer, not just ours.
+        </Text>
+      </Stack>
+    </Stack>
+  );
+}
 
 export default function MotionPage() {
   return (
@@ -14,6 +79,8 @@ export default function MotionPage() {
       title="@shuff/motion"
       description="Animation layer on top of @shuff/diagram — Motion drives the data, the untouched Diagram renders it each frame. Strategy lives in packages/motion/PLAN.md; this page hosts the Phase 0 physics spike and the Phase 1 board-transition primitive."
     >
+      <Separator />
+      <JamModel />
       <Separator />
       {MOTION_EXAMPLES.map((example) => (
         <ExampleFrame key={example.id} example={example} />
