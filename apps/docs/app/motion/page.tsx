@@ -15,6 +15,69 @@ launchSpeed(120); // ≈ 196 in/s release speed
 glideDuration(120); // ≈ 1.22 s to come to rest
 glideLength(140); // ≈ 61 in of follow-through for the struck disc`;
 
+const BYO_RENDERER_USAGE = `// The whole model, dependency-free — no @shuff/motion required:
+const MU = 160; // court speed: deceleration in in/s²
+const glideDuration = (inches: number) => Math.sqrt((2 * inches) / MU);
+const EASE_GLIDE = "cubic-bezier(0.33, 0.67, 0.67, 1)"; // exact 1-(1-t)²
+
+// Glide an element \`dist\` inches downcourt, at \`scale\` px per inch:
+function shoot(disc: HTMLElement, dist: number, scale = 4) {
+  disc.animate(
+    { translate: \`0 \${-dist * scale}px\` },
+    {
+      duration: glideDuration(dist) * 1000,
+      easing: EASE_GLIDE,
+      fill: "forwards",
+    },
+  );
+}`;
+
+async function BringYourOwnRenderer() {
+  return (
+    <Stack
+      data-slot="entry-block"
+      render={<section />}
+      id="bring-your-own-renderer"
+      data-title="Bring your own renderer"
+      ax="stretch"
+      gap={8}
+      style={{ scrollMarginBlockStart: 80 }}
+    >
+      <Text render={<h2 />} size={4} weight="semibold">
+        Bring your own renderer
+      </Text>
+      <CodeBlock
+        code={BYO_RENDERER_USAGE}
+        html={await highlightCached(BYO_RENDERER_USAGE)}
+        language="typescript"
+        filename="byo-renderer.ts"
+        rows={16}
+      />
+      <Stack gap={4} maxw={640}>
+        <Text>
+          Because deceleration is constant, you never integrate per frame: every
+          glide reduces to a straight line, a duration, and a quadratic
+          ease-out. Any animation system that accepts those can play the model
+          back exactly — the Web Animations API above, a CSS transition, Motion,
+          GSAP, or a game engine tween. The beziers are exact, not
+          approximations: quadratics are perfectly representable as cubics, so{" "}
+          <code>cubic-bezier(0.33, 0.67, 0.67, 1)</code> <em>is</em> the
+          friction curve, and <code>cubic-bezier(0.33, 0, 0.67, 0.33)</code>{" "}
+          (<code>EASE_STROKE</code>) is its mirror-image t² for the cue stroke.
+        </Text>
+        <Text>
+          The full recipe for a shot: pick where the disc should die, get the
+          duration from <code>glideDuration</code>, and animate with{" "}
+          <code>EASE_GLIDE</code>. For a struck disc, it leaves at the impact
+          speed v and glides <code>glideLength(v)</code> inches along the line
+          of centers over v/μ seconds — same curve, new heading. Coordinates,
+          scale, and drawing are entirely your renderer's business.
+        </Text>
+      </Stack>
+    </Stack>
+  );
+}
+
 async function JamModel() {
   return (
     <Stack
@@ -81,6 +144,8 @@ export default function MotionPage() {
     >
       <Separator />
       <JamModel />
+      <Separator />
+      <BringYourOwnRenderer />
       <Separator />
       {MOTION_EXAMPLES.map((example) => (
         <ExampleFrame key={example.id} example={example} />
