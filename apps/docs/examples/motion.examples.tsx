@@ -8,6 +8,7 @@ import {
   CodeInline,
   Group,
   Stack,
+  Switch,
   Text,
 } from "@uiid/design-system";
 import { PlayIcon, RotateCcwIcon } from "@uiid/icons";
@@ -27,8 +28,16 @@ import {
 } from "@shuff/motion";
 
 import { COURT_WIDTH, YELLOW } from "./_shared";
-import { breakRack, caromBoard, collisionBoard, diagramBoard } from "./data";
+import {
+  breakRack,
+  caromBoard,
+  collisionBoard,
+  diagramBoard,
+  driftGhost,
+  driftTarget,
+} from "./data";
 import { usePhysicsBoard } from "./use-physics-board";
+import { useDriftBoard } from "./use-drift-board";
 
 /** Keep click targets on the court — a disc center stays a radius from every edge. */
 const clampToCourt = (p: Point): Point => ({
@@ -162,6 +171,92 @@ export const Collisions = ({ children }: React.PropsWithChildren) => {
           stick shot); a glancing hit splits the motion between both discs;
           Chain telegraphs that same exchange down a row of three; Break drives
           a full rack apart in a cascade of knock-ons, off-court discs removed.
+        </Text>
+      </Stack>
+    </div>
+  );
+};
+
+const DRIFT_SHOOTER = { id: "y1", color: YELLOW };
+const DRIFT_ACCEL = 32; // in/s² — a strong, unmistakable court bias
+const COMP_OFFSET = 16; // aim this far up-slope so the hook curves onto the spot
+
+export const Drift = ({ children }: React.PropsWithChildren) => {
+  const { discs, settled, reset, shoot } = useDriftBoard();
+  const [leansLeft, setLeansLeft] = useState(false);
+  const dir = leansLeft ? -1 : 1; // +1 = court leans right, −1 = left
+
+  // Same power every shot — chosen for the target distance, not the aim — so
+  // the only variables are the court's bias and where you point.
+  const start = { x: driftTarget.x, y: HALF_COURT_LENGTH - DISC_RADIUS };
+  const speed = launchSpeed(distance(start, driftTarget));
+
+  const fire = (aimX: number, biased: boolean) =>
+    shoot(
+      { start, aim: { x: aimX, y: driftTarget.y }, speed },
+      DRIFT_SHOOTER,
+      { x: biased ? DRIFT_ACCEL * dir : 0, y: 0 },
+    );
+
+  // Flipping which way the court leans clears the stale disc from the last run.
+  const flip = (checked: boolean) => {
+    setLeansLeft(checked);
+    reset();
+  };
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] items-start gap-6">
+      <Box
+        data-slot="court"
+        w={COURT_WIDTH}
+        className="[&>svg]:block [&>svg]:w-full [&>svg]:h-auto"
+      >
+        <Diagram discs={[driftGhost, ...discs]} />
+      </Box>
+      <Stack gap={4} ax="stretch" className="min-w-0">
+        {children}
+        <Group gap={4} className="flex-wrap">
+          <Switch
+            label="Court leans left"
+            checked={leansLeft}
+            onCheckedChange={flip}
+          />
+        </Group>
+        <Group gap={2}>
+          <PlayButton
+            onClick={() => fire(driftTarget.x, false)}
+            disabled={!settled}
+          >
+            Straight
+          </PlayButton>
+          <PlayButton
+            onClick={() => fire(driftTarget.x, true)}
+            disabled={!settled}
+          >
+            Drift
+          </PlayButton>
+          <PlayButton
+            onClick={() => fire(driftTarget.x - COMP_OFFSET * dir, true)}
+            disabled={!settled}
+          >
+            Play it
+          </PlayButton>
+          <Button
+            onClick={reset}
+            variant="ghost"
+            size="small"
+            tooltip="Reset board"
+          >
+            <RotateCcwIcon />
+          </Button>
+        </Group>
+        <Text shade="muted" balance className="italic">
+          The gray spot is the target. On a level court (Straight) the disc
+          runs true and covers it. Turn the bias on (Drift) with the same
+          dead-on aim and the disc runs nearly straight at speed, then hooks
+          off the low side as it slows — missing wide. Play it aims up-slope so
+          the same curve carries the disc back onto the spot. Flip the switch
+          to lean the court the other way.
         </Text>
       </Stack>
     </div>
