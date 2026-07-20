@@ -1,8 +1,12 @@
 import { useState } from "react";
 
 import { Diagram } from "@shuff/diagram";
-import { useBoardTransition, type TrackedDisc } from "@shuff/motion";
-import { simulateShot, type Shot } from "@shuff/strategy";
+import {
+  simulateShot,
+  useBoardTransition,
+  type Shot,
+  type TrackedDisc,
+} from "@shuff/motion";
 
 const INITIAL_BOARD: TrackedDisc[] = [
   { id: "b1", x: 30, y: 72, color: "#1a1a1a" },

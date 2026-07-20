@@ -1,4 +1,9 @@
 import type { Disc, Point } from "@shuff/core";
+import type { Shot } from "@shuff/motion";
+
+// Shot kinematics and simulation outcomes live in @shuff/motion (the Jam
+// model's package); re-exported here because every candidate is a Shot.
+export type { Shot, ShotResult } from "@shuff/motion";
 
 /**
  * The named shots of floor shuffleboard. See docs/STRATEGY.md for the full
@@ -20,21 +25,6 @@ export type ShotIntent =
   | "sweep"
   | "hard-sweep"
   | "ten-block";
-
-/**
- * A shot, fully determined: released from `start`, aimed along the line
- * toward `aim`, at `speed` inches/second.
- *
- * `speed` is explicit rather than implied by the aim point because
- * through-shots budget for the struck disc's onward travel: a kitchen shot
- * aims at the contact point but launches with enough speed to carry the
- * target the rest of the way (see `carrySpeed`).
- */
-export type Shot = {
-  start: Point;
-  aim: Point;
-  speed: number;
-};
 
 /**
  * A shot candidate produced by a generator, tagged with the tactic it
@@ -131,21 +121,6 @@ export type StrategyOptions = {
 
 /** `StrategyOptions` with every default applied. */
 export type ResolvedStrategyOptions = Required<StrategyOptions>;
-
-/**
- * Outcome of simulating a shot to rest.
- *
- * `board` is every surviving disc — displaced originals (same `id`/`color`,
- * new positions) plus the shooter's disc if it survived. `dead` lists discs
- * removed during or after the shot (off the sides, off the back, or at rest
- * short of the lag line). `shooter` points at the shooter's disc inside
- * `board`, or is `null` if it died.
- */
-export type ShotResult = {
-  board: Disc[];
-  dead: Disc[];
-  shooter: Disc | null;
-};
 
 /** A candidate with its Monte Carlo evaluation. */
 export type EvaluatedShot = {

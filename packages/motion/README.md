@@ -1,21 +1,23 @@
 # @shuff/motion
 
-Animation layer for [`@shuff/diagram`](../diagram). Motion drives the data;
-the untouched Diagram renders it — so everything derived from disc position
-(zone tints, labels, shadows) stays correct mid-flight. Strategy and roadmap
-in [`PLAN.md`](PLAN.md).
+The physics of floor shuffleboard — the Jam model — as data: analytic
+formulas and easing curves for animation, and a numeric shot simulator for
+collision outcomes. Motion drives the data; an untouched
+[`@shuff/diagram`](../diagram) renders it — so everything derived from disc
+position (zone tints, labels, shadows) stays correct mid-flight. Strategy
+and roadmap in [`PLAN.md`](PLAN.md).
 
-Disc motion follows floor-shuffleboard physics: Coulomb friction (constant
-deceleration, stopping distance ∝ v²), which maps exactly onto quadratic
-easing curves — each glide is one Motion animation.
+Disc motion follows Coulomb friction (constant deceleration, stopping
+distance ∝ v²), which maps exactly onto quadratic easing curves — each glide
+is one Motion animation.
 
 ## Install
 
 ```sh
-pnpm add @shuff/motion @shuff/diagram @shuff/core motion react
+pnpm add @shuff/motion @shuff/core motion react
 ```
 
-`@shuff/core`, `@shuff/diagram`, `motion`, and `react` are peer dependencies.
+`@shuff/core`, `motion`, and `react` are peer dependencies.
 
 ## Quick start
 
@@ -48,6 +50,9 @@ export const Board = () => {
   returns the in-flight `TrackedDisc[]` for a target board; retargeting
   mid-flight continues from current positions. Honors
   `prefers-reduced-motion` (snap instead of glide).
+- **`simulateShot(board, shot, shooter, courtSpeed?)`** — plays a `Shot`
+  through the Jam model numerically (elastic equal-mass collisions, chained
+  knock-ons, dead-disc removal) and returns the settled `ShotResult`.
 - **`diffBoards(current, target)`** — id-based board diff
   (`added` / `removedIds` / `moves`).
 - **Physics** — `DEFAULT_MU`, `launchSpeed`, `glideLength`, `glideDuration`,

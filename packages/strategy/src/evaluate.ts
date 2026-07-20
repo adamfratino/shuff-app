@@ -16,7 +16,7 @@ import { type Disc, score } from "@shuff/core";
 import { allCandidates } from "./candidates";
 import { resolveOptions, SHOTS_PER_FRAME } from "./constants";
 import { clearExposure, kitchenExposure } from "./exposure";
-import { simulateShot } from "./simulate";
+import { simulateShot } from "@shuff/motion";
 import type {
   EvaluatedShot,
   ResolvedStrategyOptions,

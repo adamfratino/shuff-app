@@ -1,11 +1,16 @@
-import type { Disc } from "@shuff/core";
+import type { Disc, Point } from "@shuff/core";
 import { describe, expect, it } from "vitest";
-import { exactSpeed } from "./aim";
-import { SHOOTING_Y } from "./constants";
+import { launchSpeed } from "./physics";
 import { simulateShot } from "./simulate";
 
+/** Mid-kitchen release point at the shooting end (matches strategy's SHOOTING_Y). */
+const SHOOTING_Y = 230;
 const START = { x: 36, y: SHOOTING_Y };
 const YELLOW = { color: "yellow", id: "shooter" };
+
+/** Launch speed that stops the shooter's disc exactly at `aim`. */
+const exactSpeed = (start: Point, aim: Point) =>
+  launchSpeed(Math.hypot(aim.x - start.x, aim.y - start.y));
 
 function disc(x: number, y: number, color = "black", id = "b1"): Disc {
   return { x, y, color, id };

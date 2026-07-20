@@ -34,7 +34,7 @@ export {
 } from "./constants";
 export { chooseShot, evaluateShot, rankShots } from "./evaluate";
 export { clearExposure, kitchenExposure } from "./exposure";
-export { simulateShot } from "./simulate";
+export { simulateShot } from "@shuff/motion";
 export type {
   EvaluatedShot,
   ResolvedStrategyOptions,
