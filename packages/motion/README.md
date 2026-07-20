@@ -1,57 +1,58 @@
 # @shuff/motion
 
-Animation layer for [`@shuff/diagram`](../diagram). Motion drives the data;
-the untouched Diagram renders it — so everything derived from disc position
-(zone tints, labels, shadows) stays correct mid-flight. Strategy and roadmap
-in [`PLAN.md`](PLAN.md).
+The physics of floor shuffleboard — the Jam model — as data: analytic
+formulas and easing curves for animation, and a numeric shot simulator for
+collision outcomes. Motion drives the data; an untouched
+[`@shuff/diagram`](../diagram) renders it — so everything derived from disc
+position (zone tints, labels, shadows) stays correct mid-flight. Strategy
+and roadmap in [`PLAN.md`](PLAN.md).
 
-Disc motion follows floor-shuffleboard physics: Coulomb friction (constant
-deceleration, stopping distance ∝ v²), which maps exactly onto quadratic
-easing curves — each glide is one Motion animation.
+Disc motion follows Coulomb friction (constant deceleration, stopping
+distance ∝ v²), which maps exactly onto quadratic easing curves — each glide
+is one Motion animation.
 
 ## Install
 
 ```sh
-pnpm add @shuff/motion @shuff/diagram @shuff/core motion react
+pnpm add @shuff/motion @shuff/core motion react
 ```
 
-`@shuff/core`, `@shuff/diagram`, `motion`, and `react` are peer dependencies.
+`@shuff/core`, `motion`, and `react` are peer dependencies.
 
 ## Quick start
 
-```tsx
-import { AnimatedDiagram, type TrackedDisc } from "@shuff/motion";
+The package is headless — your board is plain data, the hook returns the
+in-flight frames, and an untouched `Diagram` renders them:
 
-const discs: TrackedDisc[] = [
-  { id: "y1", x: 36, y: 108, color: "#f5c518" },
-  { id: "b1", x: 28, y: 72, color: "#1a1a1a" },
+```tsx
+import { useState } from "react";
+
+import { Diagram } from "@shuff/diagram";
+import { useBoardTransition, type TrackedDisc } from "@shuff/motion";
+
+const INITIAL_BOARD: TrackedDisc[] = [
+  { id: "b1", x: 24, y: 60, color: "#1a1a1a" },
 ];
 
-// Change any disc's x/y and it glides there; ids correlate discs across
-// states. All other Diagram props pass through.
-export function Board() {
-  return <AnimatedDiagram discs={discs} showLabels />;
-}
-```
+export const Board = () => {
+  const [board, setBoard] = useState(INITIAL_BOARD);
+  const discs = useBoardTransition(board);
 
-Or headless, for custom rendering:
-
-```tsx
-import { useBoardTransition } from "@shuff/motion";
-import { Diagram } from "@shuff/diagram";
-
-const inFlight = useBoardTransition(targetDiscs, { courtSpeed: 120 });
-return <Diagram discs={inFlight} />;
+  // setBoard with new positions and the discs glide there; ids correlate
+  // discs across states.
+  return <Diagram discs={discs} />;
+};
 ```
 
 ## API
 
-- **`<AnimatedDiagram discs courtSpeed? reducedMotion? {...DiagramProps}>`** —
-  drop-in `Diagram` that animates disc changes.
 - **`useBoardTransition(target, options?)`** — the transition primitive:
   returns the in-flight `TrackedDisc[]` for a target board; retargeting
   mid-flight continues from current positions. Honors
   `prefers-reduced-motion` (snap instead of glide).
+- **`simulateShot(board, shot, shooter, courtSpeed?)`** — plays a `Shot`
+  through the Jam model numerically (elastic equal-mass collisions, chained
+  knock-ons, dead-disc removal) and returns the settled `ShotResult`.
 - **`diffBoards(current, target)`** — id-based board diff
   (`added` / `removedIds` / `moves`).
 - **Physics** — `DEFAULT_MU`, `launchSpeed`, `glideLength`, `glideDuration`,

@@ -210,9 +210,10 @@ useShotReplay(sequence: Sequence, options?): {
   controls: { play; pause; seek(t); speed; shotIndex };
 }
 
-// components (thin sugar over the hooks + <Diagram/>)
-<AnimatedDiagram discs={discs} {...diagramProps} />   // animates whenever `discs` changes
-<ReplayDiagram sequence={sequence} controls {...diagramProps} />
+// components — dropped (2026-07). The package stays headless: consumers
+// render <Diagram discs={inFlight}/> themselves. AnimatedDiagram shipped in
+// Phase 1 and was removed once the docs settled on the hook; if a wrapper
+// ever proves necessary it belongs in @shuff/diagram, not here.
 
 // presets & config
 easings: { travel, settle, knock }           // a cued 11.5 oz disc: gentle
@@ -250,9 +251,8 @@ but the presets should be parameterized from day one by a single
 speed control can be added later without reworking every animation.
 
 Design rules:
-- Every component accepts and forwards all `DiagramProps` — an
-  `AnimatedDiagram` is a drop-in `Diagram`.
-- Hooks own all Motion usage; components contain no animation logic.
+- The package ships no components — hooks own all Motion usage and
+  consumers render `<Diagram>` themselves.
 - Reduced motion is honored by default: transitions become near-instant,
   replays step between rest states.
 
@@ -278,7 +278,7 @@ axis, spring transition, `Diagram` re-rendering per frame. Verify: smoothness
 on a throttled CPU, live zone-tint updates, interrupt behavior (retarget
 mid-flight). This validates the §4 decision with ~50 lines.
 
-**Phase 1 — `useBoardTransition` + `<AnimatedDiagram>`.**
+**Phase 1 — `useBoardTransition`.**
 Disc identity model (`TrackedDisc`, id-diffing: moved / added / removed),
 friction-feel easing presets (parameterized by `courtSpeed`), reduced-motion
 support, tests. Upstream PR: optional `id` on
@@ -287,8 +287,8 @@ support, tests. Upstream PR: optional `id` on
 **Phase 2 — shot replay.**
 `Shot`/`Sequence` schema, `useShotReplay` built on Motion sequences
 (`at` offsets from `contactAt`), playback controls, `AnimatePresence`-style
-exit for off-court/kitchen'd discs, `<ReplayDiagram>` with a minimal
-transport UI. Docs page with a hand-authored 8-shot frame.
+exit for off-court/kitchen'd discs. Docs page with a hand-authored 8-shot
+frame and a minimal transport UI (built in the docs, not the package).
 
 **Phase 3 — derived realism + polish.**
 Use `@shuff/core` geometry to infer contact timing and deflection paths from

@@ -31,9 +31,6 @@ export const RIGHT_STARTS: readonly Point[] = [
  */
 export const HARD_FACTOR = 1.5;
 
-/** Speed (in/s) below which a gliding disc is considered stopped. */
-export const STOP_THRESHOLD = 0.1;
-
 /** Evaluation weight on kitchen exposure of my scorers. */
 export const KITCHEN_WEIGHT = 0.6;
 

@@ -11,8 +11,7 @@ import {
   HALF_COURT_WIDTH,
   type Point,
 } from "@shuff/core";
-import { DEFAULT_MU, EASE_GLIDE } from "@shuff/motion";
-import type { Shot } from "@shuff/strategy";
+import { DEFAULT_MU, EASE_GLIDE, type Shot } from "@shuff/motion";
 
 type Segment = {
   dir: Point; // unit direction of travel

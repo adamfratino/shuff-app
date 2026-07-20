@@ -1,10 +1,10 @@
 /**
  * Shot simulation: Coulomb friction plus equal-mass elastic collisions,
- * stepped to rest. The same model `@shuff/motion` animates analytically —
- * ported from the shuffleboardjam.com reference (constant deceleration μ,
- * full exchange of the contact-normal component of relative velocity, no
- * restitution factor) — run numerically here because strategy needs
- * multi-disc collision outcomes, not animation curves.
+ * stepped to rest. The numeric half of the Jam model — the same physics
+ * `physics.ts` expresses analytically — ported from the shuffleboardjam.com
+ * reference (constant deceleration μ, full exchange of the contact-normal
+ * component of relative velocity, no restitution factor). Run numerically
+ * because multi-disc collision outcomes have no closed form.
  */
 
 import {
@@ -13,9 +13,11 @@ import {
   HALF_COURT_WIDTH,
   isAlive,
 } from "@shuff/core";
-import { DEFAULT_MU } from "@shuff/motion";
-import { STOP_THRESHOLD } from "./constants";
+import { DEFAULT_MU } from "./physics";
 import type { Shot, ShotResult } from "./types";
+
+/** Speed (in/s) below which a gliding disc is considered stopped. */
+const STOP_THRESHOLD = 0.1;
 
 type SimDisc = {
   source: Disc | null; // null marks the shooter's disc

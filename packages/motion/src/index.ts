@@ -1,4 +1,3 @@
-export { AnimatedDiagram, type AnimatedDiagramProps } from "./AnimatedDiagram";
 export { diffBoards, type BoardDiff, type TransitionMove } from "./diff";
 export {
   DEFAULT_MU,
@@ -9,9 +8,12 @@ export {
   glideLength,
   launchSpeed,
 } from "./physics";
+export { simulateShot } from "./simulate";
 export type {
   BoardState,
   BoardTransitionOptions,
+  Shot,
+  ShotResult,
   TrackedDisc,
 } from "./types";
 export { useBoardTransition } from "./useBoardTransition";

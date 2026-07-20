@@ -12,6 +12,14 @@ import * as Strategy from "./strategy.examples";
 export type ExampleMeta = {
   /** Stable id, also used as the source-code export name. */
   id: string;
+  /**
+   * Path (relative to the examples dir) of a self-contained snippet file
+   * displayed whole — imports and all — instead of slicing `id`'s source.
+   * Decouples the shown code from the rendered demo: the snippet is a real
+   * module the app typechecks (it can't rot), and the interactive fluff
+   * stays in the Visual, out of the code block.
+   */
+  snippet?: string;
   /** File the source is sliced from, relative to the examples dir. */
   file: string;
   title: string;
@@ -162,25 +170,26 @@ export const EXAMPLES: ExampleMeta[] = [
  */
 export const MOTION_EXAMPLES: ExampleMeta[] = [
   {
-    id: "GlideToClick",
+    id: "UseWithDiagram",
+    snippet: "snippets/basic-transition.tsx",
     file: "motion.examples.tsx",
-    title: "Glide to click",
+    title: "How to use with Diagram",
     description:
-      "The animate-the-data architecture from the plan: Motion animates a progress value and the untouched <Diagram> re-renders each frame from fresh Disc[] data, so zone tints and labels stay correct mid-flight. The physics is the real thing: Coulomb friction (stopping distance ∝ v², each segment an exact quadratic-ease Motion animation), a cue stroke that accelerates the disc over one kitchen depth, and perfectly elastic equal-mass collisions — stick shots, glancing deflections, and chained knock-ons all fall out of exchanging the normal component of relative velocity.",
-    Visual: Motion.GlideToClick,
-    data: ["glideDiscs"],
+      "The whole integration recipe: keep your board as plain data, pass it through useBoardTransition, and hand the result to an untouched <Diagram>. The hook returns in-flight TrackedDisc[] each frame — no wrapper component, no animation code in yours — so anything derived from position (zone tints, labels, shadows) stays correct mid-glide.",
+    Visual: Motion.UseWithDiagram,
     courtWidth: COURT_WIDTH,
     custom: true,
     slugs: [],
   },
   {
-    id: "BoardTransition",
+    id: "Collisions",
+    snippet: "snippets/collision.tsx",
     file: "motion.examples.tsx",
-    title: "Board transitions",
+    title: "Collisions",
     description:
-      "The Phase 1 primitive, from the @shuff/motion package itself: hand <AnimatedDiagram> a new board state and discs glide there from wherever they currently are, with friction-derived durations. Retargeting mid-flight continues from the in-flight position; added discs appear in place and removed discs drop instantly (enter/exit choreography comes later). Honors prefers-reduced-motion by snapping instead of gliding.",
-    Visual: Motion.BoardTransition,
-    data: ["transitionBoards"],
+      "Collision outcomes are one function call: @shuff/strategy's simulateShot plays a shot through the Jam model — elastic equal-mass contact, chained knock-ons, dead discs removed — and returns the settled board for setBoard, the previous example unchanged.",
+    Visual: Motion.Collisions,
+    data: ["collisionBoard", "caromBoard", "breakRack"],
     courtWidth: COURT_WIDTH,
     custom: true,
     slugs: [],

@@ -1,28 +1,11 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
 import { Box, CodeBlock, Stack, Text } from "@uiid/design-system";
+
+import { TEXT_MAX_WIDTH } from "@/constants";
 
 import type { ExampleMeta } from "../examples/registry";
 import { highlightCached } from "../lib/highlight";
+import { readExportSource, readSnippetSource } from "../lib/source";
 import { MockData } from "./mock-data";
-
-const EXAMPLES_DIR = path.resolve(process.cwd(), "examples");
-const EXPORT_PATTERN = /^export const /m;
-
-/** Slices a single named export's source out of an examples file. */
-async function getExampleSource(
-  file: string,
-  name: string,
-): Promise<string | undefined> {
-  const source = await fs.readFile(path.join(EXAMPLES_DIR, file), "utf-8");
-  const start = source.search(new RegExp(`^export const ${name}\\b`, "m"));
-  if (start === -1) return undefined;
-  const rest = source.slice(start + 1);
-  const nextExport = rest.search(EXPORT_PATTERN);
-  const end = nextExport === -1 ? source.length : start + 1 + nextExport;
-  return source.slice(start, end).trimEnd();
-}
 
 function Heading({
   title,
@@ -32,11 +15,11 @@ function Heading({
   description: string;
 }) {
   return (
-    <Stack gap={6}>
+    <Stack gap={6} maxw={TEXT_MAX_WIDTH}>
       <Text render={<h3 />} size={4} weight="semibold">
         {title}
       </Text>
-      <Text size={1} shade="muted" balance>
+      <Text size={1} shade="muted">
         {description}
       </Text>
     </Stack>
@@ -62,6 +45,7 @@ function SectionLabel({ children }: React.PropsWithChildren) {
 export async function ExampleFrame({ example }: { example: ExampleMeta }) {
   const {
     id,
+    snippet,
     file,
     title,
     description,
@@ -72,7 +56,9 @@ export async function ExampleFrame({ example }: { example: ExampleMeta }) {
     courtWidth,
     custom,
   } = example;
-  const code = await getExampleSource(file, id);
+  const code = snippet
+    ? await readSnippetSource(snippet)
+    : await readExportSource(file, id);
   const html = code ? await highlightCached(code, "tsx") : undefined;
 
   const codeSection = code ? (
@@ -82,7 +68,7 @@ export async function ExampleFrame({ example }: { example: ExampleMeta }) {
         code={code}
         html={html}
         language="tsx"
-        filename={`${id}.tsx`}
+        filename={snippet ? snippet.split("/").at(-1) : `${id}.tsx`}
         rows={12}
       />
       {data?.length ? <MockData data={data} /> : null}

@@ -79,44 +79,52 @@ export const COORD_PLOT_LEGEND: ReadonlyArray<{
 export const frameShooter: Point = { x: 50, y: 459 };
 
 /**
- * Four settled blockers plus the yellow glider ("y1") for the motion glide
- * example. Discs carry ids so the animation can address the glider across
- * frames — the identity model @shuff/motion is built on. b1/b3 sit roughly
- * on the glider's line to the apex, inviting chained knock-ons.
+ * The board driven through useBoardTransition in the use-with-Diagram
+ * example: a single disc. Its id is how the hook correlates it across
+ * states — the identity model @shuff/motion is built on.
  */
-export const glideDiscs: Disc[] = [
-  { id: "y1", x: 36, y: 220, color: YELLOW },
-  { id: "b1", x: 30, y: 70, color: BLACK },
-  { id: "b2", x: 44, y: 40, color: BLACK },
-  { id: "b3", x: 33, y: 95, color: BLACK },
-  { id: "b4", x: 18, y: 35, color: BLACK },
+export const diagramBoard: TrackedDisc[] = [
+  { id: "b1", x: 24, y: 60, color: BLACK },
+];
+
+/** The stationary disc the collision example strikes. */
+export const collisionTarget: TrackedDisc = {
+  id: "b1",
+  x: 30,
+  y: 72,
+  color: BLACK,
+};
+
+/** Opening board for the collision example: just the target, at rest. */
+export const collisionBoard: TrackedDisc[] = [collisionTarget];
+
+/**
+ * Three discs on one line for the carom example. A straight shot telegraphs
+ * down the row — each disc knocks the next — and only the far one rolls clear.
+ */
+export const caromBoard: TrackedDisc[] = [
+  { id: "c1", x: 36, y: 100, color: BLACK },
+  { id: "c2", x: 36, y: 80, color: YELLOW },
+  { id: "c3", x: 36, y: 60, color: BLACK },
 ];
 
 /**
- * Named board states for the AnimatedDiagram transition example. Ids
- * correlate discs across states: y1/b1/b2 move between boards, y2 exists
- * only in "crowded" (appears/disappears), and "cleared" removes the black
- * discs entirely.
+ * A ten-disc rack for the break stress test — a triangle packed one diameter
+ * apart, apex toward the shooter. A full-power shot scatters the whole pack in
+ * a cascade of chained knock-ons, with discs driven off the court removed.
  */
-export const transitionBoards = {
-  setup: [
-    { id: "y1", x: 36, y: 190, color: YELLOW },
-    { id: "b1", x: 30, y: 70, color: BLACK },
-    { id: "b2", x: 44, y: 40, color: BLACK },
-  ],
-  spread: [
-    { id: "y1", x: 36, y: 108, color: YELLOW },
-    { id: "b1", x: 20, y: 50, color: BLACK },
-    { id: "b2", x: 60, y: 30, color: BLACK },
-  ],
-  crowded: [
-    { id: "y1", x: 54, y: 38, color: YELLOW },
-    { id: "b1", x: 33, y: 95, color: BLACK },
-    { id: "b2", x: 12, y: 25, color: BLACK },
-    { id: "y2", x: 36, y: 108, color: YELLOW },
-  ],
-  cleared: [{ id: "y1", x: 36, y: 190, color: YELLOW }],
-} satisfies Record<string, TrackedDisc[]>;
+export const breakRack: TrackedDisc[] = [
+  { id: "r0", x: 36, y: 105, color: YELLOW },
+  { id: "r1", x: 33, y: 99.8, color: BLACK },
+  { id: "r2", x: 39, y: 99.8, color: YELLOW },
+  { id: "r3", x: 30, y: 94.6, color: YELLOW },
+  { id: "r4", x: 36, y: 94.6, color: BLACK },
+  { id: "r5", x: 42, y: 94.6, color: YELLOW },
+  { id: "r6", x: 27, y: 89.4, color: BLACK },
+  { id: "r7", x: 33, y: 89.4, color: YELLOW },
+  { id: "r8", x: 39, y: 89.4, color: BLACK },
+  { id: "r9", x: 45, y: 89.4, color: YELLOW },
+];
 
 // Opening positions for the strategy playbook — one small board per named
 // shot, arranged so the tactic is the engine's natural choice. Yellow

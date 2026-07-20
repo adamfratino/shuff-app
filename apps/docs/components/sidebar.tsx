@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { List, Stack, Text } from "@uiid/design-system";
+import { List, Stack, Text, Separator } from "@uiid/design-system";
 
 import {
   SIDEBAR_WIDTH,
@@ -7,114 +7,47 @@ import {
   SHELL_BORDER_WIDTH,
   SIDEBAR_LIST_ITEM_SPACING,
 } from "@/constants";
-import { allDocs, groupByKind, KIND_ORDER } from "@/lib/docs";
-import { SidebarCollapsible } from "@/components/sidebar-collapsible";
+import { allDocs } from "@/lib/docs";
 
 const ROUTE_BY_PKG: Record<string, string> = {
   "@shuff/core": "/core",
   "@shuff/diagram": "/diagram",
 };
 
+/**
+ * One link per docs page: typedoc-driven packages first, then the packages
+ * without a manifest yet (motion, strategy), listed statically. In-page
+ * sections belong to the secondary sidebar (OnThisPage), not here.
+ */
+const PAGES: ReadonlyArray<{ label: string; href: string }> = [
+  ...allDocs.map((pkg) => ({
+    label: pkg.pkg,
+    href: ROUTE_BY_PKG[pkg.pkg] ?? "/",
+  })),
+  { label: "@shuff/motion", href: "/motion" },
+  { label: "@shuff/strategy", href: "/strategy" },
+];
+
 export function Sidebar() {
   return (
     <SidebarContainer>
       <SidebarScrollContainer>
         <SidebarHeader>shuff.app</SidebarHeader>
-        {allDocs.map((pkg) => {
-          const route = ROUTE_BY_PKG[pkg.pkg] ?? "/";
-          const groups = groupByKind(pkg.entries);
-          return (
-            <Stack key={pkg.pkg} gap={3}>
-              <Text size={0} weight="bold" render={<Link href={route} />}>
-                {pkg.pkg}
-              </Text>
-              {KIND_ORDER.flatMap((kind) => {
-                const items = groups.get(kind);
-                if (!items || items.length === 0) return [];
-                return (
-                  <SidebarCollapsible key={kind} label={kind}>
-                    <List
-                      marker="none"
-                      gap={SIDEBAR_LIST_ITEM_SPACING}
-                      ml={2}
-                      items={items.map((entry) => ({
-                        value: entry.slug,
-                        label: (
-                          <Text
-                            render={<Link href={`${route}#${entry.slug}`} />}
-                          >
-                            {entry.name}
-                          </Text>
-                        ),
-                      }))}
-                    />
-                  </SidebarCollapsible>
-                );
-              })}
-            </Stack>
-          );
-        })}
-        {/* @shuff/motion has no typedoc manifest yet (package is in planning —
-            see packages/motion/PLAN.md), so it's listed statically. */}
-        <Stack gap={3}>
-          <Text size={0} weight="bold" render={<Link href="/motion" />}>
-            @shuff/motion
-          </Text>
-          <SidebarCollapsible label="example">
-            <List
-              marker="none"
-              gap={SIDEBAR_LIST_ITEM_SPACING}
-              ml={2}
-              items={[
-                {
-                  label: (
-                    <Text render={<Link href="/motion#example-GlideToClick" />}>
-                      Glide to click
-                    </Text>
-                  ),
-                },
-                {
-                  label: (
-                    <Text
-                      render={<Link href="/motion#example-BoardTransition" />}
-                    >
-                      Board transitions
-                    </Text>
-                  ),
-                },
-              ]}
-            />
-          </SidebarCollapsible>
-        </Stack>
-        {/* @shuff/strategy has no typedoc manifest yet — listed statically
-            like @shuff/motion. One link per named-shot section. */}
-        <Stack gap={3}>
-          <Text size={0} weight="bold" render={<Link href="/strategy" />}>
-            @shuff/strategy
-          </Text>
-          <SidebarCollapsible label="example">
-            <List
-              marker="none"
-              gap={SIDEBAR_LIST_ITEM_SPACING}
-              ml={2}
-              items={[
-                { id: "KitchenShot", label: "The kitchen shot" },
-                { id: "TheGuard", label: "The guard" },
-                { id: "TheSnuggle", label: "The snuggle" },
-                { id: "KitchenReplace", label: "Kitchen replace" },
-                { id: "TheSweep", label: "The sweep" },
-                { id: "TheHammer", label: "The hammer" },
-                { id: "ExposureMeter", label: "Is this disc safe?" },
-              ].map(({ id, label }) => ({
-                label: (
-                  <Text render={<Link href={`/strategy#example-${id}`} />}>
-                    {label}
-                  </Text>
-                ),
-              }))}
-            />
-          </SidebarCollapsible>
-        </Stack>
+        <Separator />
+        <List
+          marker="none"
+          gap={SIDEBAR_LIST_ITEM_SPACING}
+          items={PAGES.map(({ label, href }) => ({
+            label: (
+              <Text
+                render={<Link href={href}>{label}</Link>}
+                // weight="semibold"
+                shade="muted"
+                size={0}
+              />
+            ),
+          }))}
+        />
       </SidebarScrollContainer>
     </SidebarContainer>
   );

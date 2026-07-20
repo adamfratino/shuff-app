@@ -10,4 +10,5 @@ export const SIDEBAR_SPACING = SHELL_SPACING * 2;
 export const SIDEBAR_LIST_ITEM_SPACING = 1;
 
 export const CONTENT_MAX_WIDTH = 960;
+export const TEXT_MAX_WIDTH = 640;
 export const ASIDE_WIDTH = 240;
