@@ -200,7 +200,7 @@ export const MOTION_EXAMPLES: ExampleMeta[] = [
     file: "motion.examples.tsx",
     title: "Drift",
     description:
-      "Outdoor courts aren't level — the reference sim's signature feature. Drift adds a constant downhill acceleration to the friction glide; because friction fights the disc's actual velocity, the bias tells as it slows, so the disc runs true at speed and hooks off the low side at the end. This is a docs spike — not yet in @shuff/motion — so the shot is integrated per frame rather than played as one analytic glide.",
+      "Outdoor courts aren't level — the reference sim's signature feature. A drift option on simulateShot adds a constant downhill acceleration to the friction glide; because friction fights the disc's actual velocity, the bias tells as it slows, so the disc runs true at speed and hooks off the low side at the end. Aim up-slope and the same curve carries it back onto the spot.",
     Visual: Motion.Drift,
     courtWidth: COURT_WIDTH,
     custom: true,

@@ -117,7 +117,7 @@ export function evaluateShot(
       tracked,
       { start: candidate.start, aim, speed },
       { color, id: SHOOTER_ID },
-      resolved.courtSpeed,
+      { courtSpeed: resolved.courtSpeed },
     );
 
     const V = boardValue(result.board, color) - scoreBefore;

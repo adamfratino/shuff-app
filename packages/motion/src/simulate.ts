@@ -14,7 +14,7 @@ import {
   isAlive,
 } from "@shuff/core";
 import { DEFAULT_MU } from "./physics";
-import type { Shot, ShotResult } from "./types";
+import type { Shot, ShotResult, SimulateShotOptions } from "./types";
 
 /** Speed (in/s) below which a gliding disc is considered stopped. */
 const STOP_THRESHOLD = 0.1;
@@ -31,6 +31,13 @@ type SimDisc = {
 
 const DT = 1 / 30;
 const MAX_STEPS = 600;
+/**
+ * Longest substep drift integrates cleanly over. Friction couples the two
+ * axes, so a curved glide needs a fine step even when the disc is slow —
+ * the adaptive collision substepping alone (sized to prevent tunneling) is
+ * too coarse and would make a drifted rest point depend on frame rate.
+ */
+const DRIFT_SUB_DT = 1 / 240;
 
 /**
  * Simulates `shot` against `board` until every disc is at rest.
@@ -46,8 +53,9 @@ export function simulateShot(
   board: readonly Disc[],
   shot: Shot,
   shooter: Pick<Disc, "color" | "id">,
-  courtSpeed: number = DEFAULT_MU,
+  options: SimulateShotOptions = {},
 ): ShotResult {
+  const { courtSpeed = DEFAULT_MU, drift } = options;
   const dx = shot.aim.x - shot.start.x;
   const dy = shot.aim.y - shot.start.y;
   const len = Math.hypot(dx, dy);
@@ -82,13 +90,24 @@ export function simulateShot(
         maxSpeed = Math.max(maxSpeed, Math.hypot(d.vx, d.vy));
       }
     }
-    const substeps = Math.max(1, Math.ceil((maxSpeed * DT) / (DISC_RADIUS * 2)));
+    const substeps = Math.max(
+      1,
+      Math.ceil((maxSpeed * DT) / (DISC_RADIUS * 2)),
+      drift ? Math.ceil(DT / DRIFT_SUB_DT) : 1,
+    );
     const subDt = DT / substeps;
 
     for (let s = 0; s < substeps; s++) {
       // Friction + integration (trapezoidal in v)
       for (const d of discs) {
         if (!d.moving || d.removed) continue;
+        // Court drift (a downhill bias) is an external acceleration applied
+        // before friction, so friction then opposes the drift-adjusted
+        // velocity — the path bends more as the disc slows.
+        if (drift) {
+          d.vx += drift.x * subDt;
+          d.vy += drift.y * subDt;
+        }
         const speed = Math.hypot(d.vx, d.vy);
         if (speed < STOP_THRESHOLD) {
           d.vx = 0;

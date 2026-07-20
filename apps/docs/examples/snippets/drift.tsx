@@ -1,21 +1,28 @@
-import type { Point } from "@shuff/core";
+import { useState } from "react";
 
-// Drift is a tilted court: a constant downhill acceleration (in/s²) layered
-// onto the friction glide. Because friction opposes the disc's *actual*
-// velocity, the bias tells more as the disc slows — so it runs nearly true
-// at speed, then hooks toward the low side. You aim up-slope to answer it.
-const MU = 160; // court speed
-const DRIFT: Point = { x: 32, y: 0 }; // the court leans right
+import { Diagram } from "@shuff/diagram";
+import {
+  simulateShot,
+  useBoardTransition,
+  type Shot,
+  type TrackedDisc,
+} from "@shuff/motion";
 
-// One physics step: drift first, then Coulomb friction — capped so it can
-// only bring the disc to rest, never reverse it — then integrate position.
-export function step(p: Point, v: Point, dt: number) {
-  v.x += DRIFT.x * dt;
-  v.y += DRIFT.y * dt;
-  const s = Math.hypot(v.x, v.y);
-  const dec = Math.min(MU * dt, s);
-  v.x -= (v.x / s) * dec;
-  v.y -= (v.y / s) * dec;
-  p.x += v.x * dt;
-  p.y += v.y * dt;
-}
+// Outdoor courts lean. Pass a constant drift (in/s²) and simulateShot plays
+// the shot through it: friction fights the disc's real velocity, so the bias
+// tells as it slows and the disc settles off the low side — aim up-slope.
+const DRIFT = { x: 32, y: 0 }; // the court leans right
+const SHOOTER = { id: "y1", color: "#f5c518" };
+
+export const Drift = () => {
+  const [board, setBoard] = useState<TrackedDisc[]>([]);
+  const discs = useBoardTransition(board);
+
+  const play = (shot: Shot) => {
+    // Same call as a level court, plus the court's bias
+    const { board: settled } = simulateShot([], shot, SHOOTER, { drift: DRIFT });
+    setBoard(settled as TrackedDisc[]);
+  };
+
+  return <Diagram discs={discs} />;
+};

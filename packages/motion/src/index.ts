@@ -14,6 +14,7 @@ export type {
   BoardTransitionOptions,
   Shot,
   ShotResult,
+  SimulateShotOptions,
   TrackedDisc,
 } from "./types";
 export { useBoardTransition } from "./useBoardTransition";
