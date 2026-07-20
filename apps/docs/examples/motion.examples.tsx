@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Stack, Text } from "@uiid/design-system";
+import { Box, CodeInline, Stack, Text } from "@uiid/design-system";
 import { Diagram } from "@shuff/diagram";
 import {
   DISC_RADIUS,
@@ -51,9 +51,9 @@ export const UseWithDiagram = ({ children }: React.PropsWithChildren) => {
       <Stack gap={4} ax="stretch" className="min-w-0">
         {children}
         <Text shade="muted" balance className="italic">
-          Click the court and the disc glides there — each click just writes
-          new board data. Click again mid-glide and it retargets from wherever
-          it is.
+          Click the court and the disc glides there — each click just writes new
+          board data. In the example above, this would be done using{" "}
+          <CodeInline>setBoard</CodeInline>.
         </Text>
       </Stack>
     </div>

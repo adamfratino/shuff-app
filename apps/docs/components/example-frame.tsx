@@ -1,5 +1,7 @@
 import { Box, CodeBlock, Stack, Text } from "@uiid/design-system";
 
+import { TEXT_MAX_WIDTH } from "@/constants";
+
 import type { ExampleMeta } from "../examples/registry";
 import { highlightCached } from "../lib/highlight";
 import { readExportSource, readSnippetSource } from "../lib/source";
@@ -13,11 +15,11 @@ function Heading({
   description: string;
 }) {
   return (
-    <Stack gap={6}>
+    <Stack gap={6} maxw={TEXT_MAX_WIDTH}>
       <Text render={<h3 />} size={4} weight="semibold">
         {title}
       </Text>
-      <Text size={1} shade="muted" balance>
+      <Text size={1} shade="muted">
         {description}
       </Text>
     </Stack>

@@ -39,9 +39,12 @@ export function Sidebar() {
           gap={SIDEBAR_LIST_ITEM_SPACING}
           items={PAGES.map(({ label, href }) => ({
             label: (
-              <Text size={0} weight="semibold" render={<Link href={href} />}>
-                {label}
-              </Text>
+              <Text
+                render={<Link href={href}>{label}</Link>}
+                // weight="semibold"
+                shade="muted"
+                size={0}
+              />
             ),
           }))}
         />

@@ -1,4 +1,5 @@
 import { CodeBlock, Separator, Stack, Text } from "@uiid/design-system";
+import { TEXT_MAX_WIDTH } from "@/constants";
 
 import { ExampleFrame } from "../../components/example-frame";
 import { PageWrapper } from "../../components/page-wrapper";
@@ -53,7 +54,7 @@ async function BringYourOwnRenderer() {
         filename="byo-renderer.ts"
         rows={16}
       />
-      <Stack gap={4} maxw={640}>
+      <Stack gap={4} maxw={TEXT_MAX_WIDTH}>
         <Text>
           Because deceleration is constant, you never integrate per frame: every
           glide reduces to a straight line, a duration, and a quadratic
@@ -99,16 +100,16 @@ async function JamModel() {
         filename="jam-model.ts"
         rows={14}
       />
-      <Stack gap={4} maxw={640}>
+      <Stack gap={4} maxw={TEXT_MAX_WIDTH}>
         <Text>
           Our physics are adopted from{" "}
           <a href="https://shuffleboardjam.com/" className="underline">
             shuffleboardjam.com
           </a>
           , a playable floor-shuffleboard simulator built in the same inch-based
-          court coordinates. Full credit for the model goes to that project — we
-          treat its feel as the accuracy benchmark and summarize its rules here
-          for anyone building shuffleboard tools.
+          court coordinates. Full credit for the model goes to project creator
+          Jeff Ziev — we treat its feel as the accuracy benchmark and summarize
+          its rules here for anyone building shuffleboard tools.
         </Text>
         <Stack my={2} bl={1}>
           <Text render={<blockquote />} shade="muted" pl={4} className="italic">
@@ -124,12 +125,9 @@ async function JamModel() {
           </Text>
         </Stack>
         <Text>
-          Constant deceleration traces an exact quadratic ease-out, which is why
-          each glide is a single Motion animation (<code>EASE_GLIDE</code>, with{" "}
-          <code>EASE_STROKE</code> for the cue stroke) rather than a per-frame
-          simulation. The entire model is three one-line formulas and two easing
-          constants — <code>physics.ts</code> is under fifty lines, so you can
-          adopt it in any renderer, not just ours.
+          The entire model is three one-line formulas and two easing constants —{" "}
+          <code>physics.ts</code> is under fifty lines, so you can adopt it in
+          any renderer, not just ours.
         </Text>
       </Stack>
     </Stack>
