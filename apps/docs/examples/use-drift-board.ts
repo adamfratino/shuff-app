@@ -8,32 +8,33 @@ import {
   HALF_COURT_WIDTH,
   type Point,
 } from "@shuff/core";
-import { DEFAULT_MU, type Shot } from "@shuff/motion";
+import {
+  DEFAULT_MU,
+  frictionStep,
+  type Kinematic,
+  type Shot,
+} from "@shuff/motion";
 
-/** Speed (in/s) below which a gliding disc is considered stopped. */
-const STOP_THRESHOLD = 0.1;
 /** Fixed physics step — the loop sub-steps to this for a stable curve. */
 const SUB_DT = 1 / 240;
 /** Clamp long rAF gaps (tab blur) so the disc never leaps a frame. */
 const MAX_FRAME = 1 / 20;
 
-type Sim = { x: number; y: number; vx: number; vy: number };
-
 /**
- * Single-disc drift glide, integrated numerically. Where the collision hook
- * plays each glide as one analytic straight-line ease, a drifting disc's
- * heading changes every frame: Coulomb friction opposes the disc's *actual*
- * velocity while a constant `drift` acceleration (a tilted court's downhill
- * bias, in in/s²) bends the path. So the disc runs nearly true at speed and
- * hooks toward the low side as it slows — the shuffleboardjam.com behavior,
- * and why a real shot is aimed up-slope. No collisions: the drift example is
- * one disc against an open court, so this stays a small, self-contained
- * integrator and leaves usePhysicsBoard's analytic engine alone.
+ * Single-disc drift glide, driven frame by frame off @shuff/motion's
+ * `frictionStep` — the same primitive `simulateShot` steps with, so the live
+ * animation and the packaged model are one source of truth. Where the
+ * collision hook plays each glide as one analytic straight-line ease, a
+ * drifting disc's heading changes every frame, so it can't be a single ease:
+ * this rAF loop steps `frictionStep` to rest, exposing the curved path
+ * `simulateShot` only reports the endpoint of. No collisions — the drift
+ * example is one disc against an open court — so it stays small and leaves
+ * usePhysicsBoard's analytic engine alone.
  */
 export function useDriftBoard(mu: number = DEFAULT_MU) {
   const [disc, setDisc] = useState<Disc | null>(null);
   const [settled, setSettled] = useState(true);
-  const simRef = useRef<Sim | null>(null);
+  const simRef = useRef<Kinematic | null>(null);
   const metaRef = useRef<{ id: string; color: string; drift: Point } | null>(
     null,
   );
@@ -67,22 +68,12 @@ export function useDriftBoard(mu: number = DEFAULT_MU) {
     while (remaining > 0) {
       const h = Math.min(SUB_DT, remaining);
       remaining -= h;
-      // Drift (external accel) first, then Coulomb friction opposing the
-      // resulting velocity — capped so it can only bring the disc to rest,
-      // never reverse it. Since drift < μ, speed decays to a clean stop.
-      sim.vx += meta.drift.x * h;
-      sim.vy += meta.drift.y * h;
-      const s = Math.hypot(sim.vx, sim.vy);
-      if (s < STOP_THRESHOLD) {
-        sim.vx = 0;
-        sim.vy = 0;
-        return true;
-      }
-      const dec = Math.min(mu * h, s);
-      sim.vx -= (sim.vx / s) * dec;
-      sim.vy -= (sim.vy / s) * dec;
-      sim.x += sim.vx * h;
-      sim.y += sim.vy * h;
+      const next = frictionStep(sim, h, mu, meta.drift);
+      sim.x = next.x;
+      sim.y = next.y;
+      sim.vx = next.vx;
+      sim.vy = next.vy;
+      if (sim.vx === 0 && sim.vy === 0) return true; // frictionStep parked it
       if (isOffCourt(sim)) return true;
     }
     return false;

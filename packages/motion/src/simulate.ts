@@ -12,12 +12,48 @@ import {
   DISC_RADIUS,
   HALF_COURT_WIDTH,
   isAlive,
+  type Point,
 } from "@shuff/core";
 import { DEFAULT_MU } from "./physics";
 import type { Shot, ShotResult, SimulateShotOptions } from "./types";
 
 /** Speed (in/s) below which a gliding disc is considered stopped. */
 const STOP_THRESHOLD = 0.1;
+
+/** A disc's position and velocity — the state a friction step advances. */
+export type Kinematic = { x: number; y: number; vx: number; vy: number };
+
+/**
+ * Advance one disc by `dt` seconds under Coulomb friction and an optional
+ * court `drift`. The single source of truth for the Jam glide model, shared
+ * by `simulateShot` and any renderer driving a live glide: `drift` (an
+ * external downhill acceleration, in/s²) is applied first, then friction
+ * opposes the resulting velocity — capped so it can only bring the disc to
+ * rest, never reverse it. Because friction fights the drift-adjusted
+ * velocity, the path bends more as the disc slows. Returns a disc at rest
+ * (zero velocity, position held) once it drops below the stop threshold.
+ */
+export function frictionStep(
+  k: Kinematic,
+  dt: number,
+  courtSpeed: number = DEFAULT_MU,
+  drift?: Point,
+): Kinematic {
+  const vx0 = k.vx + (drift?.x ?? 0) * dt;
+  const vy0 = k.vy + (drift?.y ?? 0) * dt;
+  const speed = Math.hypot(vx0, vy0);
+  if (speed < STOP_THRESHOLD) return { x: k.x, y: k.y, vx: 0, vy: 0 };
+  const ratio = Math.max(0, speed - courtSpeed * dt) / speed;
+  const vx = vx0 * ratio;
+  const vy = vy0 * ratio;
+  // Trapezoidal in v: average the pre- and post-friction velocity.
+  return {
+    x: k.x + (vx0 + vx) * 0.5 * dt,
+    y: k.y + (vy0 + vy) * 0.5 * dt,
+    vx,
+    vy,
+  };
+}
 
 type SimDisc = {
   source: Disc | null; // null marks the shooter's disc
@@ -98,31 +134,15 @@ export function simulateShot(
     const subDt = DT / substeps;
 
     for (let s = 0; s < substeps; s++) {
-      // Friction + integration (trapezoidal in v)
+      // Friction + optional drift, via the shared step primitive.
       for (const d of discs) {
         if (!d.moving || d.removed) continue;
-        // Court drift (a downhill bias) is an external acceleration applied
-        // before friction, so friction then opposes the drift-adjusted
-        // velocity — the path bends more as the disc slows.
-        if (drift) {
-          d.vx += drift.x * subDt;
-          d.vy += drift.y * subDt;
-        }
-        const speed = Math.hypot(d.vx, d.vy);
-        if (speed < STOP_THRESHOLD) {
-          d.vx = 0;
-          d.vy = 0;
-          d.moving = false;
-          continue;
-        }
-        const newSpeed = Math.max(0, speed - courtSpeed * subDt);
-        const ratio = newSpeed / speed;
-        const oldVx = d.vx;
-        const oldVy = d.vy;
-        d.vx *= ratio;
-        d.vy *= ratio;
-        d.x += (oldVx + d.vx) * 0.5 * subDt;
-        d.y += (oldVy + d.vy) * 0.5 * subDt;
+        const next = frictionStep(d, subDt, courtSpeed, drift);
+        d.x = next.x;
+        d.y = next.y;
+        d.vx = next.vx;
+        d.vy = next.vy;
+        if (d.vx === 0 && d.vy === 0) d.moving = false;
       }
 
       // Equal-mass elastic collisions: full exchange of the contact-normal
