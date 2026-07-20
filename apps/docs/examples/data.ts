@@ -87,6 +87,17 @@ export const diagramBoard: TrackedDisc[] = [
   { id: "b1", x: 24, y: 60, color: BLACK },
 ];
 
+/** The stationary disc the collision example strikes. */
+export const collisionTarget: TrackedDisc = {
+  id: "b1",
+  x: 30,
+  y: 72,
+  color: BLACK,
+};
+
+/** Opening board for the collision example: just the target, at rest. */
+export const collisionBoard: TrackedDisc[] = [collisionTarget];
+
 // Opening positions for the strategy playbook — one small board per named
 // shot, arranged so the tactic is the engine's natural choice. Yellow
 // shoots; black is the opponent. See docs/STRATEGY.md for the taxonomy.

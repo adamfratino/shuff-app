@@ -181,6 +181,19 @@ export const MOTION_EXAMPLES: ExampleMeta[] = [
     custom: true,
     slugs: [],
   },
+  {
+    id: "Collisions",
+    snippet: "snippets/collision.tsx",
+    file: "motion.examples.tsx",
+    title: "Collisions",
+    description:
+      "Collision outcomes are one function call: @shuff/strategy's simulateShot plays a shot through the Jam model — elastic equal-mass contact, chained knock-ons, dead discs removed — and returns the settled board for setBoard, the previous example unchanged. The live court goes further and animates the impact per frame with the same exchange rule; that machinery ships as the replay hook in the roadmap's Phase 2.",
+    Visual: Motion.Collisions,
+    data: ["collisionTarget", "collisionBoard"],
+    courtWidth: COURT_WIDTH,
+    custom: true,
+    slugs: [],
+  },
 ];
 
 /**
