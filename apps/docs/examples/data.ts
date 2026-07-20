@@ -98,6 +98,34 @@ export const collisionTarget: TrackedDisc = {
 /** Opening board for the collision example: just the target, at rest. */
 export const collisionBoard: TrackedDisc[] = [collisionTarget];
 
+/**
+ * Three discs on one line for the carom example. A straight shot telegraphs
+ * down the row — each disc knocks the next — and only the far one rolls clear.
+ */
+export const caromBoard: TrackedDisc[] = [
+  { id: "c1", x: 36, y: 100, color: BLACK },
+  { id: "c2", x: 36, y: 80, color: YELLOW },
+  { id: "c3", x: 36, y: 60, color: BLACK },
+];
+
+/**
+ * A ten-disc rack for the break stress test — a triangle packed one diameter
+ * apart, apex toward the shooter. A full-power shot scatters the whole pack in
+ * a cascade of chained knock-ons, with discs driven off the court removed.
+ */
+export const breakRack: TrackedDisc[] = [
+  { id: "r0", x: 36, y: 105, color: YELLOW },
+  { id: "r1", x: 33, y: 99.8, color: BLACK },
+  { id: "r2", x: 39, y: 99.8, color: YELLOW },
+  { id: "r3", x: 30, y: 94.6, color: YELLOW },
+  { id: "r4", x: 36, y: 94.6, color: BLACK },
+  { id: "r5", x: 42, y: 94.6, color: YELLOW },
+  { id: "r6", x: 27, y: 89.4, color: BLACK },
+  { id: "r7", x: 33, y: 89.4, color: YELLOW },
+  { id: "r8", x: 39, y: 89.4, color: BLACK },
+  { id: "r9", x: 45, y: 89.4, color: YELLOW },
+];
+
 // Opening positions for the strategy playbook — one small board per named
 // shot, arranged so the tactic is the engine's natural choice. Yellow
 // shoots; black is the opponent. See docs/STRATEGY.md for the taxonomy.

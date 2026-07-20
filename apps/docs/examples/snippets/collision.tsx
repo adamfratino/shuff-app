@@ -8,6 +8,7 @@ import {
   type TrackedDisc,
 } from "@shuff/motion";
 
+// Any board — one disc or a full rack; simulateShot resolves whatever it hits.
 const INITIAL_BOARD: TrackedDisc[] = [
   { id: "b1", x: 30, y: 72, color: "#1a1a1a" },
 ];

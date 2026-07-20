@@ -1,7 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Button, CodeInline, Group, Stack, Text } from "@uiid/design-system";
+import {
+  Box,
+  Button,
+  type ButtonProps,
+  CodeInline,
+  Group,
+  Stack,
+  Text,
+} from "@uiid/design-system";
+import { PlayIcon, RotateCcwIcon } from "@uiid/icons";
+
 import { Diagram } from "@shuff/diagram";
 import {
   DISC_RADIUS,
@@ -10,10 +20,14 @@ import {
   HALF_COURT_WIDTH,
   type Point,
 } from "@shuff/core";
-import { launchSpeed, useBoardTransition } from "@shuff/motion";
+import {
+  launchSpeed,
+  useBoardTransition,
+  type TrackedDisc,
+} from "@shuff/motion";
 
 import { COURT_WIDTH, YELLOW } from "./_shared";
-import { collisionBoard, collisionTarget, diagramBoard } from "./data";
+import { breakRack, caromBoard, collisionBoard, diagramBoard } from "./data";
 import { usePhysicsBoard } from "./use-physics-board";
 
 /** Keep click targets on the court — a disc center stays a radius from every edge. */
@@ -62,23 +76,31 @@ export const UseWithDiagram = ({ children }: React.PropsWithChildren) => {
 
 const SHOOTER = { id: "y1", color: YELLOW };
 const CARRY = 40; // glide handed to the struck disc — knocks the 8 into the 7
+const CAROM_CARRY = 65; // glide budget telegraphed down the row of three
+const BREAK_CARRY = 240; // full-power residual energy — scatters the whole pack
 
 export const Collisions = ({ children }: React.PropsWithChildren) => {
   const { discs, settled, reset, shoot } = usePhysicsBoard();
+  // The resting layout the buttons fire into — swapped per scenario so Reset
+  // restores whichever one is on the court.
+  const [board, setBoard] = useState<TrackedDisc[]>(collisionBoard);
   const [played, setPlayed] = useState(false);
 
-  const shown = played ? discs : collisionBoard;
+  const shown = played ? discs : board;
 
-  const fire = (offset: number) => {
+  const fire = (next: TrackedDisc[], offset: number, carry: number) => {
+    const [target] = next;
+    if (!target) return;
+    setBoard(next);
     setPlayed(true);
-    reset(collisionBoard);
-    const x = collisionTarget.x + offset;
+    reset(next);
+    const x = target.x + offset;
     const start = { x, y: HALF_COURT_LENGTH };
     shoot(
       {
         start,
-        aim: { x, y: collisionTarget.y },
-        speed: launchSpeed(distance(start, collisionTarget) + CARRY),
+        aim: { x, y: target.y },
+        speed: launchSpeed(distance(start, target) + carry),
       },
       SHOOTER,
     );
@@ -86,7 +108,7 @@ export const Collisions = ({ children }: React.PropsWithChildren) => {
 
   const resetBoard = () => {
     setPlayed(false);
-    reset(collisionBoard);
+    reset(board);
   };
 
   return (
@@ -99,21 +121,56 @@ export const Collisions = ({ children }: React.PropsWithChildren) => {
         <Diagram discs={[...shown]} showLabels />
       </Box>
       <Stack gap={4} ax="stretch" className="min-w-0">
-        <Group gap={2}>
-          <Button onClick={() => fire(0)} disabled={!settled}>
-            Head-on
-          </Button>
-          <Button onClick={() => fire(5)} disabled={!settled}>
-            Glancing
-          </Button>
-          <Button onClick={resetBoard}>Reset</Button>
-        </Group>
         {children}
+        <Group gap={2}>
+          <PlayButton
+            onClick={() => fire(collisionBoard, 0, CARRY)}
+            disabled={!settled}
+          >
+            Head-on
+          </PlayButton>
+          <PlayButton
+            onClick={() => fire(collisionBoard, 5, CARRY)}
+            disabled={!settled}
+          >
+            Glancing
+          </PlayButton>
+          <PlayButton
+            onClick={() => fire(caromBoard, 0, CAROM_CARRY)}
+            disabled={!settled}
+          >
+            Chain
+          </PlayButton>
+          <PlayButton
+            onClick={() => fire(breakRack, 0, BREAK_CARRY)}
+            disabled={!settled}
+          >
+            Break
+          </PlayButton>
+          <Button
+            onClick={resetBoard}
+            variant="ghost"
+            size="small"
+            tooltip="Reset board"
+          >
+            <RotateCcwIcon />
+          </Button>
+        </Group>
         <Text shade="muted" balance className="italic">
-          A dead-center hit stops the shooter where it lands — the stick shot;
-          a glancing hit splits the motion between both discs.
+          The recipe above is the whole story for every button — only the board
+          data differs. A dead-center hit stops the shooter where it lands (the
+          stick shot); a glancing hit splits the motion between both discs;
+          Chain telegraphs that same exchange down a row of three; Break drives
+          a full rack apart in a cascade of knock-ons, off-court discs removed.
         </Text>
       </Stack>
     </div>
   );
 };
+
+const PlayButton = ({ children, ...props }: ButtonProps) => (
+  <Button variant="subtle" size="small" {...props}>
+    <PlayIcon />
+    {children}
+  </Button>
+);

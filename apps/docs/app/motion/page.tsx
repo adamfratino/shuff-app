@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { CodeBlock, Separator, Stack, Text } from "@uiid/design-system";
 import { TEXT_MAX_WIDTH } from "@/constants";
 
@@ -146,7 +147,10 @@ export default function MotionPage() {
       <BringYourOwnRenderer />
       <Separator />
       {MOTION_EXAMPLES.map((example) => (
-        <ExampleFrame key={example.id} example={example} />
+        <Fragment key={example.id}>
+          <ExampleFrame example={example} />
+          <Separator />
+        </Fragment>
       ))}
     </PageWrapper>
   );
