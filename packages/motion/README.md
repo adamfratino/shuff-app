@@ -19,35 +19,31 @@ pnpm add @shuff/motion @shuff/diagram @shuff/core motion react
 
 ## Quick start
 
-```tsx
-import { AnimatedDiagram, type TrackedDisc } from "@shuff/motion";
+The package is headless — your board is plain data, the hook returns the
+in-flight frames, and an untouched `Diagram` renders them:
 
-const discs: TrackedDisc[] = [
-  { id: "y1", x: 36, y: 108, color: "#f5c518" },
-  { id: "b1", x: 28, y: 72, color: "#1a1a1a" },
+```tsx
+import { useState } from "react";
+
+import { Diagram } from "@shuff/diagram";
+import { useBoardTransition, type TrackedDisc } from "@shuff/motion";
+
+const INITIAL_BOARD: TrackedDisc[] = [
+  { id: "b1", x: 24, y: 60, color: "#1a1a1a" },
 ];
 
-// Change any disc's x/y and it glides there; ids correlate discs across
-// states. All other Diagram props pass through.
-export function Board() {
-  return <AnimatedDiagram discs={discs} showLabels />;
-}
-```
+export const Board = () => {
+  const [board, setBoard] = useState(INITIAL_BOARD);
+  const discs = useBoardTransition(board);
 
-Or headless, for custom rendering:
-
-```tsx
-import { useBoardTransition } from "@shuff/motion";
-import { Diagram } from "@shuff/diagram";
-
-const inFlight = useBoardTransition(targetDiscs, { courtSpeed: 120 });
-return <Diagram discs={inFlight} />;
+  // setBoard with new positions and the discs glide there; ids correlate
+  // discs across states.
+  return <Diagram discs={discs} />;
+};
 ```
 
 ## API
 
-- **`<AnimatedDiagram discs courtSpeed? reducedMotion? {...DiagramProps}>`** —
-  drop-in `Diagram` that animates disc changes.
 - **`useBoardTransition(target, options?)`** — the transition primitive:
   returns the in-flight `TrackedDisc[]` for a target board; retargeting
   mid-flight continues from current positions. Honors

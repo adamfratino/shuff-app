@@ -1,4 +1,3 @@
-export { AnimatedDiagram, type AnimatedDiagramProps } from "./AnimatedDiagram";
 export { diffBoards, type BoardDiff, type TransitionMove } from "./diff";
 export {
   DEFAULT_MU,
