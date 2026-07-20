@@ -126,6 +126,23 @@ export const breakRack: TrackedDisc[] = [
   { id: "r9", x: 45, y: 89.4, color: YELLOW },
 ];
 
+/**
+ * The spot the drift example aims for — the center of the 8 line. The shot
+ * covers ~159" from the kitchen slot, long enough that court bias tells.
+ */
+export const driftTarget: Point = { x: 36, y: 72 };
+
+/**
+ * A faint, non-physical marker of the target spot, drawn *under* the shooter
+ * as a reference — it isn't in the drift sim, so nothing collides with it. A
+ * made shot covers it; a drifted one leaves it showing off to the low side.
+ */
+export const driftGhost: TrackedDisc = {
+  id: "spot",
+  ...driftTarget,
+  color: "rgba(120,120,120,0.35)",
+};
+
 // Opening positions for the strategy playbook — one small board per named
 // shot, arranged so the tactic is the engine's natural choice. Yellow
 // shoots; black is the opponent. See docs/STRATEGY.md for the taxonomy.

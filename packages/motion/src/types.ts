@@ -44,6 +44,24 @@ export type ShotResult = {
   shooter: Disc | null;
 };
 
+export type SimulateShotOptions = {
+  /**
+   * Court friction — the deceleration a gliding disc experiences, in
+   * inches/second². Lower is a faster (beaded) court. Defaults to
+   * `DEFAULT_MU`.
+   */
+  courtSpeed?: number;
+
+  /**
+   * Constant court bias, in inches/second² — an outdoor court's downhill
+   * lean. Added to every moving disc each step; friction still opposes the
+   * disc's actual velocity, so a drifting disc runs nearly true at speed and
+   * hooks toward the low side as it slows. Keep its magnitude below
+   * `courtSpeed` or discs never come to rest. Omitted means a level court.
+   */
+  drift?: Point;
+};
+
 export type BoardTransitionOptions = {
   /**
    * Court friction — the deceleration a gliding disc experiences, in

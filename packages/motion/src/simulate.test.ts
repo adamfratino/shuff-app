@@ -70,6 +70,34 @@ describe("simulateShot", () => {
     expect(dead).toHaveLength(1);
   });
 
+  it("drifts a shot off the low side of a leaning court", () => {
+    const aim = { x: 36, y: 72 };
+    const speed = exactSpeed(START, aim);
+    const level = simulateShot([], { start: START, aim, speed }, YELLOW);
+    const drifted = simulateShot([], { start: START, aim, speed }, YELLOW, {
+      drift: { x: 32, y: 0 },
+    });
+    expect(level.shooter!.x).toBeCloseTo(36, 0);
+    // A right-leaning court carries the disc well right of the aim.
+    expect(drifted.shooter!.x).toBeGreaterThan(level.shooter!.x + 8);
+    // Same forward distance, though — drift bends the path, not the range.
+    expect(Math.abs(drifted.shooter!.y - level.shooter!.y)).toBeLessThan(4);
+  });
+
+  it("answers drift with an up-slope aim that curves back onto the spot", () => {
+    const target = { x: 36, y: 72 };
+    const speed = exactSpeed(START, target);
+    const drift = { x: 32, y: 0 };
+    // Aim up-slope (left) and the same curve carries the disc back to target.
+    const played = simulateShot(
+      [],
+      { start: START, aim: { x: target.x - 16, y: target.y }, speed },
+      YELLOW,
+      { drift },
+    );
+    expect(Math.abs(played.shooter!.x - target.x)).toBeLessThan(3);
+  });
+
   it("leaves untouched discs exactly where they were", () => {
     const bystander = disc(60, 40, "black", "still");
     const aim = { x: 20, y: 104 };

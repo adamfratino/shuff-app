@@ -8,12 +8,13 @@ export {
   glideLength,
   launchSpeed,
 } from "./physics";
-export { simulateShot } from "./simulate";
+export { frictionStep, simulateShot, type Kinematic } from "./simulate";
 export type {
   BoardState,
   BoardTransitionOptions,
   Shot,
   ShotResult,
+  SimulateShotOptions,
   TrackedDisc,
 } from "./types";
 export { useBoardTransition } from "./useBoardTransition";

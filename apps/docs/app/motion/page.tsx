@@ -130,6 +130,18 @@ async function JamModel() {
           <code>physics.ts</code> is under fifty lines, so you can adopt it in
           any renderer, not just ours.
         </Text>
+        <Text>
+          Friction and collisions assume a level court; real ones aren't.
+          Outdoor courts <em>drift</em> — the reference sim's signature feature
+          — so <code>simulateShot</code> takes a <code>drift</code> option, a
+          constant downhill acceleration layered on the glide. Because friction
+          fights the disc's actual velocity, the bias tells as the disc slows:
+          it runs nearly true at speed, then hooks off the low side, which is
+          why players read the court and aim up-slope. That curve has no closed
+          form, so drift is stepped numerically (<code>frictionStep</code>, the
+          same primitive <code>simulateShot</code> runs) rather than played as
+          one analytic ease — see the drift example below.
+        </Text>
       </Stack>
     </Stack>
   );
